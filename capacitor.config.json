@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "ayo-solutions-mobile-app",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}

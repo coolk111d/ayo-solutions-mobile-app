@@ -1,0 +1,7 @@
+{
+  "name": "ayo-solutions-mobile-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
