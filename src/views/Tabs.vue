@@ -9,17 +9,17 @@
                 </ion-tab-button>
 
                 <ion-tab-button tab="food" href="/food">
-                    <ion-icon :icon="pizza" />
+                    <ion-icon :icon="fastFoodOutline" />
                     <ion-label>Food</ion-label>
                 </ion-tab-button>
 
                 <ion-tab-button tab="logistic" href="/logistic">
-                    <ion-icon :icon="square" />
-                    <ion-label>Logistic</ion-label>
+                    <ion-icon :icon="airplaneOutline" />
+                    <ion-label>Logistics</ion-label>
                 </ion-tab-button>
 
                 <ion-tab-button tab="courier" href="/courier">
-                    <ion-icon :icon="square" />
+                    <ion-icon :icon="bicycleOutline" />
                     <ion-label>Courier</ion-label>
                 </ion-tab-button>
 
@@ -34,13 +34,12 @@
 
 <script lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { home, pizza, square, construct } from 'ionicons/icons';
-
+import { home, fastFoodOutline, airplaneOutline, bicycleOutline, construct } from 'ionicons/icons';
 export default {
     name: 'Tabs',
     components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet },
     setup() {
-        return { home, pizza, square, construct }
+        return { home, fastFoodOutline, airplaneOutline, bicycleOutline, construct }
     }
 }
 </script>
