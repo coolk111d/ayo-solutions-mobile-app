@@ -6,3 +6,34 @@
     transform: translateX(-50%);
     top: 10%;
 }
+
+.ayo-food-slider {
+    background: url('/assets/images/slider/AyoFoodSlider.jpg');
+}
+
+.ayo-logistic-slider {
+    background: url('/assets/images/slider/AyoBox.jpg');
+} 
+.ayo-handyman-slider {
+    background: url('/assets/images/slider/AyoHandyman.jpg');
+} 
+.ayo-store-slider {
+    background: url('/assets/images/slider/AyoStore2.jpg');
+} 
+.ayo-slider {
+    height: 35vh;
+    width: 100%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.ayo-slider h1 {
+    color: #fff;
+    text-shadow: 1px 3px 6px rgba(0,0,0,0.5);
+}
