@@ -4,7 +4,7 @@
     <p>AYO Mobile App is under development.</p>
     <p>Use <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/">Web App</a> for the meantime.</p>
 
-    <h3><a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/register">Register now!</a></h3>
+    <h3><a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/pre-registration/create">Register now!</a></h3>
   </div>
 </template>
 
@@ -21,11 +21,9 @@ export default {
 <style scoped>
 #container {
   text-align: center;
+  padding: 20px 10px;
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 60%;
-  transform: translateY(-50%);
+  top: 30%;
 }
 
 #container strong {

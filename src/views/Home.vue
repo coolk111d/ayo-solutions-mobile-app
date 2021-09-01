@@ -9,52 +9,22 @@
                 </ion-toolbar>
             </ion-header>
 
-            <ion-slides pager="true" :options="slideOpts">
-                <ion-slide>
-                    <div class="ayo-slider ayo-food-slider">
-                        <h1>Food</h1>
-                    </div>
-                </ion-slide>
+            <div class="video-div">
+            <iframe width="100%" height="180" src="https://www.youtube.com/embed/MdBkFdRJ420?autoplay=1&muted=1&loop=1&modestbranding=1&controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen controls></iframe>
+            </div>
 
-                <ion-slide>
-                 <div class="ayo-slider ayo-logistic-slider">
-                        <h1>Logistic</h1>
-                    </div>
-                </ion-slide>
-
-                <ion-slide>
-                 <div class="ayo-slider ayo-handyman-slider">
-                        <h1>Handyman</h1>
-                    </div>
-                </ion-slide>
-
-                <ion-slide>
-                 <div class="ayo-slider ayo-store-slider">
-                        <h1>Store</h1>
-                    </div>
-                </ion-slide>
-            </ion-slides>
-           <ExploreContainer name="Welcome!" />
+           <ServicesSlider slide1="Food" slide2="Express" slide3="Same Day" slide4="Handyman" slide5="Store" />
         </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
-import { IonSlides, IonSlide } from '@ionic/vue';
+import ServicesSlider from '@/components/ServicesSlider.vue';
 import Header from '@/components/Header.vue';
 
 export default  {
     name: 'Home',
-    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Header, IonSlides, IonSlide, ExploreContainer },
-    setup() {
-    const slideOpts = {
-      initialSlide: 0,
-      speed: 700,
-      loop: 1
-    };
-    return { slideOpts }
-  }
+    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Header, ServicesSlider }
 }
 </script>
