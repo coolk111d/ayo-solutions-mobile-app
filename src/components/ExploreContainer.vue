@@ -24,15 +24,7 @@ export default {
 
   methods: {
       async openModal() {
-          const modal = await modalController
-              .create({
-                  component: PreRegistrationModal,
-                  cssClass: "my-custom-class",
-                  componentProps: {
-                      title: "Pre Registration"
-                  }
-              });
-
+          const modal = await modalController.create({component: PreRegistrationModal});
           modal.present();
       }
   }

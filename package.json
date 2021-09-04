@@ -19,9 +19,11 @@
     "@ionic/vue": "^5.4.0",
     "@ionic/vue-router": "^5.4.0",
     "core-js": "^3.6.5",
+    "vee-validate": "^4.4.10",
     "vue": "^3.2.1",
     "vue-router": "^4.0.0-0",
-    "vue-youtube-embed": "^2.2.2"
+    "vue-youtube-embed": "^2.2.2",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@capacitor/cli": "3.2.0",
