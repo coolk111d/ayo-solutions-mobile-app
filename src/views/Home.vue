@@ -10,10 +10,10 @@
             </ion-header>
 
             <div class="video-div">
-            <iframe width="100%" height="180" src="https://www.youtube.com/embed/MdBkFdRJ420?autoplay=1&muted=1&loop=1&modestbranding=1&controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen controls></iframe>
+                <iframe width="100%" height="180" src="https://www.youtube.com/embed/MdBkFdRJ420?autoplay=1&muted=1&loop=1&modestbranding=1&controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen controls></iframe>
             </div>
 
-           <ServicesSlider slide1="Food" slide2="Express" slide3="Same Day" slide4="Handyman" slide5="Store" />
+            <ServicesSlider slide1="Food" slide2="Express" slide3="Same Day" slide4="Handyman" slide5="Store" />
         </ion-content>
     </ion-page>
 </template>
