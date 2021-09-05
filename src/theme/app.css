@@ -43,3 +43,16 @@ h5.title {
     color: #feb041;
     font-size: 16px;
 }
+
+.registration-link {
+    text-align:center; 
+    margin: 10px 0 15px; 
+}
+
+.registration-link a {
+    text-decoration: none;
+}
+
+.registration-link a:hover {
+    color: #04529b;
+}

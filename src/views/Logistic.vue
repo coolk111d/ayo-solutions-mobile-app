@@ -8,7 +8,9 @@
                     <ion-title size="large">AYO Logistic</ion-title>
                 </ion-toolbar>
             </ion-header>
+
             <ExploreContainer name="AYO Logistic" />
+            <!-- <ion-button @click="openModal">Register Now!</ion-button> -->
         </ion-content>
     </ion-page>
 </template>

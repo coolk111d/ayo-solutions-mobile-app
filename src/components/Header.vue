@@ -26,12 +26,20 @@
 </template>
 
 <script lang="ts">
-import { IonHeader, IonToolbar, IonTitle } from '@ionic/vue';
+import {
+    IonHeader, IonToolbar, IonTitle,
+    IonGrid, IonRow, IonCol,
+    IonIcon
+} from '@ionic/vue';
 import { menu, cart } from 'ionicons/icons';
 
 export default {
     name: 'Header',
-    components: { IonHeader, IonToolbar, IonTitle },
+    components: {
+        IonHeader, IonToolbar, IonTitle,
+        IonGrid, IonRow, IonCol,
+        IonIcon
+    },
 
     setup() {
         return { menu, cart };
