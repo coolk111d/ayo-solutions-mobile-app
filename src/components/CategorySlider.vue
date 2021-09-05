@@ -1,39 +1,35 @@
 <template>
-  <h5 class="title">Services</h5>
+
+  <h5 class="title">Categories</h5>
 <div class="container">
-  <ion-slides pager="true" :options="servicesOpts">
+  <ion-slides pager="true" :options="categoryOpts">
                 <ion-slide>
                     <div class="services-slider ayo-service-food" @click="() => router.push('/food')">
                         <h5 class="service-title">{{ slide1 }}</h5>
-                        <p>Food Delivery</p>
                     </div>
                 </ion-slide>
 
                 <ion-slide>
-                    <div class="services-slider ayo-service-express" @click="() => router.push('/logistic')">
+                    <div class="services-slider ayo-service-express" @click="() => router.push('/food')">
                         <h5 class="service-title">{{ slide2 }}</h5>
-                        <p>National Logistics</p>
                     </div>
                 </ion-slide>
 
                 <ion-slide>
-                    <div class="services-slider ayo-service-sameday" @click="() => router.push('/courier')">
+                    <div class="services-slider ayo-service-sameday" @click="() => router.push('/food')">
                         <h5 class="service-title">{{ slide3 }}</h5>
-                        <p>Delivery Service</p>
                     </div>
                 </ion-slide>
 
                 <ion-slide>
-                    <div class="services-slider ayo-service-handyman" @click="() => router.push('/handyman')">
+                    <div class="services-slider ayo-service-handyman" @click="() => router.push('/food')">
                         <h5 class="service-title">{{ slide4 }}</h5>
-                        <p>Coming Soon</p>
                     </div>
                 </ion-slide>
 
                 <ion-slide>
-                    <div class="services-slider ayo-service-store">
+                    <div class="services-slider ayo-service-store" @click="() => router.push('/food')">
                         <h5 class="service-title">{{ slide5 }}</h5>
-                        <p>Coming Soon</p>
                     </div>
                 </ion-slide>
     </ion-slides>
@@ -44,7 +40,7 @@
 import { IonSlides, IonSlide } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 export default {
-  name: 'ServicesSlider',
+  name: 'CategorySlider',
   components: { IonSlides, IonSlide },
   props: {
     slide1: String,
@@ -54,16 +50,16 @@ export default {
     slide5: String
   },
   setup() {
-    const servicesOpts = {
+    const categoryOpts = {
       initialSlide: 0,
       speed: 300,
       loop: 1,
       pagination: 0,
-      slidesPerView: 1.2,
+      slidesPerView: 2.2,
     };
     const router = useRouter();
-    return { router, servicesOpts }
-  }
+    return { router, categoryOpts }
+}
 }
 </script>
 
@@ -71,8 +67,9 @@ export default {
 * {
   font-family: "Poppins", sans-serif;
 }
+
 .container {
-    padding: 5px 0;
+    padding: 5px 0px 30px;
 }
 .container p {
   color: #07185C;
@@ -80,31 +77,29 @@ export default {
   margin-top: -.5em;
 }
 h5.service-title {
-  margin-top: 2em;
-  color: #07185C;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgb(0 0 0);
   font-weight: 600;
+  font-size: 13px;
 }
 
 .ayo-service-food {
-    background: url('/assets/images/icons/food.png');
+    background: url('/assets/images/categories/fast-food.png');
 }
 .ayo-service-express {
-    background: url('/assets/images/icons/express.png');
-    background-size: 65px !important;
+    background: url('/assets/images/categories/milk-tea.jpg');
 }
 .ayo-service-sameday {
-    background: url('/assets/images/icons/same-day.png');
-    background-size: 75px !important;
+    background: url('/assets/images/categories/pet-food.jpg');
 }
 .ayo-service-handyman {
-    background: url('/assets/images/icons/handyman.png');
+    background: url('/assets/images/categories/bakeshops.jpg');
 }
 .ayo-service-store {
-    background: url('/assets/images/icons/store.png');
-    background-size: 80px !important;
+    background: url('/assets/images/categories/groceries.jpg');
 }
 ion-slide:first-child {
-    margin-left: 10px;
+    margin-left: 10px; 
 }
 .services-slider {
     padding: 10px 20px;
@@ -112,13 +107,12 @@ ion-slide:first-child {
     height: 17vh;
     width: 100%;
     display:flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
     background-color: #ecc7b5 !important;
     background-repeat: no-repeat;
-    background-size: 100px;
-    background-position: 85% center;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+    background-size: cover;
+    background-position: center;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
     border-radius: 5px;
   }
 </style>

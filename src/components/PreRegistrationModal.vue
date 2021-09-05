@@ -1,16 +1,16 @@
 <template>
     <ion-header>
         <ion-toolbar>
-            <ion-title>{{ title }}</ion-title>
-            <ion-buttons slot="end">
-                <ion-button @click="dismissModal">Close</ion-button>
+             <ion-buttons slot="start">
+                <ion-button @click="dismissModal"><ion-icon :icon="arrowBackOutline" /></ion-button>
             </ion-buttons>
-        </ion-toolbar>
+            <ion-title>{{ title }}</ion-title>
+            
+        </ion-toolbar>  
     </ion-header>
     <ion-content class="ion-padding">
-        <ion-card>
             <ion-card-header>
-                <ion-card-title>Please Fill Required Fields</ion-card-title>
+                <ion-card-title>Please fill out required fields:</ion-card-title>
             </ion-card-header>
 
             <ion-card-content>
@@ -40,48 +40,20 @@
                         <ErrorMessage as="ion-text" name="email" color="danger" />
                     </ion-item>
 
-                    <!-- <ion-item>
-                        <ion-label position="floating">Type of Service you need:</ion-label> -->
-                        <!-- <ion-select name="service" @ionChange="bum($event)" v-model="service">
-                            <ion-select-option value="food">Food</ion-select-option>
-                            <ion-select-option value="same day courier">Same Day Courier</ion-select-option>
-                            <ion-select-option value="national logistics">National Logistics</ion-select-option>
-                            <ion-select-option value="handyman">Handyman</ion-select-option>
-                        </ion-select> -->
+                  
 
-                        <!-- <Field as="ion-select" name="service" ok-text="Done" cancel-text="Cancel" @ionChange="bum($event)">
-                            <ion-select-option value="food" selected>Food</ion-select-option>
-                            <ion-select-option value="same day courier">Same Day Courier</ion-select-option>
-                            <ion-select-option value="national logistics">National Logistics</ion-select-option>
-                            <ion-select-option value="handyman">Handyman</ion-select-option>
-                        </Field> -->
-
-                        <!-- <Field name="service" v-bind="service" style="display: none"></Field> -->
-
-                        <!-- <ion-select ok-text="Done" cancel-text="Cancel" @ionChange="bum($event)">
-                            <ion-select-option value="food">Food</ion-select-option>
-                            <ion-select-option value="same day courier">Same Day Courier</ion-select-option>
-                            <ion-select-option value="national logistics">National Logistics</ion-select-option>
-                            <ion-select-option value="handyman">Handyman</ion-select-option>
-                        </ion-select> -->
-
-                        <!-- <ErrorMessage as="ion-text" name="service" color="danger" />
-                    </ion-item> -->
-
-                    <!-- <ion-item>
-                      <ion-label>Action Sheet</ion-label>
-                      <ion-select name="service" :interface-options="customActionSheetOptions" interface="action-sheet" placeholder="Select One" @ionChange="bum($event)" v-model="service">
-                        <ion-select-option value="red">Red</ion-select-option>
-                        <ion-select-option value="purple">Purple</ion-select-option>
-                        <ion-select-option value="yellow">Yellow</ion-select-option>
-                        <ion-select-option value="orange">Orange</ion-select-option>
-                        <ion-select-option value="green">Green</ion-select-option>
-                      </ion-select>
-                    </ion-item> -->
+                    <ion-item>
+                    <ion-label position="floating">Type of Service you need:</ion-label>
+                   <ion-select ok-text="Done" cancel-text="Cancel" @ionChange="bum($event)" v-model="service">
+                            <ion-select-option value="Food">Food</ion-select-option>
+                            <ion-select-option value="Same Day courier">Same Day Courier</ion-select-option>
+                            <ion-select-option value="National Logistics">National Logistics</ion-select-option>
+                            <ion-select-option value="Handyman">Handyman</ion-select-option>
+                        </ion-select>
+                        <ErrorMessage as="ion-text" name="service" color="danger" />
+                    </ion-item>
 
                     <br>
-                    <!-- may problema sa checkbox ng ionic sa validation kaya custom checkbox muna ginamit -->
-                    <!-- <Field as="ion-checkbox" type="checkbox" name="tac" :rules="tac" :value="true" /> -->
 
                     <Field as="input" type="checkbox" name="tac" :value="true" />
                     <ion-text> I agree to the <a href="https://ayosolution.com/terms-and-condition/ayo-food">AYO Food Terms and Conditions</a></ion-text>
@@ -90,11 +62,10 @@
                         <ErrorMessage as="ion-text" name="tac" color="danger" />
                     </p>
 
-                    <ion-button expand="full" type="submit">Register</ion-button>
+                    <ion-button class="button" expand="full" type="submit">Register</ion-button>
                 <!-- </form> -->
                 </Form>
             </ion-card-content>
-        </ion-card>
     </ion-content>
 
     <ion-loading
@@ -115,18 +86,25 @@
     </ion-alert>
 </template>
 
+
+<style scoped>
+ion-card-title {
+    font-size: 16px;
+    color: #feb041;
+}
+</style>
 <script>
 import {
     IonHeader, IonContent, IonToolbar, IonTitle,
-    IonButtons, IonButton,
-    IonCard, IonCardHeader, IonCardTitle, IonCardContent,
+    IonButtons, IonButton, IonCardHeader, IonCardTitle, IonCardContent,
     IonLabel, IonItem, IonText,
 
     IonLoading,
-    IonAlert,
+    IonAlert, IonSelect, IonSelectOption,
 
     modalController
 } from '@ionic/vue';
+import { arrowBackOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
 
 import { Form, Field, ErrorMessage } from "vee-validate";
@@ -147,12 +125,11 @@ export default defineComponent({
 
     components: {
         IonHeader, IonContent, IonToolbar, IonTitle,
-        IonButtons, IonButton,
-        IonCard, IonCardHeader, IonCardTitle, IonCardContent,
+        IonButtons, IonButton, IonCardHeader, IonCardTitle, IonCardContent,
         IonLabel, IonItem, IonText,
 
         IonLoading,
-        IonAlert,
+        IonAlert, IonSelect, IonSelectOption,
 
         Form, Field, ErrorMessage
     },
@@ -177,11 +154,12 @@ export default defineComponent({
         const alertTitle = "";
         const alertMessage = "";
 
+
         return {
             schema,
             isOpenLoadingRef, setOpenLoading,
 
-            isOpenAlertRef, setOpenAlert, alertTitle, alertMessage
+            isOpenAlertRef, setOpenAlert, alertTitle, alertMessage, arrowBackOutline
         };
     },
 
@@ -191,7 +169,7 @@ export default defineComponent({
         },
 
         bum(e) {
-            // this.service = e.target.value;
+            this.service = e.target.value;
             console.log(e.target.value);
         },
 
@@ -199,7 +177,7 @@ export default defineComponent({
             console.log("submitted");
             console.log(JSON.stringify(input, null, 2));
             this.setOpenLoading(true);
-
+            console.log(process.env.VUE_APP_ROOT_API);
             axios({
                 method: "POST",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/pre-registration`,
@@ -209,7 +187,7 @@ export default defineComponent({
                     // eslint-disable-next-line @typescript-eslint/camelcase
                     contact_number: input.mobile_number,
                     email: input.email,
-                    service: input.service,
+                    service: this.service,
                     // eslint-disable-next-line @typescript-eslint/camelcase
                     terms_and_condition: true
                 }

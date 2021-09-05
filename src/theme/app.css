@@ -37,3 +37,22 @@
     color: #fff;
     text-shadow: 1px 3px 6px rgba(0,0,0,0.5);
 }
+
+h5.title {
+    margin: 5px 0 5px 10px;
+    color: #feb041;
+    font-size: 16px;
+}
+
+.registration-link {
+    text-align:center; 
+    margin: 10px 0 15px; 
+}
+
+.registration-link a {
+    text-decoration: none;
+}
+
+.registration-link a:hover {
+    color: #04529b;
+}
