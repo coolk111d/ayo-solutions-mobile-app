@@ -18,33 +18,72 @@
                 <Form @submit="onSubmit" :validation-schema="schema">
                     <ion-item>
                         <ion-label position="floating">Name</ion-label>
-                        <Field as="ion-input" name="name" :rules="name" />
+                        <Field as="ion-input" name="name" />
                         <ErrorMessage as="ion-text" name="name" color="danger" />
                     </ion-item>
 
                     <ion-item>
                         <ion-label position="floating">Address</ion-label>
-                        <Field as="ion-textarea" name="address" :rules="address" />
+                        <Field as="ion-textarea" name="address" />
                         <ErrorMessage as="ion-text" name="address" color="danger" />
                     </ion-item>
 
                     <ion-item>
                         <ion-label position="floating">Mobile Number</ion-label>
-                        <Field as="ion-input" name="mobile_number" :rules="mobile_number" />
+                        <Field as="ion-input" name="mobile_number" />
                         <ErrorMessage as="ion-text" name="mobile_number" color="danger" />
                     </ion-item>
 
                     <ion-item>
                         <ion-label position="floating">Email Address</ion-label>
-                        <Field as="ion-input" name="email" :rules="email" />
+                        <Field as="ion-input" name="email" />
                         <ErrorMessage as="ion-text" name="email" color="danger" />
                     </ion-item>
+
+                    <!-- <ion-item>
+                        <ion-label position="floating">Type of Service you need:</ion-label> -->
+                        <!-- <ion-select name="service" @ionChange="bum($event)" v-model="service">
+                            <ion-select-option value="food">Food</ion-select-option>
+                            <ion-select-option value="same day courier">Same Day Courier</ion-select-option>
+                            <ion-select-option value="national logistics">National Logistics</ion-select-option>
+                            <ion-select-option value="handyman">Handyman</ion-select-option>
+                        </ion-select> -->
+
+                        <!-- <Field as="ion-select" name="service" ok-text="Done" cancel-text="Cancel" @ionChange="bum($event)">
+                            <ion-select-option value="food" selected>Food</ion-select-option>
+                            <ion-select-option value="same day courier">Same Day Courier</ion-select-option>
+                            <ion-select-option value="national logistics">National Logistics</ion-select-option>
+                            <ion-select-option value="handyman">Handyman</ion-select-option>
+                        </Field> -->
+
+                        <!-- <Field name="service" v-bind="service" style="display: none"></Field> -->
+
+                        <!-- <ion-select ok-text="Done" cancel-text="Cancel" @ionChange="bum($event)">
+                            <ion-select-option value="food">Food</ion-select-option>
+                            <ion-select-option value="same day courier">Same Day Courier</ion-select-option>
+                            <ion-select-option value="national logistics">National Logistics</ion-select-option>
+                            <ion-select-option value="handyman">Handyman</ion-select-option>
+                        </ion-select> -->
+
+                        <!-- <ErrorMessage as="ion-text" name="service" color="danger" />
+                    </ion-item> -->
+
+                    <!-- <ion-item>
+                      <ion-label>Action Sheet</ion-label>
+                      <ion-select name="service" :interface-options="customActionSheetOptions" interface="action-sheet" placeholder="Select One" @ionChange="bum($event)" v-model="service">
+                        <ion-select-option value="red">Red</ion-select-option>
+                        <ion-select-option value="purple">Purple</ion-select-option>
+                        <ion-select-option value="yellow">Yellow</ion-select-option>
+                        <ion-select-option value="orange">Orange</ion-select-option>
+                        <ion-select-option value="green">Green</ion-select-option>
+                      </ion-select>
+                    </ion-item> -->
 
                     <br>
                     <!-- may problema sa checkbox ng ionic sa validation kaya custom checkbox muna ginamit -->
                     <!-- <Field as="ion-checkbox" type="checkbox" name="tac" :rules="tac" :value="true" /> -->
 
-                    <Field as="input" type="checkbox" name="tac" :rules="tac" :value="true" />
+                    <Field as="input" type="checkbox" name="tac" :value="true" />
                     <ion-text> I agree to the <a href="https://ayosolution.com/terms-and-condition/ayo-food">AYO Food Terms and Conditions</a></ion-text>
 
                     <p>
@@ -57,6 +96,23 @@
             </ion-card-content>
         </ion-card>
     </ion-content>
+
+    <ion-loading
+        :is-open="isOpenLoadingRef"
+        message="Please wait..."
+        :duration="timeout"
+        @didDismiss="setOpenLoading(false)"
+      >
+      </ion-loading>
+
+    <ion-alert
+        :is-open="isOpenAlertRef"
+        :header="alertTitle"
+        :message="alertMessage"
+        css-class="my-custom-class"
+        @didDismiss="setOpenAlert(false)"
+    >
+    </ion-alert>
 </template>
 
 <script>
@@ -64,14 +120,19 @@ import {
     IonHeader, IonContent, IonToolbar, IonTitle,
     IonButtons, IonButton,
     IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-    IonLabel, IonItem,
+    IonLabel, IonItem, IonText,
+
+    IonLoading,
+    IonAlert,
 
     modalController
 } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 import { Form, Field, ErrorMessage } from "vee-validate";
-import { object, string, boolean, ValidationError } from "yup";
+import { object, string, boolean } from "yup";
+
+import axios from "axios";
 
 export default defineComponent({
     name: "PreRegistrationModal",
@@ -79,45 +140,49 @@ export default defineComponent({
         title: {
             type: String,
             default: "Pre Registration"
-        }
+        },
+
+        timeout: { type: Number, default: 0 }
     },
 
     components: {
         IonHeader, IonContent, IonToolbar, IonTitle,
         IonButtons, IonButton,
         IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-        IonLabel, IonItem,
+        IonLabel, IonItem, IonText,
+
+        IonLoading,
+        IonAlert,
 
         Form, Field, ErrorMessage
     },
 
     setup() {
-        let schema = object({
-            name: string().required().min(2).max(50).label("Name"),
-            address: string().required().min(2).max(100).label("Address"),
+        const schema = object({
+            name: string().required().min(3).max(50).label("Name"),
+            address: string().required().min(10).max(100).label("Address"),
             // eslint-disable-next-line @typescript-eslint/camelcase
             mobile_number: string().required().matches(/^(09|\+639)\d{9}$/, "Mobile Number is invalid.").label("Mobile Number"),
             email: string().required().email().label("Email"),
             // eslint-disable-next-line @typescript-eslint/camelcase
-            tac: boolean()
-            //         .required("The terms and conditions must be accepted.")
-            //         .oneOf([true], "You must agree on our terms and conditions."),
+            tac: boolean().required("Please accept our terms and conditions."),
+            // service: string().oneOf(["food", "same day courier"]).required("Please select service.")
         });
 
-        schema = schema.test(
-            'tac',
-            null,
-            (obj) => {
-                console.log(obj);
-                if (obj.tac) {
-                    return true;
-                }
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
 
-                return new ValidationError("Accept our terms and conditions.", null, "tac");
-            }
-        );
+        const isOpenAlertRef = ref(false);
+        const setOpenAlert = (state) => isOpenAlertRef.value = state;
+        const alertTitle = "";
+        const alertMessage = "";
 
-        return { schema };
+        return {
+            schema,
+            isOpenLoadingRef, setOpenLoading,
+
+            isOpenAlertRef, setOpenAlert, alertTitle, alertMessage
+        };
     },
 
     methods : {
@@ -125,9 +190,45 @@ export default defineComponent({
             modalController.dismiss();
         },
 
-        onSubmit(values) {
+        bum(e) {
+            // this.service = e.target.value;
+            console.log(e.target.value);
+        },
+
+        onSubmit(input) {
             console.log("submitted");
-            console.log(JSON.stringify(values, null, 2));
+            console.log(JSON.stringify(input, null, 2));
+            this.setOpenLoading(true);
+
+            axios({
+                method: "POST",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/pre-registration`,
+                data: {
+                    name: input.name,
+                    address: input.address,
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    contact_number: input.mobile_number,
+                    email: input.email,
+                    service: input.service,
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    terms_and_condition: true
+                }
+            }).then(res => {
+                console.log(res);
+                this.setOpenLoading(false);
+
+                this.alertTitle = "Success";
+                this.alertMessage = "";
+                this.setOpenAlert(true);
+
+                setTimeout(modalController.dismiss, 1500);
+            }).catch(err => {
+                this.setOpenLoading(false);
+
+                this.alertTitle = "Error";
+                this.alertMessage = err.response.data.message;
+                this.setOpenAlert(true);
+            });
         }
     }
 })
