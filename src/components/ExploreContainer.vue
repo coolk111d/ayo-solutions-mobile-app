@@ -20,10 +20,13 @@ export default {
 
 <style scoped>
 #container {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  text-align:center;
+  justify-content:center;
+  align-items: center;
   padding: 20px 10px;
-  position: absolute;
-  top: 30%;
+  height: 100%;
 }
 
 #container strong {
