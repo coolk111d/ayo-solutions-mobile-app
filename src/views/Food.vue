@@ -5,11 +5,14 @@
         <ion-content :fullscreen="true">
                 <ion-header collapse="condense">
                 <ion-toolbar>
-                    <ion-title size="large">Ayo Food</ion-title>
+                
                 </ion-toolbar>
             </ion-header>
-
                 <div class="container">
+                <h3 class="registration-link" >
+            <!-- <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/pre-registration/create">Register now!</a> -->
+            <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
+            </h3>
                 <ion-card class="food-card-head">
                 <div class="card-body pt-4">
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
@@ -57,13 +60,89 @@
                 </ion-card>
             </div>
 
-            <h3 class="registration-link">
-            <!-- <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/pre-registration/create">Register now!</a> -->
-            <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
-            </h3>
 
             <CategorySlider slide1="Fast Food & Restaurants" slide2="Milk Tea and Coffee Shops" slide3="Pet Food and Care" slide4="BakeShops" slide5="Groceries" />
-        
+
+
+            <HotPicks slide1="Store A" slide2="Store B" slide3="Store C" slide4="Store D" slide5="Store E" />
+
+            
+            <h5 class="title">All Restaurants in City of Tanauan</h5>
+            <ion-searchbar placeholder="What are you craving?" color="light"></ion-searchbar>
+            <ion-grid>
+                <ion-row class="ion-align-items-center">
+                    <ion-col size="4">
+                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/chowking.jpg" alt=""></a>
+                    </ion-col>
+                    <ion-col size="8">
+                         <!-- Product Title --><a class="product-title" href="">Chowking</a>
+                            <!-- Product Price -->
+                            <p class="sale-price">Tanuan Batangas   - <span class="store-hours open">Open</span></p>
+                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                    <ion-col size="4">
+                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/jolibee.png" alt=""></a>
+                    </ion-col>
+                    <ion-col size="8">
+                         <!-- Product Title --><a class="product-title" href="">Jolibee</a>
+                            <!-- Product Price -->
+                            <p class="sale-price">Tanuan Batangas  - <span class="store-hours open">Open</span></p>
+                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                    <ion-col size="4">
+                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/dencios.png" alt=""></a>
+                    </ion-col>
+                    <ion-col size="8">
+                         <!-- Product Title --><a class="product-title" href="">Dencios</a>
+                            <!-- Product Price -->
+                            <p class="sale-price">Tanuan Batangas - <span class="store-hours closed">7am-10pm</span></p>
+                            <ion-button color="dark" expand="full" shape="round" size="small" disabled>Closed</ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                    <ion-col size="4">
+                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/affinitea.jpg" alt=""></a>
+                    </ion-col>
+                    <ion-col size="8">
+                         <!-- Product Title --><a class="product-title" href="">Affinitea</a>
+                            <!-- Product Price -->
+                            <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
+                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                    <ion-col size="4">
+                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/maco.jpg" alt=""></a>
+                    </ion-col>
+                    <ion-col size="8">
+                         <!-- Product Title --><a class="product-title" href="">Macao</a>
+                            <!-- Product Price -->
+                            <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
+                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row class="ion-align-items-center">
+                    <ion-col size="4">
+                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/manginasal.jpg" alt=""></a>
+                    </ion-col>
+                    <ion-col size="8">
+                         <!-- Product Title --><a class="product-title" href="">Mang Inasal</a>
+                            <!-- Product Price -->
+                            <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
+                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+
             <ion-card class="footer">
             <div class="footer-div">
                  <h2 class="text-white">AYO SOLUTIONS INC.</h2>
@@ -71,21 +150,27 @@
                 <ion-button fill="outline" target="_blank" rel="noopener noreferrer" href="https://ayosolution.comio">Visit our Site!</ion-button>
             </div>
             </ion-card>
+
+
         </ion-content>
     </ion-page>
 </template>
 
 <script lang="ts">
 import { modalController } from '@ionic/vue';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard,IonSelect, IonSelectOption, IonButton} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonContent, IonCard,IonSelect, IonSelectOption, IonButton, IonSearchbar,
+        IonCol, IonGrid, IonRow
+} from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import CategorySlider from '@/components/CategorySlider.vue';
+import HotPicks from '@/components/HotPicks.vue';
 import PreRegistrationModal from '@/components/PreRegistrationModal.vue';
 import Header from '@/components/Header.vue';
 export default {
     name: 'AYO Food',
-    components: {IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton,CategorySlider, Header},
+    components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
+    Header, HotPicks, IonSearchbar, IonCol, IonGrid, IonRow},
     methods: {
       async openModal() {
           const modal = await modalController.create({component: PreRegistrationModal});
@@ -104,6 +189,55 @@ export default {
 </script>
 
 <style scoped>
+.store-hours {
+    font-size: 12px;
+    font-weight: 600;
+}
+.open {
+    color: green;
+}
+.closed {
+    color: red;
+}
+.product-thumbnail img {
+height: 80px; 
+width: 100%; 
+}
+a.product-title {
+    text-decoration: none;
+    color: #000;
+    font-weight: 600;
+    margin-left:5px;
+    color: #04046b;
+    font-size: 14px;
+}
+.sale-price {
+    margin-top: 5px;
+    margin-left:5px;
+    font-size: 12px;
+}
+ion-row {
+ background: #fff;
+ border-radius: 0px;
+ box-shadow: 1px 1px 6px rgba(0,0,0,0.05);
+ padding: 10px;
+ margin: 10px 5px;
+}
+
+ion-content {
+--background: #f4f6ff;
+}
+ion-header {
+background: #fff;
+}
+ion-searchbar {
+    color: #000 !important;
+    border: 1px solid #feb041;
+    border-radius: 10px;
+    margin: 10px auto -5px;
+    width: 95vw;
+    height: 40px;
+}
 .food-card-head {
 padding: 20px 10px; 
 text-align: center;
@@ -123,5 +257,14 @@ margin-top: 15px;
   border-radius: 10px;
   border: 1px solid black;
 }
-
+ion-card.head-title {
+    padding: 5px;
+    margin: 5px;
+}
+ion-card.head-title h3 {
+    font-size: 16px;
+    text-align: center;
+    color: #07185C !important;
+    font-weight: 600;
+}
 </style>

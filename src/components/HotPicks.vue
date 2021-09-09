@@ -1,8 +1,8 @@
 <template>
 
-  <h5 class="title">Categories</h5>
+  <h5 class="title">Hot Picks</h5>
 <div class="container">
-  <ion-slides pager="true" :options="categoryOpts">
+  <ion-slides pager="true" :options="hotpicksOpts">
                 <ion-slide>
                     <div class="services-slider ayo-service-food" @click="() => router.push('/food')">
                         <h5 class="service-title">{{ slide1 }}</h5>
@@ -40,7 +40,7 @@
 import { IonSlides, IonSlide } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 export default {
-  name: 'CategorySlider',
+  name: 'HotPicks',
   components: { IonSlides, IonSlide },
   props: {
     slide1: String,
@@ -50,15 +50,15 @@ export default {
     slide5: String
   },
   setup() {
-    const categoryOpts = {
+    const hotpicksOpts = {
       initialSlide: 0,
       speed: 300,
       loop: 1,
       pagination: 0,
-      slidesPerView: 2.2,
+      slidesPerView: 1.2,
     };
     const router = useRouter();
-    return { router, categoryOpts }
+    return { router, hotpicksOpts }
 }
 }
 </script>
@@ -84,19 +84,19 @@ h5.service-title {
 }
 
 .ayo-service-food {
-    background: url('/assets/images/categories/fast-food.png');
+    background: url('/assets/images/promos/promo1.jpg');
 }
 .ayo-service-express {
-    background: url('/assets/images/categories/milk-tea.jpg');
+    background: url('/assets/images/promos/promo2.jpg');
 }
 .ayo-service-sameday {
-    background: url('/assets/images/categories/pet-food.jpg');
+    background: url('/assets/images/promos/promo3.jpg');
 }
 .ayo-service-handyman {
-    background: url('/assets/images/categories/bakeshops.jpg');
+    background: url('/assets/images/promos/promo4.jpg');
 }
 .ayo-service-store {
-    background: url('/assets/images/categories/groceries.jpg');
+    background: url('/assets/images/promos/promo5.jpg');
 }
 ion-slide:first-child {
     margin-left: 10px; 
@@ -104,7 +104,7 @@ ion-slide:first-child {
 .services-slider {
     padding: 10px 20px;
     margin-right: 10px;
-    height: 17vh;
+    height: 16vh;
     width: 100%;
     display:flex;
     align-items: flex-end;
