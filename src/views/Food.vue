@@ -68,13 +68,13 @@
 
             
             <h5 class="title">All Restaurants in City of Tanauan</h5>
-            <ion-searchbar placeholder="What are you craving?" color="light"></ion-searchbar>
+            <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
             <ion-grid>
                 <ion-row class="ion-align-items-center">
-                    <ion-col size="4">
+                    <ion-col size="3.5">
                             <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/chowking.jpg" alt=""></a>
                     </ion-col>
-                    <ion-col size="8">
+                    <ion-col size="8.5">
                          <!-- Product Title --><a class="product-title" href="">Chowking</a>
                             <!-- Product Price -->
                             <p class="sale-price">Tanuan Batangas   - <span class="store-hours open">Open</span></p>
@@ -83,10 +83,10 @@
                 </ion-row>
 
                 <ion-row class="ion-align-items-center">
-                    <ion-col size="4">
+                    <ion-col size="3.5">
                             <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/jolibee.png" alt=""></a>
                     </ion-col>
-                    <ion-col size="8">
+                    <ion-col size="8.5">
                          <!-- Product Title --><a class="product-title" href="">Jolibee</a>
                             <!-- Product Price -->
                             <p class="sale-price">Tanuan Batangas  - <span class="store-hours open">Open</span></p>
@@ -95,10 +95,10 @@
                 </ion-row>
 
                 <ion-row class="ion-align-items-center">
-                    <ion-col size="4">
+                    <ion-col size="3.5">
                             <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/dencios.png" alt=""></a>
                     </ion-col>
-                    <ion-col size="8">
+                    <ion-col size="8.5">
                          <!-- Product Title --><a class="product-title" href="">Dencios</a>
                             <!-- Product Price -->
                             <p class="sale-price">Tanuan Batangas - <span class="store-hours closed">7am-10pm</span></p>
@@ -107,10 +107,10 @@
                 </ion-row>
 
                 <ion-row class="ion-align-items-center">
-                    <ion-col size="4">
+                    <ion-col size="3.5">
                             <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/affinitea.jpg" alt=""></a>
                     </ion-col>
-                    <ion-col size="8">
+                    <ion-col size="8.5">
                          <!-- Product Title --><a class="product-title" href="">Affinitea</a>
                             <!-- Product Price -->
                             <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
@@ -119,10 +119,10 @@
                 </ion-row>
 
                 <ion-row class="ion-align-items-center">
-                    <ion-col size="4">
+                    <ion-col size="3.5">
                             <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/maco.jpg" alt=""></a>
                     </ion-col>
-                    <ion-col size="8">
+                    <ion-col size="8.5">
                          <!-- Product Title --><a class="product-title" href="">Macao</a>
                             <!-- Product Price -->
                             <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
@@ -131,10 +131,10 @@
                 </ion-row>
 
                 <ion-row class="ion-align-items-center">
-                    <ion-col size="4">
+                    <ion-col size="3.5">
                             <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/manginasal.jpg" alt=""></a>
                     </ion-col>
-                    <ion-col size="8">
+                    <ion-col size="8.5">
                          <!-- Product Title --><a class="product-title" href="">Mang Inasal</a>
                             <!-- Product Price -->
                             <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
@@ -194,10 +194,10 @@ export default {
     font-weight: 600;
 }
 .open {
-    color: green;
+    color: #2e602e;
 }
 .closed {
-    color: red;
+    color: #7a1414;
 }
 .product-thumbnail img {
 height: 80px; 
@@ -205,10 +205,9 @@ width: 100%;
 }
 a.product-title {
     text-decoration: none;
-    color: #000;
     font-weight: 600;
     margin-left:5px;
-    color: #04046b;
+    color: #1e1e50;
     font-size: 14px;
 }
 .sale-price {
@@ -218,7 +217,7 @@ a.product-title {
 }
 ion-row {
  background: #fff;
- border-radius: 0px;
+ border-radius: 10px;
  box-shadow: 1px 1px 6px rgba(0,0,0,0.05);
  padding: 10px;
  margin: 10px 5px;
@@ -232,11 +231,9 @@ background: #fff;
 }
 ion-searchbar {
     color: #000 !important;
-    border: 1px solid #feb041;
-    border-radius: 10px;
-    margin: 10px auto -5px;
+    margin: 10px auto;
     width: 95vw;
-    height: 40px;
+    height: 45px;
 }
 .food-card-head {
 padding: 20px 10px; 
