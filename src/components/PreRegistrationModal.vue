@@ -53,6 +53,11 @@
                         <ErrorMessage as="ion-text" name="service" color="danger" />
                     </ion-item>
 
+                    <ion-item>
+                     <ion-label position="floating" style="margin-bottom: 20px;">Government ID</ion-label>
+                        <Field as="ion-input" name="image" type="file"/>
+                        <ErrorMessage as="ion-text" name="image" color="danger" />
+                    </ion-item>
                     <br>
 
                     <Field as="input" type="checkbox" name="tac" :value="true" />
@@ -178,6 +183,7 @@ export default defineComponent({
             console.log(JSON.stringify(input, null, 2));
             this.setOpenLoading(true);
             console.log(process.env.VUE_APP_ROOT_API);
+            console.log(input.image);
             axios({
                 method: "POST",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/pre-registration`,
@@ -190,6 +196,7 @@ export default defineComponent({
                     service: this.service,
                     // eslint-disable-next-line @typescript-eslint/camelcase
                     terms_and_condition: true
+                    
                 }
             }).then(res => {
                 console.log(res);
