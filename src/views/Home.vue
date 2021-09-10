@@ -8,13 +8,6 @@
                     <ion-title size="large">Home</ion-title>
                 </ion-toolbar>
             </ion-header>
-
-
-            <youtube video-id="lG0Ys-2d4MA" ref="youtube"></youtube>
-
-
-            
-            <div id="ytplayer"></div>
             <div class="video-div">
             <iframe width="100%" height="170" src="https://www.youtube.com/embed/MdBkFdRJ420?autoplay=1&showinfo=0&loop=1&rel=0" frameborder="0" allowfullscreen></iframe>
             </div>
