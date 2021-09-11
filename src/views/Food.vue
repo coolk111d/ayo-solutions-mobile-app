@@ -5,14 +5,13 @@
         <ion-content :fullscreen="true">
                 <ion-header collapse="condense">
                 <ion-toolbar>
-                
+                    <ion-title size="large">AYO Food</ion-title>
                 </ion-toolbar>
             </ion-header>
-                <div class="container">
+            <div class="container">
                 <h3 class="registration-link" >
-            <!-- <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/pre-registration/create">Register now!</a> -->
-            <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
-            </h3>
+                    <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
+                </h3>
                 <ion-card class="food-card-head">
                     <div class="card-body pt-4">
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>

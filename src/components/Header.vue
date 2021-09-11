@@ -12,7 +12,7 @@
                     <ion-row>
                         <ion-col>
                             <div class="ion-text-start">
-                                <ion-icon :icon="menu" @click="openMenu" />
+                                <ion-icon :icon="menu" @click="openMenu" class="menu-head"/>
                             </div>
                         </ion-col>
                         <ion-col>
@@ -35,8 +35,7 @@ import {
     // IonButtons, IonMenuButton,
 
     IonGrid, IonRow, IonCol,
-    IonIcon,
-    IonText, modalController , IonBadge
+    IonIcon,modalController , IonBadge
 } from '@ionic/vue';
 import { menu, basketOutline } from 'ionicons/icons';
 import CartModal from './CartModal.vue';
@@ -52,14 +51,9 @@ export default {
         // IonButtons, IonMenuButton,
 
         IonGrid, IonRow, IonCol,
-<<<<<<< HEAD
-        IonIcon, IonBadge
-=======
         IonIcon,
-        IonText,
-
+        IonBadge,
         Menu
->>>>>>> 9c61e799b92f8d14e1cfbe0f5de8e07a706c1790
     },
     methods: {
         async onClick() {
@@ -73,16 +67,13 @@ export default {
         })
       return modal.present();
     },
+    openMenu() {
+            menuController.enable(true, "menu");
+            menuController.open("menu");
+        },
   },
     setup() {
         return { menu, basketOutline };
-    },
-
-    methods: {
-        openMenu() {
-            menuController.enable(true, "menu");
-            menuController.open("menu");
-        }
     }
 }
 </script>
