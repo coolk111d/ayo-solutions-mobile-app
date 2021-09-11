@@ -14,49 +14,48 @@
             <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
             </h3>
                 <ion-card class="food-card-head">
-                <div class="card-body pt-4">
+                    <div class="card-body pt-4">
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
                         <ion-select class="form-select" interface="action-sheet" :interface-options="options">
                             <ion-select-option>----- Select -----</ion-select-option>
                             <ion-select-option class="disabled">Batangas</ion-select-option>
-                                <ion-select-option value="city-of-tanauan" selected="">City Of Tanauan</ion-select-option>
-                                <ion-select-option value="city-of-sto-tomas">City Of Sto. Tomas</ion-select-option>
-                                <ion-select-option value="malvar">Malvar</ion-select-option>
-                                <ion-select-option value="city-of-lipa">City Of Lipa</ion-select-option>
+                            <ion-select-option value="city-of-tanauan" selected="">City Of Tanauan</ion-select-option>
+                            <ion-select-option value="city-of-sto-tomas">City Of Sto. Tomas</ion-select-option>
+                            <ion-select-option value="malvar">Malvar</ion-select-option>
+                            <ion-select-option value="city-of-lipa">City Of Lipa</ion-select-option>
 
                             <ion-select-option disabled>Cavite</ion-select-option>
-                                <ion-select-option value="silang">Silang</ion-select-option>
-                                <ion-select-option value="city-of-dasmarinas">City Of Dasmariñas</ion-select-option>
-                                <ion-select-option value="gen-mariano-alvarez">Gen. Mariano Alvarez</ion-select-option>
+                            <ion-select-option value="silang">Silang</ion-select-option>
+                            <ion-select-option value="city-of-dasmarinas">City Of Dasmariñas</ion-select-option>
+                            <ion-select-option value="gen-mariano-alvarez">Gen. Mariano Alvarez</ion-select-option>
 
                             <ion-select-option disabled>Laguna</ion-select-option>
-                                <ion-select-option value="victoria">Victoria</ion-select-option>
-                                <ion-select-option value="bay">Bay</ion-select-option>
-                                <ion-select-option value="santa-cruz-capital">Santa Cruz (Capital)</ion-select-option>
-                                <ion-select-option value="pila">Pila</ion-select-option>
-                                <ion-select-option value="city-of-san-pablo">City Of San Pablo</ion-select-option>
-                                <ion-select-option value="alaminos">Alaminos</ion-select-option>
-                            
+                            <ion-select-option value="victoria">Victoria</ion-select-option>
+                            <ion-select-option value="bay">Bay</ion-select-option>
+                            <ion-select-option value="santa-cruz-capital">Santa Cruz (Capital)</ion-select-option>
+                            <ion-select-option value="pila">Pila</ion-select-option>
+                            <ion-select-option value="city-of-san-pablo">City Of San Pablo</ion-select-option>
+                            <ion-select-option value="alaminos">Alaminos</ion-select-option>
+
                             <ion-select-option disabled>Zamboanga Del Sur</ion-select-option>
-                                <ion-select-option value="city-of-pagadian-capital">City Of Pagadian (Capital)</ion-select-option>
-                                <ion-select-option value="city-of-zamboanga">City Of Zamboanga</ion-select-option>
-                            
+                            <ion-select-option value="city-of-pagadian-capital">City Of Pagadian (Capital)</ion-select-option>
+                            <ion-select-option value="city-of-zamboanga">City Of Zamboanga</ion-select-option>
+
                             <ion-select-option disabled>Negros Oriental</ion-select-option>
-                                <ion-select-option value="city-of-dumaguete-capital">City Of Dumaguete (Capital)</ion-select-option>
-                                <ion-select-option value="sibulan">Sibulan</ion-select-option>
-                            
+                            <ion-select-option value="city-of-dumaguete-capital">City Of Dumaguete (Capital)</ion-select-option>
+                            <ion-select-option value="sibulan">Sibulan</ion-select-option>
+
                             <ion-select-option diabled>Leyte</ion-select-option>
-                                <ion-select-option value="city-of-tacloban-capital">City Of Tacloban (Capital)</ion-select-option>
-                            
+                            <ion-select-option value="city-of-tacloban-capital">City Of Tacloban (Capital)</ion-select-option>
+
                             <ion-select-option disabled>Aklan</ion-select-option>
-                                <ion-select-option value="kalibo-capital">Kalibo (Capital)</ion-select-option>
-                                <ion-select-option value="altavas">Altavas</ion-select-option>
-                            
+                            <ion-select-option value="kalibo-capital">Kalibo (Capital)</ion-select-option>
+                            <ion-select-option value="altavas">Altavas</ion-select-option>
+
                             <ion-select-option disabled>Quezon</ion-select-option>
-                                <ion-select-option value="lucban">Lucban</ion-select-option>
-                            
+                            <ion-select-option value="lucban">Lucban</ion-select-option>
                         </ion-select>
-                </div>
+                    </div>
                 </ion-card>
             </div>
 
@@ -167,6 +166,7 @@ import CategorySlider from '@/components/CategorySlider.vue';
 import HotPicks from '@/components/HotPicks.vue';
 import PreRegistrationModal from '@/components/PreRegistrationModal.vue';
 import Header from '@/components/Header.vue';
+
 export default {
     name: 'AYO Food',
     components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
