@@ -18,7 +18,6 @@
                         <ion-col>
                             <div class="ion-text-end">
                                 <ion-icon :icon="cart" />
-                                <ion-text style="margin-left: 5px">Rodrgio</ion-text>
                             </div>
                         </ion-col>
                     </ion-row>
