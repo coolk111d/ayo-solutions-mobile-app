@@ -34,8 +34,7 @@ import {
     // IonButtons, IonMenuButton,
 
     IonGrid, IonRow, IonCol,
-    IonIcon,
-    IonText,
+    IonIcon
 } from '@ionic/vue';
 import { menu, cart } from 'ionicons/icons';
 
@@ -52,7 +51,6 @@ export default {
 
         IonGrid, IonRow, IonCol,
         IonIcon,
-        IonText,
 
         Menu
     },
