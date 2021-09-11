@@ -132,8 +132,10 @@ export default  {
 
         // Initial values
         const formValues = {
-            email: 'jones.krista@example.org',
-            password: 'jones.krista@example.org',
+            // email: "jones.krista@example.org",
+            // password: "jones.krista@example.org",
+            email: "",
+            password: "",
         };
 
         const isOpenLoadingRef = ref(false);
