@@ -1,4 +1,6 @@
 <template>
+    <Menu />
+
     <ion-header>
         <a href="/home">
             <img src="/assets/images/logo.png" alt="" class="logo">
@@ -10,7 +12,7 @@
                     <ion-row>
                         <ion-col>
                             <div class="ion-text-start">
-                                <ion-icon :icon="menu" class="menu-head"/>
+                                <ion-icon :icon="menu" @click="openMenu" />
                             </div>
                         </ion-col>
                         <ion-col>
@@ -29,17 +31,35 @@
 <script lang="ts">
 import {
     IonHeader, IonToolbar, IonTitle,
+
+    // IonButtons, IonMenuButton,
+
     IonGrid, IonRow, IonCol,
-    IonIcon, modalController , IonBadge
+    IonIcon,
+    IonText, modalController , IonBadge
 } from '@ionic/vue';
 import { menu, basketOutline } from 'ionicons/icons';
 import CartModal from './CartModal.vue';
+import { menuController } from '@ionic/vue';
+
+import Menu from '@/components/Menu.vue';
+
 export default {
     name: 'Header',
     components: {
         IonHeader, IonToolbar, IonTitle,
+
+        // IonButtons, IonMenuButton,
+
         IonGrid, IonRow, IonCol,
+<<<<<<< HEAD
         IonIcon, IonBadge
+=======
+        IonIcon,
+        IonText,
+
+        Menu
+>>>>>>> 9c61e799b92f8d14e1cfbe0f5de8e07a706c1790
     },
     methods: {
         async onClick() {
@@ -56,6 +76,13 @@ export default {
   },
     setup() {
         return { menu, basketOutline };
+    },
+
+    methods: {
+        openMenu() {
+            menuController.enable(true, "menu");
+            menuController.open("menu");
+        }
     }
 }
 </script>
