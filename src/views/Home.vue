@@ -18,7 +18,7 @@
             </h3>
            <ServicesSlider slide1="Food" slide2="Express" slide3="Same Day" slide4="Handyman" slide5="Store" />
 
-           <CategorySlider slide1="Fast Food & Restaurants" slide2="Milk Tea and Coffee Shops" slide3="Pet Food and Care" slide4="BakeShops" slide5="Groceries" />
+           <CategorySlider/>
         
             <ion-card class="footer">
             <div class="footer-div">
@@ -38,6 +38,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButto
 import ServicesSlider from '@/components/ServicesSlider.vue';
 import CategorySlider from '@/components/CategorySlider.vue';
 import Header from '@/components/Header.vue';
+
 
 export default  {
     name: 'Home',

@@ -1,73 +1,65 @@
 <template>
-
   <h5 class="title">Categories</h5>
 <div class="container">
-  <ion-slides pager="true" :options="categoryOpts">
-                <ion-slide>
-                    <div class="services-slider ayo-service-food" @click="() => router.push('/food')">
-                        <h5 class="service-title">{{ slide1 }}</h5>
-                    </div>
-                </ion-slide>
-
-                <ion-slide>
-                    <div class="services-slider ayo-service-express" @click="() => router.push('/food')">
-                        <h5 class="service-title">{{ slide2 }}</h5>
-                    </div>
-                </ion-slide>
-
-                <ion-slide>
-                    <div class="services-slider ayo-service-sameday" @click="() => router.push('/food')">
-                        <h5 class="service-title">{{ slide3 }}</h5>
-                    </div>
-                </ion-slide>
-
-                <ion-slide>
-                    <div class="services-slider ayo-service-handyman" @click="() => router.push('/food')">
-                        <h5 class="service-title">{{ slide4 }}</h5>
-                    </div>
-                </ion-slide>
-
-                <ion-slide>
-                    <div class="services-slider ayo-service-store" @click="() => router.push('/food')">
-                        <h5 class="service-title">{{ slide5 }}</h5>
-                    </div>
-                </ion-slide>
-    </ion-slides>
+                <swiper
+    :slides-per-view="2.3"
+    :space-between="10"
+    @swiper="onSwiper"
+    @slideChange="onSlideChange"
+  >
+    <swiper-slide v-for="category of categories" :key="category.name">
+                    <div class="services-slider"  v-bind:style="{'background-image':'url('+ env + '/storage/' + category.image + ')' }" @click="() => router.push('/food')">
+                        <h5 class="service-title" :key="i">{{category.name }}</h5>
+                    </div> 
+    </swiper-slide>
+  </swiper>
+  
 </div>
 </template>
 
 <script lang="ts">
-import { IonSlides, IonSlide } from '@ionic/vue';
 import { useRouter } from 'vue-router';
-export default {
+import { defineComponent } from "vue";
+import axios from "axios";
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/swiper-bundle.css';
+
+export default defineComponent({
   name: 'CategorySlider',
-  components: { IonSlides, IonSlide },
-  props: {
-    slide1: String,
-    slide2: String,
-    slide3: String,
-    slide4: String,
-    slide5: String
+  data(){
+    return{
+      categories: [],
+    }
   },
+  created() {
+      axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchant-categories/` 
+            }).then(res => {
+                this.categories = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
+  },
+  components: { Swiper, SwiperSlide },
   setup() {
-    const categoryOpts = {
-      initialSlide: 0,
-      speed: 300,
-      loop: 1,
-      pagination: 0,
-      slidesPerView: 2.2,
-    };
+    const env = process.env.VUE_APP_ROOT_API;
+    const onSwiper = (swiper) => {
+      return;
+      };
+      const onSlideChange = () => {
+        return;
+      };
     const router = useRouter();
-    return { router, categoryOpts }
+    return { router, onSwiper, onSlideChange, env }
 }
-}
+})
 </script>
 
 <style scoped>
 * {
   font-family: "Poppins", sans-serif;
 }
-
 .container {
     padding: 5px 0px 20px;
 }
@@ -82,28 +74,12 @@ h5.service-title {
   font-weight: 600;
   font-size: 13px;
 }
-
-.ayo-service-food {
-    background: url('/assets/images/categories/fast-food.png');
-}
-.ayo-service-express {
-    background: url('/assets/images/categories/milk-tea.jpg');
-}
-.ayo-service-sameday {
-    background: url('/assets/images/categories/pet-food.jpg');
-}
-.ayo-service-handyman {
-    background: url('/assets/images/categories/bakeshops.jpg');
-}
-.ayo-service-store {
-    background: url('/assets/images/categories/groceries.jpg');
-}
 ion-slide:first-child {
     margin-left: 10px; 
 }
 .services-slider {
     padding: 10px 20px;
-    margin-right: 10px;
+    margin-left: 10px;
     height: 17vh;
     width: 100%;
     display:flex;

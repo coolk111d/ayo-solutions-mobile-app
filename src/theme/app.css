@@ -116,32 +116,4 @@ ion-card h2, ion-card p  {
     padding: 5px; 
 }
 
-.cart-content .store-hours {
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.cart-content .product-thumbnail img {
-height: 80px; 
-width: 100%; 
-}
-.cart-content a.product-title {
-    text-decoration: none;
-    font-weight: 600;
-    margin-left:5px;
-    color: #1e1e50;
-    font-size: 14px;
-}
-.cart-content .sale-price {
-    margin-top: 5px;
-    margin-left:5px;
-    font-size: 12px;
-}
-.cart-content ion-row {
- background: #fff;
- border-radius: 10px;
- box-shadow: 1px 1px 6px rgba(0,0,0,0.05);
- padding: 10px;
- margin: 10px 5px;
-}
 

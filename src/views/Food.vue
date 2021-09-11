@@ -67,81 +67,7 @@
             <HotPicks slide1="Store A" slide2="Store B" slide3="Store C" slide4="Store D" slide5="Store E" />
 
             
-            <h5 class="title">All Restaurants in City of Tanauan</h5>
-            <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
-            <ion-grid>
-                <ion-row class="ion-align-items-center">
-                    <ion-col size="3.5">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/chowking.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="8.5">
-                         <!-- Product Title --><a class="product-title" href="">Chowking</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Tanuan Batangas   - <span class="store-hours open">Open</span></p>
-                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row class="ion-align-items-center">
-                    <ion-col size="3.5">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/jolibee.png" alt=""></a>
-                    </ion-col>
-                    <ion-col size="8.5">
-                         <!-- Product Title --><a class="product-title" href="">Jolibee</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Tanuan Batangas  - <span class="store-hours open">Open</span></p>
-                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row class="ion-align-items-center">
-                    <ion-col size="3.5">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/dencios.png" alt=""></a>
-                    </ion-col>
-                    <ion-col size="8.5">
-                         <!-- Product Title --><a class="product-title" href="">Dencios</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Tanuan Batangas - <span class="store-hours closed">7am-10pm</span></p>
-                            <ion-button color="dark" expand="full" shape="round" size="small" disabled>Closed</ion-button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row class="ion-align-items-center">
-                    <ion-col size="3.5">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/affinitea.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="8.5">
-                         <!-- Product Title --><a class="product-title" href="">Affinitea</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
-                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row class="ion-align-items-center">
-                    <ion-col size="3.5">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/maco.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="8.5">
-                         <!-- Product Title --><a class="product-title" href="">Macao</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
-                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
-                    </ion-col>
-                </ion-row>
-
-                <ion-row class="ion-align-items-center">
-                    <ion-col size="3.5">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/merchant-logos/manginasal.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="8.5">
-                         <!-- Product Title --><a class="product-title" href="">Mang Inasal</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Tanuan Batangas - <span class="store-hours open">Open</span></p>
-                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+            <MerchantGrid/>
 
             <ion-card class="footer">
             <div class="footer-div">
@@ -166,11 +92,12 @@ import { useRouter } from 'vue-router';
 import CategorySlider from '@/components/CategorySlider.vue';
 import HotPicks from '@/components/HotPicks.vue';
 import PreRegistrationModal from '@/components/PreRegistrationModal.vue';
+import MerchantGrid from '@/components/MerchantGrid.vue';
 import Header from '@/components/Header.vue';
 export default {
     name: 'AYO Food',
     components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
-    Header, HotPicks, IonSearchbar, IonCol, IonGrid, IonRow},
+    Header, HotPicks, MerchantGrid},
     methods: {
       async openModal() {
           const modal = await modalController.create({component: PreRegistrationModal});
