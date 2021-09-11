@@ -116,52 +116,6 @@ export default {
 </script>
 
 <style scoped>
-.store-hours {
-    font-size: 12px;
-    font-weight: 600;
-}
-.open {
-    color: #2e602e;
-}
-.closed {
-    color: #7a1414;
-}
-.product-thumbnail img {
-height: 80px; 
-width: 100%; 
-}
-a.product-title {
-    text-decoration: none;
-    font-weight: 600;
-    margin-left:5px;
-    color: #1e1e50;
-    font-size: 14px;
-}
-.sale-price {
-    margin-top: 5px;
-    margin-left:5px;
-    font-size: 12px;
-}
-ion-row {
- background: #fff;
- border-radius: 10px;
- box-shadow: 1px 1px 6px rgba(0,0,0,0.05);
- padding: 10px;
- margin: 10px 5px;
-}
-
-ion-content {
---background: #f4f6ff;
-}
-ion-header {
-background: #fff;
-}
-ion-searchbar {
-    color: #000 !important;
-    margin: 10px auto;
-    width: 95vw;
-    height: 45px;
-}
 .food-card-head {
 padding: 20px 10px; 
 text-align: center;
