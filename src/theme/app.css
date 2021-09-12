@@ -116,4 +116,8 @@ ion-card h2, ion-card p  {
     padding: 5px; 
 }
 
+ion-content {
+    --background: #e7eff5;
+}
+
 

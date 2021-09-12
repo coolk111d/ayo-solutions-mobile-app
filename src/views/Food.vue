@@ -144,4 +144,7 @@ ion-card.head-title h3 {
     color: #07185C !important;
     font-weight: 600;
 }
+ion-content {
+    --background: #eceff1;
+}
 </style>

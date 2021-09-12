@@ -13,6 +13,11 @@ const routes: Array < RouteRecordRaw > = [
         component: () => import('@/views/Login.vue')
     },
     {
+        path: '/merchant/:id',
+        name: 'Merchant',
+        component: () => import('@/views/MerchantSingle.vue'),
+    },
+    {
         path: '/',
         component: Tabs,
         children: [
