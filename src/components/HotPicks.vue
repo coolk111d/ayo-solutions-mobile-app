@@ -3,7 +3,7 @@
 <div class="container">
                 <swiper
     :slides-per-view="1.2"
-    :space-between="5"
+    :space-between="0"
     @swiper="onSwiper"
     @slideChange="onSlideChange"
   >

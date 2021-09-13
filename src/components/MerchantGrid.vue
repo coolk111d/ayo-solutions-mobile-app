@@ -2,21 +2,22 @@
   <h5 class="title">All Restaurants in City of Tanauan</h5>
             <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
             <ion-grid>
-                <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.name" >
+                <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" >
+                    <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
                     <ion-col size="4">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" @click="() => router.push(`/merchant/${merchant.id}`)"><img v-bind:src="env + '/storage/' + merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
+                            <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="env + '/storage/' + merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
                     </ion-col>
                     <ion-col size="8">
-                         <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.name}}</a>
+                         <!-- Product Title --><a class="product-title" >{{merchant.name}}</a>
                             <!-- Product Price -->
                             <p class="sale-price" style="margin-bottom:0px">{{merchant.address}} </p>
                             <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
-                            <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${merchant.id}`)">Visit Store</ion-button>
+                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
             <div style="margin: -5px auto 10px; text-align:center">
-            <ion-button @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
+            <ion-button v-if="!loc" @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
             </div>
 </template>
 
@@ -32,7 +33,8 @@ export default defineComponent({
     return{
       merchants: [],
       page: 1,
-      arr: []
+      arr: [],
+      loc: false
     }
   },
   methods: {
@@ -59,6 +61,20 @@ export default defineComponent({
                 console.log(err);
             });
       },
+
+      changeLoad: function(loc) {
+           this.loc = true;
+           axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants/${loc}`,
+            }).then(res => {
+                        console.log(res.data);
+                        this.merchants = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
+      },
+
   },
   beforeMount() {
       this.initialLoad();
