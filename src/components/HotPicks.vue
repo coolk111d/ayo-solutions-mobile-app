@@ -7,7 +7,8 @@
     @swiper="onSwiper"
     @slideChange="onSlideChange"
   >
-    <swiper-slide v-for="promo of promos" :key="promo.name">
+  <!--  @click="() => router.push(`/merchant/${promo.merchant_id}`)" -->
+    <swiper-slide v-for="promo of promos" :key="promo.name" @click="() => router.push(`/merchant/${promo.merchant_id}`)">
                     <div class="services-slider"  v-bind:style="{'background-image':'url('+ env + '/storage/' + promo.image + ')' }" @click="() => router.push('/food')">
                         <h5 class="service-title" :key="i">{{promo.name }}</h5>
                     </div> 

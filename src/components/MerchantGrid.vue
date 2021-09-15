@@ -2,17 +2,17 @@
   <h5 class="title">All Restaurants in City of Tanauan</h5>
             <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
             <ion-grid>
-                <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" >
+                <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
                     <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
                     <ion-col size="4">
                             <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="env + '/storage/' + merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
                     </ion-col>
                     <ion-col size="8">
-                         <!-- Product Title --><a class="product-title" >{{merchant.name}}</a>
+                         <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.name}}</a>
                             <!-- Product Price -->
-                            <p class="sale-price" style="margin-bottom:0px">{{merchant.address}} </p>
+                            <p class="sale-price" style="margin-bottom:0px" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.address}} </p>
                             <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
-                            <ion-button color="warning" expand="full" shape="round" size="small">Visit Store</ion-button>
+                            <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${merchant.id}`)">Visit Store</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>

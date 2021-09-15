@@ -173,7 +173,7 @@ export default  {
             if (authUser !== null) {
                 this.toastMessage = "You are already login";
                 this.setOpenToast(true);
-
+                
                 this.router.push("/home");
             } else {
                 this.notAuth = true;

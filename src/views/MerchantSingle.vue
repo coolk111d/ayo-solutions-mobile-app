@@ -82,7 +82,7 @@ ion-content {
 .container {
      background: url('/assets/images/bg-img/24.jpg') rgba(0,0,0,0.3);
      background-blend-mode:darken; 
-     height: 200px; 
+     min-height: 200px; 
      background-size:cover; 
      background-position: center;
      border-radius: 0 0 15% 15%; 

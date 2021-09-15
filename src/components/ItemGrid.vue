@@ -3,14 +3,14 @@
             <ion-grid>
                 <ion-row class="ion-align-items-center" v-for="item of items" :key="item.name" >
                     <ion-col size="4">
-                            <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="env + '/storage/' + item.image" alt="" v-if="item.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
+                            <!-- Product Thumbnail --><a class="product-thumbnail"  @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)"><img v-bind:src="env + '/storage/' + item.image" alt="" v-if="item.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
                     </ion-col>
                     <ion-col size="8">
                          <!-- Product Title --><a class="product-title">{{item.name}}</a>
                             <!-- Product Price -->
                             <p class="sale-price" style="margin-bottom:0px">{{item.description}} </p>
                             <span class="store-hours open" v-if="item.price != null">&#8369; {{item.price}}</span>
-                            <ion-button color="warning" expand="full" shape="round" size="small">Add to Basket</ion-button>
+                            <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)">Add to Basket</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>

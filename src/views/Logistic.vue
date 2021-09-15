@@ -9,7 +9,7 @@
                 </ion-toolbar>
             </ion-header>
 
-            <ExploreContainer name="AYO Logistic" />
+            <ExploreContainer name="AYO Logistic" service="Logistic" link="https://ayosolution.com/ayo-box/calculator-rate"/>
             <!-- <ion-button @click="openModal">Register Now!</ion-button> -->
         </ion-content>
     </ion-page>

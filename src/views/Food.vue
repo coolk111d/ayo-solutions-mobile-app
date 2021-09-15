@@ -93,6 +93,8 @@ import PreRegistrationModal from '@/components/PreRegistrationModal.vue';
 import MerchantGrid from '@/components/MerchantGrid.vue';
 import Header from '@/components/Header.vue';
 import { defineComponent, ref} from "vue";
+import { Geolocation } from '@capacitor/geolocation';
+
 export default defineComponent({
     name: 'AYO Food',
     components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
@@ -112,7 +114,15 @@ export default defineComponent({
       async onSelectChange(e: Event & { target: HTMLInputElement }) {
           const child: any = this.$refs.merchantGrid;
           child.changeLoad(e.target.value);
-      }
+      },
+      async map() {
+     const coordinates = await Geolocation.getCurrentPosition();
+
+    console.log('Current position:', coordinates);
+    },
+  },
+  mounted() {
+      this.map();
   },
 })
 </script>

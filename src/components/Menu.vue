@@ -6,19 +6,17 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <div class="name" v-if="logins.name != null">
-                <h3>{{logins.name}}</h3>
-                <ion-button @click="logOut" slot="end" color="default"  size="small">Logout</ion-button>
-            </div>
-            <div class="name" v-else>
+        
+            
+            <div class="name">
                 <h3>Guest</h3>
-                <ion-button @click="logIn" slot="end" size="small">Login</ion-button>
+                <ion-button @click="logOut" slot="end" size="small">Logout</ion-button>
             </div>
             <ion-list>
                 <ion-item>Orders</ion-item>
                 <ion-item>Addresses</ion-item>
                 <ion-item>Password</ion-item>
-                <ion-item>Setting</ion-item>
+                <ion-item>Settings</ion-item>
             </ion-list>
         </ion-content>
     </ion-menu>
@@ -54,18 +52,14 @@
             IonTitle,
             IonToolbar
         },
-
         setup() {
             const router = useRouter();
-
+            
             const storage = new Storage();
             storage.create();
-
-            const logins = storage.get('authUser', name);
-            console.log(logins);
-            return { router, storage,logins };
+            return { router, storage };
         },
-
+        
         methods: {
             logOut() {
                 this.storage.clear();
@@ -73,7 +67,17 @@
             },
             logIn() {
                 this.router.push("/login");
+            },
+            checkThisOut() {
+                const login = Promise.resolve(this.storage.get("authUser")).then(function(value) {
+            return value; // "Success"
+            }, function(value) {
+            // not called
+            });
             }
+        },
+        created() {
+            this.checkThisOut();
         }
     });
 </script>

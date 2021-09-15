@@ -8,7 +8,7 @@
                     <ion-title size="large">AYO Courier</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <ExploreContainer name="AYO Courier" />
+            <ExploreContainer name="AYO Courier" service="Courier" link="https://ayosolution.com/same-day" />
         </ion-content>
     </ion-page>
 </template>

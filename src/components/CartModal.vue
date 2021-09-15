@@ -134,9 +134,7 @@
                     <h5 style="color:black;  text-align: center;  font-weight: 600">256.00</h5>
                     </ion-col>
                 </ion-row>
-                <ion-row style="background-color:#feb041; padding: 10px; margin: 0; text-align:center"  @click="dismissModal()">
-                    <ion-title color="light">Checkout</ion-title>
-                </ion-row>
+                    <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Checkout</ion-button>
             </ion-grid>
         </ion-toolbar>  
     </ion-footer>
@@ -158,7 +156,7 @@ import {
 } from '@ionic/vue';
 import {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline } from 'ionicons/icons';
 import { defineComponent} from 'vue';
-
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
     name: "Cart",
@@ -181,7 +179,8 @@ export default defineComponent({
 
     setup() {
         let currentNumber;
-        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline};
+        const router = useRouter();
+        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router};
     },
 
     methods : {
@@ -195,7 +194,11 @@ export default defineComponent({
             if(this.amount >= 1) {
             this.amount--;
             }
-        },      
+        }, 
+        checkout() {
+            modalController.dismiss();
+            this.router.push('/checkout');
+        }     
     }
 })
 </script>

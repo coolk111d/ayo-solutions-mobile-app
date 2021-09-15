@@ -13,11 +13,6 @@ const routes: Array < RouteRecordRaw > = [
         component: () => import('@/views/Login.vue')
     },
     {
-        path: '/merchant/:id',
-        name: 'Merchant',
-        component: () => import('@/views/MerchantSingle.vue'),
-    },
-    {
         path: '/',
         component: Tabs,
         children: [
@@ -42,7 +37,22 @@ const routes: Array < RouteRecordRaw > = [
                 component: () => import('@/views/Handyman.vue')
             }
         ]
-    }
+    },
+    {
+        path: '/merchant/:id',
+        name: 'Merchant',
+        component: () => import('@/views/MerchantSingle.vue'),
+    },
+    {
+        path: '/merchant/:id/menu',
+        name: 'Menu',
+        component: () => import('@/views/MenuSingle.vue'),
+    },
+    {
+        path: '/checkout',
+        name: 'Checkout',
+        component: () => import('@/views/Checkout.vue'),
+    },
 ]
 
 const router = createRouter({
