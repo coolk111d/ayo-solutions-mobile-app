@@ -35,11 +35,7 @@ import {
     // IonButtons, IonMenuButton,
 
     IonGrid, IonRow, IonCol,
-<<<<<<< HEAD
     IonIcon,modalController , IonBadge
-=======
-    IonIcon
->>>>>>> 4e7a215f479fc96d1cc2d1804c2b9310c1a651aa
 } from '@ionic/vue';
 import { menu, basketOutline } from 'ionicons/icons';
 import CartModal from './CartModal.vue';
@@ -56,11 +52,7 @@ export default {
 
         IonGrid, IonRow, IonCol,
         IonIcon,
-<<<<<<< HEAD
         IonBadge,
-=======
-
->>>>>>> 4e7a215f479fc96d1cc2d1804c2b9310c1a651aa
         Menu
     },
     methods: {
