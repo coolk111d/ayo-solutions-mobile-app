@@ -134,7 +134,7 @@
                     <h5 style="color:black;  text-align: center;  font-weight: 600">256.00</h5>
                     </ion-col>
                 </ion-row>
-                    <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Checkout</ion-button>
+                    <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Review Payment</ion-button>
             </ion-grid>
         </ion-toolbar>  
     </ion-footer>

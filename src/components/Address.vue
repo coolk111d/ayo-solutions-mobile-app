@@ -14,7 +14,15 @@
                 :zoom="10"
                 :disableUI="true"
             ></g-map>
-                <ion-item>
+                    <ion-item>
+                        <ion-label position="stacked" style="font-weight: 600">First Name <ion-icon :icon="navigateCircleoutline" color="dark" class="edit"></ion-icon></ion-label>
+                        <ion-input type="text" placeholder=""></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label position="stacked" style="font-weight: 600">Last Name <ion-icon :icon="navigateCircleoutline" color="dark" class="edit"></ion-icon></ion-label>
+                        <ion-input type="text" placeholder=""></ion-input>
+                    </ion-item>
+                    <ion-item>
                         <ion-label position="stacked" style="font-weight: 600">Apt/Blk/Lot/Landmark  <ion-icon :icon="navigateCircleoutline" color="dark" class="edit"></ion-icon></ion-label>
                         <ion-input></ion-input>
                     </ion-item>

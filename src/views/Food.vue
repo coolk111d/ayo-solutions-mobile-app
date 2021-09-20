@@ -12,6 +12,7 @@
                 <h3 class="registration-link" >
                     <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
                 </h3>
+                
                 <ion-card class="food-card-head">
                     <div class="card-body pt-4">
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
@@ -57,8 +58,7 @@
                     </div>
                 </ion-card>
             </div>
-
-
+            
             <CategorySlider slide1="Fast Food & Restaurants" slide2="Milk Tea and Coffee Shops" slide3="Pet Food and Care" slide4="BakeShops" slide5="Groceries" />
 
 
@@ -74,8 +74,13 @@
                 <ion-button fill="outline" target="_blank" rel="noopener noreferrer" href="https://ayosolution.com">Visit our Site!</ion-button>
             </div>
             </ion-card>
-
-
+            <g-map 
+                mapType="roadmap"
+                :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
+                :zoom="10"
+                :disableUI="true"
+                :mapDidLoad="handleMapDidLoad" style="display:none"
+            ></g-map>
         </ion-content>
     </ion-page>
 </template>
@@ -92,19 +97,36 @@ import HotPicks from '@/components/HotPicks.vue';
 import PreRegistrationModal from '@/components/PreRegistrationModal.vue';
 import MerchantGrid from '@/components/MerchantGrid.vue';
 import Header from '@/components/Header.vue';
-import { defineComponent, ref} from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { Geolocation } from '@capacitor/geolocation';
-
+import GMap from '@/components/GMap.vue';
 export default defineComponent({
     name: 'AYO Food',
     components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
-    Header, HotPicks, MerchantGrid},
+    Header, HotPicks, MerchantGrid, GMap,},
     setup() {
-    const options: any = {
-      cssClass: 'my-custom-interface'
-    };
-    const router = useRouter();
-    return { router, options, arrowBackOutline }
+        let geocoderService: any = null;
+        const options: any = {
+        cssClass: 'my-custom-interface'
+        };
+        const router = useRouter();
+        
+        const findLocation = async() => {
+            const currentposition = await Geolocation.getCurrentPosition();
+            const latlng = { lat: currentposition.coords.latitude, lng: currentposition.coords.longitude }; 
+            geocoderService
+                .geocode({ location: latlng })
+                .then((response: any) => {
+                   console.log(response.results[0]);
+                })
+                .catch((e) => {
+                alert("Geocode was not successful for the following reason: " + e);
+                });
+        };
+        const handleMapDidLoad = (map: any, GServices: any) => {
+            geocoderService = new GServices.Geocoder();
+        }
+        return { router, options, arrowBackOutline, handleMapDidLoad, findLocation }
   },
   methods: {
       async openModal() {
@@ -115,14 +137,6 @@ export default defineComponent({
           const child: any = this.$refs.merchantGrid;
           child.changeLoad(e.target.value);
       },
-      async map() {
-     const coordinates = await Geolocation.getCurrentPosition();
-
-    console.log('Current position:', coordinates);
-    },
-  },
-  mounted() {
-      this.map();
   },
 })
 </script>

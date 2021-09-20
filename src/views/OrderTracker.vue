@@ -3,7 +3,7 @@
         <Header/>
         
         <ion-content :fullscreen="true">
-            <h5 style="text-align:center">Checkout</h5>
+            <h5 style="text-align:center">Track your order.</h5>
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
@@ -104,7 +104,7 @@ When using our COD service, payment is given to our official delivery partner up
         
         <ion-footer>
             <ion-toolbar>
-                <ion-button @click="() => router.push(`/order-details`)">PROCESS ORDER</ion-button>
+                <ion-button @click="() => router.push(`/food`)">Continue Shopping</ion-button>
             </ion-toolbar>
         </ion-footer>
     </ion-page>
@@ -119,7 +119,7 @@ import { defineComponent } from 'vue';
 import Header from '@/components/Header.vue';
 import Address from '@/components/Address.vue';
 export default defineComponent({
-    name: 'Checkout',
+    name: 'OrderDetails',
     components: { IonContent, IonPage, IonCard, Header, IonTextarea, IonLabel, IonItem, 
     IonFooter, IonRadioGroup, IonRadio},
     setup() {

@@ -9,8 +9,10 @@
         
             
             <div class="name">
-                <h3>Guest</h3>
-                <ion-button @click="logOut" slot="end" size="small">Logout</ion-button>
+                <h3 style="margin: 0">{{name}}</h3><br>
+                <span style="color:#feb041; font-size: 14px; text-align:center;margin: -15px 0 0">{{role}}</span>
+                <p style="color:rgba(230,230,230,1); font-size: 12px; text-align:center;margin: 5px 0 20px">{{email}}</p>
+                <ion-button @click="logOut" slot="end" size="small">LogOut</ion-button>
             </div>
             <ion-list>
                 <ion-item>Orders</ion-item>
@@ -40,7 +42,6 @@
 
     import { useRouter } from 'vue-router';
     import { defineComponent } from 'vue';
-
     export default defineComponent({
         components: {
             IonContent,
@@ -51,6 +52,13 @@
             IonRouterOutlet,
             IonTitle,
             IonToolbar
+        },
+        data() {
+            return {
+                name: String,
+                email: String,
+                role: String,
+            }
         },
         setup() {
             const router = useRouter();
@@ -68,17 +76,23 @@
             logIn() {
                 this.router.push("/login");
             },
-            checkThisOut() {
-                const login = Promise.resolve(this.storage.get("authUser")).then(function(value) {
-            return value; // "Success"
-            }, function(value) {
-            // not called
-            });
+            async getName() {
+            
+                    const name = await this.storage.get('authUser');
+                    if(name == null) {
+                        this.name = "Guest" 
+                        this.email = "Not Available"
+                        this.role = "Customer"
+                    } else {
+                    this.name = name.name;
+                    this.email = name.email;
+                    this.role = name.role;
+                    }
             }
         },
-        created() {
-            this.checkThisOut();
-        }
+        beforeMount() {
+            this.getName();
+        },
     });
 </script>
 

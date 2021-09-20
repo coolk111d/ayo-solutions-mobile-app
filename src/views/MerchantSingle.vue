@@ -4,14 +4,16 @@
         
         <ion-content :fullscreen="true">
 
-            <div class="container" style="">
+            <div class="container">
                 <h3 class="name-text">
                     {{merchant.name}}
                 </h3>
                 <p class="address-text">{{merchant.address}}</p>
                 <p class="store-hours" v-if="merchant.opening_time != null">Opens at {{merchant.opening_time}} - {{merchant.closing_time}}</p>
             </div>
-
+            
+            <MenuCategorySlider/>
+            
             <div class="item-grid">
                 <ItemGrid/>
             </div>
@@ -31,14 +33,13 @@
 </template>
 
 <script lang="ts">
-import { IonPage,  IonContent, IonCard, IonButton,
-        
-} from '@ionic/vue';
+import { IonPage,  IonContent, IonCard, IonButton } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import ItemGrid from '@/components/ItemGrid.vue';
+import MenuCategorySlider from '@/components/MenuCategorySlider.vue';
 import axios from "axios";
 export default defineComponent({
     name: 'Merchant Details',
@@ -47,7 +48,7 @@ export default defineComponent({
       merchant: [],
     }
   },
-    components: {IonContent, IonPage, IonCard, IonButton, CustomHeader, ItemGrid},
+    components: {IonContent, IonPage, IonCard, IonButton, CustomHeader, ItemGrid, MenuCategorySlider},
     methods: {
       initialLoad: function() {
       axios({
@@ -67,7 +68,6 @@ export default defineComponent({
   },
  
     setup() {
-
     const router = useRouter();
     return { router, arrowBackOutline}
   }

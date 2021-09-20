@@ -13,6 +13,7 @@ export default {
         zoom: Number,
         mapType: String,
         disableUI: Boolean,
+        mapDidLoad: Function
     },
     setup(props) {
 
@@ -48,6 +49,7 @@ export default {
                 center: props.center || { lat: 14.124561213272877, lng: 121.164106030269481}
             });
             
+            props.mapDidLoad && props.mapDidLoad(map, window.google.maps);
 
             const image = {
             url: "../assets/images/logo-trans.png", // url
