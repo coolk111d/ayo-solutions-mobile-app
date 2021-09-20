@@ -1,9 +1,11 @@
 <template>
     <ion-page>
-        <Header/>
+        <CustomHeader link="/food" />
         
         <ion-content :fullscreen="true">
+          <div class="header-container">
             <h5 style="text-align:center">Checkout</h5>
+            </div>
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
@@ -116,11 +118,11 @@ import { IonPage, IonContent, IonCard, modalController,IonTextarea, IonLabel, Io
 import { arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutline, bicycleOutline, person, call, personOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
-import Header from '@/components/Header.vue';
+import CustomHeader from '@/components/CustomHeader.vue';
 import Address from '@/components/Address.vue';
 export default defineComponent({
     name: 'Checkout',
-    components: { IonContent, IonPage, IonCard, Header, IonTextarea, IonLabel, IonItem, 
+    components: { IonContent, IonPage, IonCard, CustomHeader, IonTextarea, IonLabel, IonItem, 
     IonFooter, IonRadioGroup, IonRadio},
     setup() {
         const router = useRouter();
@@ -144,7 +146,20 @@ export default defineComponent({
 
 <style scoped>
 ion-content {
-    --background: #fff;
+    --background: #eceff1;;
+}
+.header-container {
+    margin-top: -60px;
+    padding-top: 70px;
+    min-height: 150px;
+    background: #feb041;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 1px 1px 6px rgba(0,0,0,0.2);
+}
+.header-container h5 {
+    font-size: 24px;
+    color: #fff;
 }
 p {
     font-weight: 600;

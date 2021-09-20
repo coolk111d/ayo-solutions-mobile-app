@@ -7,7 +7,7 @@
 import { ref, onMounted } from 'vue';
 
 export default {
-    name: "GMap",
+    name: "GMapTracker",
     props: {
         center: { lat: Number, lng: Number},
         zoom: Number,
@@ -35,12 +35,6 @@ export default {
         });
 
 
-        const clearMarkers = () => {
-            currentMarkers.forEach(marker => {
-                marker.setMap(null);
-            });
-        }
-
         window.initMap = () => {
             map.value = new window.google.maps.Map(mapDivRef.value, {
                 mapTypeId: props.mapType,
@@ -52,23 +46,20 @@ export default {
             props.mapDidLoad && props.mapDidLoad(map, window.google.maps);
 
             const image = {
-            url: "../assets/images/logo-trans.png", // url
-            scaledSize: new window.google.maps.Size(30, 50), // scaled size
+            url: "../assets/images/merchant.png", // url
+            scaledSize: new window.google.maps.Size(50, 50), // scaled size
             origin: new window.google.maps.Point(0,0), // origin
             anchor: new window.google.maps.Point(15, 50) // anchor
             };
 
-         map.value.addListener('click', mapEvent =>  {
-                clearMarkers();
                 const newMarker = new window.google.maps.Marker({
-                    position: mapEvent.latLng.toJSON(),
+                    position: {lat: 14.124561213272877, lng: 121.164106030269481},
                     map: map.value,
                     icon: image
                 });
                 currentMarkers.push(newMarker);
 
-                console.log(mapEvent.latLng.toJSON());
-            });
+            
         };
 
 

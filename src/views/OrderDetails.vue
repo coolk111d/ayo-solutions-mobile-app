@@ -1,73 +1,88 @@
 <template>
     <ion-page>
-        <Header/>
+        <CustomHeader link="/checkout"/>
         
         <ion-content :fullscreen="true">
-            <h5 style="text-align:center">Thank you for ordering.</h5>
+           <div class="head-container">   
+                <h4>Thank you for ordering!</h4>
+                <h5>Order #S19820101</h5>
+                <h6>Ordered: 09/20/2021 8:15pm</h6>
+                <h6>Estimated Delivery: 09/20/2021 8:45pm-9:00pm</h6>
+           </div>
            <ion-card>
                 <div class="title-icon">
-                    <ion-icon :icon="mapOutline" class="map"></ion-icon>
-                    <p class="title">Delivery Address</p> 
-                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="addAddress"></ion-icon>
+                    <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p> 
                 </div>
-                <p class="address" @click="addAddress">Blk 20 Lot 21 Mara St. Cabuyao Laguna</p>
-                <hr style="margin-bottom: 30px;">
-                <p class="title">Receiver Details:</p> 
-                <p class="address" @click="addAddress"><ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> John Smith</p>
-                <p class="address" @click="addAddress"><ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> 095673877711</p>
-                <hr>
-                    <ion-item>
-                        <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
-                        <ion-textarea></ion-textarea>
-                    </ion-item>
-           </ion-card>
-
-           <ion-card>
-                <div class="title-icon">
-                    <ion-icon :icon="walletOutline" class="map"></ion-icon>
-                    <p class="title">Payment Method</p> 
-                </div>
-                    <ion-radio-group>
-                        <ion-item>
+                <div class="summary-details">
+                    <ion-grid>
+                    <ion-row>  
+                        <ion-col size="3">
+                            <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                        </ion-col>
+                        <ion-col size="9"> 
+                            <p style="font-size: 15px;">John Rider</p>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col  size="3">
+                            <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                        </ion-col>
+                        <ion-col size="9"> 
+                            <ion-button  href="tel:09210010121" size="small">Call Rider</ion-button><p style="font-size: 15px;">09210910211</p>
+                        </ion-col>
+                    </ion-row>
+                    
+                    <ion-row>
                             
-                            <ion-radio value="Cash"></ion-radio>
-                            <ion-label style="margin-left: 10px">Cash</ion-label>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-radio value="GCash"></ion-radio>
-                            <ion-label style="margin-left: 10px">GCash upon Rider Delivery</ion-label>
-                        </ion-item>
-
-                        <ion-item>
-                            <ion-radio value="Paymaya"></ion-radio>
-                            <ion-label style="margin-left: 10px">Paymaya upon Rider Delivery</ion-label>
-                        </ion-item>
-                        
-                        <ion-item>
-                            <ion-radio value="Debit/Credit" disabled></ion-radio>
-                            <ion-label style="margin-left: 10px">Debit/Credit</ion-label>
-                        </ion-item>
-                    </ion-radio-group>
+                    <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
+                    </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Make and Model: Mio i124</p>
+                            <p style="font-size: 12px;">Plate Number: XGY210</p>
+                            </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Company ID:</p>
+                        <ion-col size="12"> 
+                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
+                        </ion-col>
+                    </ion-row>
+                    </ion-grid>
+                </div>
            </ion-card>
-
-
            <ion-card>
                 <div class="title-icon">
-                    <ion-icon :icon="personOutline" class="map"></ion-icon>
-                    <p class="title">Proof of Identity</p> 
+                    <ion-icon :icon="receiptOutline" class="map"></ion-icon>
+                    <p class="title" style="text-align:left; margin-right: 100px;">Receiver Details</p> 
                 </div>
-                <ion-item>
-                    <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
-                    <ion-input name="government_id" type="file" accept="image/*" > </ion-input>
-                    <ErrorMessage as="ion-text" name="government_id" color="danger" />
-                </ion-item>
-                <ion-item>
-                    <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
-                    <ion-input name="selfie" type="file" accept="image/*" > </ion-input>
-                    <ErrorMessage as="ion-text" name="government_id" color="danger" />
-                </ion-item>
-            </ion-card>
+                <div class="summary-details">
+                    <ion-grid>
+                    <ion-row>  
+                        <ion-col size="3">
+                            <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                        </ion-col>
+                        <ion-col size="9"> 
+                            <p style="font-size: 15px;">John Smith</p>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col  size="3">
+                            <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                        </ion-col>
+                        <ion-col size="9"> 
+                            <p style="font-size: 15px;">09567387836</p>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col size="3">
+                            <ion-icon :icon="navigate" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                        </ion-col>
+                        <ion-col size="9"> 
+                            <p style="font-size: 15px;">Blk 21 Lot 1 John St. Batangas City, Batangas</p>
+                        </ion-col>
+                    </ion-row>
+                    </ion-grid>
+                </div>
+           </ion-card>
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="receiptOutline" class="map"></ion-icon>
@@ -93,13 +108,8 @@
                     </div>
                 </div>
            </ion-card>
-
-            <ion-card>
-                <p>Please Note:</p>
-                <small>AYO Solution Sellers are NOT allowed to ask you to order and transact your payments outside the platform.
-
-When using our COD service, payment is given to our official delivery partner upon receipt on item.</small>
-                </ion-card>
+            
+          
         </ion-content>
         
         <ion-footer>
@@ -111,40 +121,55 @@ When using our COD service, payment is given to our official delivery partner up
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonCard, modalController,IonTextarea, IonLabel, IonItem, IonRadioGroup, IonRadio,
-    IonFooter, IonInput} from '@ionic/vue';
-import { arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutline, bicycleOutline, person, call, personOutline } from 'ionicons/icons';
+import { IonPage, IonContent, IonCard, IonGrid, IonButton  } from '@ionic/vue';
+import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
-import Header from '@/components/Header.vue';
-import Address from '@/components/Address.vue';
+import CustomHeader from '@/components/CustomHeader.vue';
 export default defineComponent({
     name: 'OrderDetails',
-    components: { IonContent, IonPage, IonCard, Header, IonTextarea, IonLabel, IonItem, 
-    IonFooter, IonRadioGroup, IonRadio},
+    components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton },
     setup() {
         const router = useRouter();
-        return { router, arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutline, bicycleOutline, person, call, personOutline}
+        return { router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline}
     },
-    methods: {
-        async addAddress() {
-        const modal = await modalController
-        .create({
-          component: Address,
-          cssClass: 'my-custom-class',
-          componentProps: {
-            title: 'Address'
-          },
-        })
-      return modal.present();
-    }
-    }
 })
 </script>
 
 <style scoped>
+.head-container {
+    margin-top: -70px;
+    padding-top: 80px;
+    padding-bottom: 20px;
+    background: url('/assets/images/bg-img/25.jpg') rgba(0,0,0,0.3);
+    background-blend-mode: darken;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    min-height: 200px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 1px 1px 6px rgba(0,0,0,0.2)
+}
+.head-container h5 {
+    text-align:center;
+    color: #feb041;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+.head-container h6 {
+    color: #fff;
+    text-align:center;
+    font-size: 14px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,1);
+}
+.head-container h4 {
+    color: #01077c;
+    font-weight: 600;
+    text-align:center;
+    font-size: 16px;
+}
 ion-content {
-    --background: #fff;
+    --background: #eceff1;
 }
 p {
     font-weight: 600;

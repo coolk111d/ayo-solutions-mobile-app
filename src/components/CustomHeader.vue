@@ -8,7 +8,7 @@
                     <ion-row>
                         <ion-col>
                             <div class="ion-text-start">
-                                <a href="/food"><ion-icon :icon="arrowBackOutline" class="menu-head" > </ion-icon></a>
+                                <a @click="() => router.push(link)"><ion-icon :icon="arrowBackOutline" class="menu-head" > </ion-icon></a>
                             </div>
                         </ion-col>
                         <ion-col>
@@ -39,12 +39,19 @@ import Menu from '@/components/Menu.vue';
 
 export default {
     name: 'CustomHeader',
+    props: {
+        link: String,
+    },
     components: {
         IonHeader, IonToolbar, IonTitle,
         IonGrid, IonRow, IonCol,
         IonIcon,
         IonBadge,
         Menu
+    },
+    setup() {
+        const router = useRouter();
+        return { menu, basketOutline, arrowBackOutline, router };
     },
     methods: {
         async onClick() {
@@ -63,10 +70,6 @@ export default {
             menuController.open("menu");
         },
   },
-    setup() {
-        const router = useRouter();
-        return { menu, basketOutline, arrowBackOutline, router };
-    }
 }
 </script>
 

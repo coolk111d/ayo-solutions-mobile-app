@@ -1,6 +1,6 @@
 <template>
     <ion-page>
-        <CustomHeader/>
+        <CustomHeader link="/merchant/1"/>
         
         <ion-content :fullscreen="true">
 
@@ -21,7 +21,7 @@
 
              <ion-footer>
                     <ion-toolbar style="padding:0">
-                    <ion-button style="width: 100%; margin:0;"  @click="onClick">Add to Bag</ion-button>
+                    <ion-button style="width: 100%; margin:0;"  @click="onClick">Add to Basket</ion-button>
                     </ion-toolbar>
             </ion-footer>
         </ion-content>
