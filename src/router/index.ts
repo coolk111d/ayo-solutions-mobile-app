@@ -63,6 +63,17 @@ const routes: Array < RouteRecordRaw > = [
         name: 'Order Tracker',
         component: () => import('@/views/OrderTracker.vue'),
     },
+
+    {
+        path: '/rider-dashboard',
+        name: 'Rider Dashboard',
+        component: () => import('@/views/Rider/Dashboard.vue'),
+    },
+    {
+        path: '/merchant-dashboard',
+        name: 'Merchant Dashboard',
+        component: () => import('@/views/Merchant/Dashboard.vue'),
+    },
 ]
 
 const router = createRouter({

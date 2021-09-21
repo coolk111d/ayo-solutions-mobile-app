@@ -173,8 +173,13 @@ export default  {
             if (authUser !== null) {
                 this.toastMessage = "You are already login";
                 this.setOpenToast(true);
-                
-                this.router.push("/home");
+                if(authUser.role == "rider") {
+                        this.router.push('/rider-dashboard')
+                    } else if(authUser.role == "merchant") {
+                        this.router.push('/merchant-dashboard')
+                    } else {
+                        this.router.push('/home')
+                    }
             } else {
                 this.notAuth = true;
             }
@@ -198,7 +203,13 @@ export default  {
                 console.log(data);
                 this.setOpenLoading(false);
                 if (data.success) {
-                    this.router.push('/home')
+                    if(data.user.role == "rider") {
+                        this.router.push('/rider-dashboard')
+                    } else if(data.user.role == "merchant") {
+                        this.router.push('/merchant-dashboard')
+                    } else {
+                        this.router.push('/home')
+                    }
                     this.toastMessage = `Successfully Login! Welcome ${data.user.name}`;
                     // eslint-disable-next-line no-undef
                     this.storage.set('authUser', {
