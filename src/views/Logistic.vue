@@ -3,6 +3,7 @@
         <Header/>
 
         <ion-content :fullscreen="true">
+            <div class="container">
             <ion-header collapse="condense">
                 <ion-toolbar>
                     <ion-title size="large">AYO Logistic</ion-title>
@@ -11,6 +12,7 @@
 
             <ExploreContainer name="AYO Logistic" service="Logistic" link="https://ayosolution.com/ayo-box/calculator-rate"/>
             <!-- <ion-button @click="openModal">Register Now!</ion-button> -->
+            </div>
         </ion-content>
     </ion-page>
 </template>
@@ -25,3 +27,13 @@ export default {
     components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Header }
 }
 </script>
+
+<style scoped>
+.container {
+    height: 81vh;
+    background: url('/assets/images/bg-img/51.jpg') rgba(0,0,0,0.3);
+    background-blend-mode: darken;
+    background-size: cover;
+    background-position: center;
+}
+</style>

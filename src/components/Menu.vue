@@ -12,12 +12,12 @@
                 <h3 style="margin: 0">{{name}}</h3><br>
                 <span style="color:#feb041; font-size: 14px; text-align:center;margin: -15px 0 0">{{role}}</span>
                 <p style="color:rgba(230,230,230,1); font-size: 12px; text-align:center;margin: 5px 0 20px">{{email}}</p>
-                <ion-button @click="logOut" slot="end" size="small">LogOut</ion-button>
             </div>
             <ion-list>
                 <ion-item lines="none" detail button @click="orders"><ion-icon :icon="bagOutline"/> <a>Orders</a></ion-item>
                 <ion-item  lines="none" detail button  @click="address"> <ion-icon :icon="mapOutline"/> <a>Addresses</a></ion-item>
                 <ion-item  lines="none" detail button @click="password"><ion-icon :icon="keypadOutline"/><a> Change Password</a></ion-item>
+                <ion-item  lines="none" detail button @click="logOut"><ion-icon :icon="logOutOutline"/><a> Log Out</a></ion-item>
             </ion-list>
         </ion-content>
     </ion-menu>
@@ -39,7 +39,7 @@
     } from '@ionic/vue';
 
     import { Storage } from '@ionic/storage';
-    import { bagOutline, mapOutline, keypadOutline } from 'ionicons/icons';
+    import { bagOutline, mapOutline, keypadOutline, logOutOutline } from 'ionicons/icons';
     import OrderList from '@/components/OrderList.vue';
     import AddressList from '@/components/AddressList.vue';
     import ChangePassword from '@/components/ChangePassword.vue';
@@ -69,7 +69,7 @@
             
             const storage = new Storage();
             storage.create();
-            return { router, storage, bagOutline, mapOutline, keypadOutline };
+            return { router, storage, bagOutline, mapOutline, keypadOutline, logOutOutline };
         },
         
         methods: {

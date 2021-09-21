@@ -44,12 +44,13 @@ export default {
 #container strong {
   font-size: 20px;
   line-height: 26px;
+  color: #feb041;
 }
 
 #container p {
   font-size: 16px;
   line-height: 22px;
-  color: #8c8c8c;
+  color: #fff;
   margin: 0;
 }
 
