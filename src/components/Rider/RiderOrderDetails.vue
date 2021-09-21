@@ -42,7 +42,8 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">09567387836</p>
+                            <ion-button target="_blank" rel="noopener noreferrer" href="tel:09567387836" color="tertiary">Call: 09567387836</ion-button>
+                            <p style="font-size: 15px;"></p>
                         </ion-col>
                     </ion-row>
                     <ion-row>

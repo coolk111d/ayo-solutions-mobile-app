@@ -43,7 +43,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <ion-button  href="tel:09210010121" size="small">Call Rider</ion-button><p style="font-size: 15px;">09210910211</p>
+                            <ion-button target="_blank" rel="noopener noreferrer" href="tel:09567387836" color="warning">Call Rider 09567387836</ion-button>
                         </ion-col>
                     </ion-row>
                     
