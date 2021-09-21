@@ -7,8 +7,11 @@
                 <ion-grid>
                     <ion-row>
                         <ion-col>
-                            <div class="ion-text-start">
+                            <div class="ion-text-start" v-show="link">
                                 <a @click="() => router.push(link)"><ion-icon :icon="arrowBackOutline" class="menu-head" > </ion-icon></a>
+                            </div>
+                            <div class="ion-text-start" v-show="reset">
+                                <a :href="reset"><ion-icon :icon="arrowBackOutline" class="menu-head" > </ion-icon></a>
                             </div>
                         </ion-col>
                         <ion-col>
@@ -41,6 +44,7 @@ export default {
     name: 'CustomHeader',
     props: {
         link: String,
+        reset:String
     },
     components: {
         IonHeader, IonToolbar, IonTitle,

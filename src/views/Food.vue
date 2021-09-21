@@ -103,7 +103,7 @@ import GMap from '@/components/GMap.vue';
 export default defineComponent({
     name: 'AYO Food',
     components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
-    Header, HotPicks, MerchantGrid, GMap,},
+    Header, HotPicks, MerchantGrid, GMap},
     setup() {
         let geocoderService: any = null;
         const options: any = {

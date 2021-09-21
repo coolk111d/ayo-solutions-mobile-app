@@ -15,10 +15,9 @@
                 <ion-button @click="logOut" slot="end" size="small">LogOut</ion-button>
             </div>
             <ion-list>
-                <ion-item>Orders</ion-item>
-                <ion-item>Addresses</ion-item>
-                <ion-item>Password</ion-item>
-                <ion-item>Settings</ion-item>
+                <ion-item lines="none" detail button @click="orders"><ion-icon :icon="bagOutline"/> <a>Orders</a></ion-item>
+                <ion-item  lines="none" detail button  @click="address"> <ion-icon :icon="mapOutline"/> <a>Addresses</a></ion-item>
+                <ion-item  lines="none" detail button @click="password"><ion-icon :icon="keypadOutline"/><a> Change Password</a></ion-item>
             </ion-list>
         </ion-content>
     </ion-menu>
@@ -35,10 +34,15 @@
         IonMenu,
         IonRouterOutlet,
         IonTitle,
-        IonToolbar
+        IonToolbar,
+        modalController
     } from '@ionic/vue';
 
     import { Storage } from '@ionic/storage';
+    import { bagOutline, mapOutline, keypadOutline } from 'ionicons/icons';
+    import OrderList from '@/components/OrderList.vue';
+    import AddressList from '@/components/AddressList.vue';
+    import ChangePassword from '@/components/ChangePassword.vue';
 
     import { useRouter } from 'vue-router';
     import { defineComponent } from 'vue';
@@ -51,7 +55,7 @@
             IonMenu,
             IonRouterOutlet,
             IonTitle,
-            IonToolbar
+            IonToolbar,
         },
         data() {
             return {
@@ -65,7 +69,7 @@
             
             const storage = new Storage();
             storage.create();
-            return { router, storage };
+            return { router, storage, bagOutline, mapOutline, keypadOutline };
         },
         
         methods: {
@@ -88,7 +92,31 @@
                     this.email = name.email;
                     this.role = name.role;
                     }
-            }
+            },
+            async orders() {
+                const modal = await modalController
+                .create({
+                component: OrderList,
+                cssClass: 'my-custom-class',
+                })
+            return modal.present();
+            },
+            async address() {
+                const modal = await modalController
+                .create({
+                component: AddressList,
+                cssClass: 'my-custom-class',
+                })
+            return modal.present();
+            },
+            async password() {
+                const modal = await modalController
+                .create({
+                component: ChangePassword,
+                cssClass: 'my-custom-class',
+                })
+            return modal.present();
+            },
         },
         beforeMount() {
             this.getName();
@@ -119,5 +147,24 @@
     color: #fff;
     text-shadow: 1px 1px 3px #000;
     font-size: 20px;
+}
+ion-list {
+    height: 62vh;
+    padding-top: 20px;
+}
+ion-item:hover {
+    --background: #feb041;
+    --color: #fff;
+}
+ion-item:hover a, ion-item:hover ion-icon {
+    color: #fff;
+}
+ion-item a {
+    font-size: 16px;
+    color: #000;
+    padding: 20px 0;
+}
+ion-item ion-icon {
+    margin-right: 30px;
 }
 </style>

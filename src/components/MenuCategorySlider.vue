@@ -1,6 +1,6 @@
 <template>
 <div class="container-menu">
-                <swiper
+                <!--<swiper
     :slides-per-view="3"
     :space-between="0"
     @swiper="onSwiper"
@@ -18,7 +18,34 @@
     <swiper-slide>
                     <a>Soup</a>
     </swiper-slide>
-  </swiper>
+  </swiper>-->
+
+  <ion-slides pager="true" :options="slideOpts">
+    <ion-slide>
+                    <a class="active">Rice Meal</a>
+    </ion-slide>
+    <ion-slide>
+                    <a>Burger</a>
+    </ion-slide>
+    <ion-slide>
+                    <a>Fries</a>
+    </ion-slide>
+    <ion-slide>
+                    <a>Soup</a>
+    </ion-slide>
+    <ion-slide>
+                    <a>Meal A</a>
+    </ion-slide>
+    <ion-slide>
+                    <a>Meal B</a>
+    </ion-slide>
+    <ion-slide>
+                    <a>Meal C</a>
+    </ion-slide>
+    <ion-slide>
+                    <a>Addons</a>
+    </ion-slide>
+  </ion-slides>
   
 </div>
 </template>
@@ -27,9 +54,9 @@
 import { useRouter } from 'vue-router';
 import { defineComponent } from "vue";
 import axios from "axios";
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/swiper-bundle.css';
-
+// import { Swiper, SwiperSlide } from 'swiper/vue';
+// import 'swiper/swiper-bundle.css';
+import { IonSlides, IonSlide } from '@ionic/vue';
 export default defineComponent({
   name: 'MenuCategorySlider',
   // data(){
@@ -47,17 +74,24 @@ export default defineComponent({
   //               console.log(err);
   //           });
   // },
-  components: { Swiper, SwiperSlide },
+  components: {   IonSlides, IonSlide  },
   setup() {
     const env = process.env.VUE_APP_ROOT_API;
-    const onSwiper = (swiper) => {
-      return;
-      };
-      const onSlideChange = () => {
-        return;
-      };
+    // const onSwiper = (swiper) => {
+    //   return;
+    //   };
+    //   const onSlideChange = () => {
+    //     return;
+    //   };
+     const slideOpts = {
+      initialSlide: 0,
+      slidesPerView: 3,
+      speed: 400,
+      pagination: false,
+
+    };
     const router = useRouter();
-    return { router, onSwiper, onSlideChange, env }
+    return { router, slideOpts, env }
 }
 })
 </script>
@@ -78,8 +112,7 @@ export default defineComponent({
 }
 .container-menu a {
   font-size: 16px;
-  color:#fff; 
-  text-shadow: 2px 1px 2px rgba(0,0,0,1);
+  color:grey; 
 }
 ion-slide:first-child {
     margin-left: 10px;

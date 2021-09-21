@@ -1,6 +1,6 @@
 <template>
     <ion-page>
-        <CustomHeader link="/food" />
+        <CustomHeader reset="/food" />
         
         <ion-content :fullscreen="true">
 
