@@ -173,7 +173,7 @@ export default  {
             if (authUser !== null) {
                 this.toastMessage = "You are already login";
                 this.setOpenToast(true);
-
+                
                 this.router.push("/home");
             } else {
                 this.notAuth = true;
@@ -194,9 +194,8 @@ export default  {
                     password: inputs.password
                 }
             }).then(res => {
-                console.log(res);
                 const data = res.data;
-
+                console.log(data);
                 this.setOpenLoading(false);
                 if (data.success) {
                     this.router.push('/home')
@@ -205,9 +204,11 @@ export default  {
                     this.storage.set('authUser', {
                             token: data.token,
                             name: data.user.name,
-                            email: data.user.email
+                            email: data.user.email,
+                            role: data.user.role
                         }
                     );
+                    
                 } else {
                     this.toastMessage = "Invalid email and password."
                 }
@@ -219,8 +220,8 @@ export default  {
                 this.toastMessage = err.response.data.message;
                 this.setOpenToast(true);
             });
-        }
-    }
+        },
+    },
 }
 </script>
 

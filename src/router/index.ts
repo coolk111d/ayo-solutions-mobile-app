@@ -37,7 +37,32 @@ const routes: Array < RouteRecordRaw > = [
                 component: () => import('@/views/Handyman.vue')
             }
         ]
-    }
+    },
+    {
+        path: '/merchant/:id',
+        name: 'Merchant',
+        component: () => import('@/views/MerchantSingle.vue'),
+    },
+    {
+        path: '/merchant/:id/menu',
+        name: 'Menu',
+        component: () => import('@/views/MenuSingle.vue'),
+    },
+    {
+        path: '/checkout',
+        name: 'Checkout',
+        component: () => import('@/views/Checkout.vue'),
+    },
+    {
+        path: '/order-details',
+        name: 'Order Details',
+        component: () => import('@/views/OrderDetails.vue'),
+    },
+    {
+        path: '/order-tracker',
+        name: 'Order Tracker',
+        component: () => import('@/views/OrderTracker.vue'),
+    },
 ]
 
 const router = createRouter({

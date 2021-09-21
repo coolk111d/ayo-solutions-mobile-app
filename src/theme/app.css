@@ -89,3 +89,35 @@ ion-card h2, ion-card p  {
     line-height: 1.3;
     color: #fff;
 }
+
+.cart-head {
+    width: 1.5em;
+    height: 1.5em;
+    color: #000;
+}
+.cart-head:hover {
+    color: #feb041;
+}
+
+.menu-head {
+    width: 1.5em;
+    height: 1.5em;
+}
+
+.cart-container {
+    position: relative;
+}
+
+.cart-container ion-badge {
+    position: absolute;
+    top: 0;
+    right: -5%;
+    font-size: 10px;
+    padding: 5px; 
+}
+
+ion-content {
+    --background: #e7eff5;
+}
+
+

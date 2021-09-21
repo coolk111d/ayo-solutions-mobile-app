@@ -2,26 +2,25 @@
     <div id="container">
         <strong>{{ name }}</strong>
         <p>AYO Mobile App is under development.</p>
-        <p>Use <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/">Web App</a> for the meantime.</p>
+        <p>Use {{service}} Web App for the meantime.</p>
 
-        <h3>
-            <!-- <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/pre-registration/create">Register now!</a> -->
-            <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
-        </h3>
+        <ion-button target="_blank" rel="noopener noreferrer" :href="link">Go to {{service}}</ion-button>
     </div>
 </template>
 
 <script lang="ts">
 
-import { modalController } from '@ionic/vue';
+import { modalController, IonButton } from '@ionic/vue';
 import PreRegistrationModal from '@/components/PreRegistrationModal.vue'
 
 export default {
   name: 'ExploreContainer',
   props: {
-    name: String
+    name: String,
+    service: String,
+    link: String
   },
-
+  components: {IonButton },
   methods: {
       async openModal() {
           const modal = await modalController.create({component: PreRegistrationModal});
@@ -45,16 +44,20 @@ export default {
 #container strong {
   font-size: 20px;
   line-height: 26px;
+  color: #feb041;
 }
 
 #container p {
   font-size: 16px;
   line-height: 22px;
-  color: #8c8c8c;
+  color: #fff;
   margin: 0;
 }
 
 #container a {
   text-decoration: none;
+}
+ion-button {
+  margin-top: 20px;
 }
 </style>
