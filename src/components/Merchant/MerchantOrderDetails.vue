@@ -1,22 +1,21 @@
 <template>
-    <ion-page>
-        <CustomHeader link="/order-details"/>
         
         <ion-content :fullscreen="true">
+           <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
            <g-map 
                 mapType="roadmap"
                 :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
-                :zoom="10"
+                :zoom="14"
                 :disableUI="true"
              style="height: 200px;"></g-map>
            <ion-card class="status">
-                <h4>Your Order</h4>
+                <h4>Customer's Order</h4>
                 <h5>Order #S19820101</h5>   
                 <h6>Estimated Delivery Time: 09/20/2021 8:45pm-9:00pm</h6>
                 <ion-grid>
                     <ion-row>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></ion-col>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
+                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status ">Processing</p></ion-col>
+                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"  color="warning"></ion-icon><p class="text-status active">Assembled</p></ion-col>
                     </ion-row>
                     <ion-row>
                         <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
@@ -26,48 +25,7 @@
            </ion-card>
            <ion-card>
                 <div class="title-icon">
-                    <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p> 
-                </div>
-                <div class="summary-details">
-                    <ion-grid>
-                    <ion-row>  
-                        <ion-col size="3">
-                            <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
-                        </ion-col>
-                        <ion-col size="9"> 
-                            <p style="font-size: 15px;">John Rider</p>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col  size="3">
-                            <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
-                        </ion-col>
-                        <ion-col size="9"> 
-                            <ion-button target="_blank" rel="noopener noreferrer" href="tel:09567387836" color="warning">Call Rider 09567387836</ion-button>
-                        </ion-col>
-                    </ion-row>
-                    
-                    <ion-row>
-                            
-                    <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
-                    </ion-row>
-                    <ion-row>
-                            <p style="font-size: 12px;">Make and Model: Mio i124</p>
-                            <p style="font-size: 12px;">Plate Number: XGY210</p>
-                            </ion-row>
-                    <ion-row>
-                            <p style="font-size: 12px;">Company ID:</p>
-                        <ion-col size="12"> 
-                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
-                        </ion-col>
-                    </ion-row>
-                    </ion-grid>
-                </div>
-           </ion-card>
-           <ion-card>
-                <div class="title-icon">
-                    <ion-icon :icon="receiptOutline" class="map"></ion-icon>
-                    <p class="title" style="text-align:left; margin-right: 100px;">Receiver Details</p> 
+                    <p style="text-align:center; font-size: 18px">Customer's Details</p> 
                 </div>
                 <div class="summary-details">
                     <ion-grid>
@@ -84,7 +42,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">09567387836</p>
+                            <ion-button target="_blank" rel="noopener noreferrer" href="tel:09567387836" color="tertiary">Call: 09567387836</ion-button>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -95,13 +53,24 @@
                             <p style="font-size: 15px;">Blk 21 Lot 1 John St. Batangas City, Batangas</p>
                         </ion-col>
                     </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Customer's ID:</p>
+                        <ion-col size="12"> 
+                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Customer's Selfie:</p>
+                        <ion-col size="12"> 
+                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
+                        </ion-col>
+                    </ion-row>
                     </ion-grid>
                 </div>
            </ion-card>
            <ion-card>
                 <div class="title-icon">
-                    <ion-icon :icon="receiptOutline" class="map"></ion-icon>
-                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p> 
+                    <p style="text-align:left; font-size: 18px">Summary</p> 
                 </div>
                 <div class="summary-details">
                     <div class="display-flex">
@@ -124,31 +93,32 @@
                 </div>
            </ion-card>
             
-          
         </ion-content>
-        
         <ion-footer>
             <ion-toolbar>
-                <ion-button @click="() => router.push(`/food`)">Continue Shopping</ion-button>
+                <ion-button color="tertiary" target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/private-login">Assign Rider on Web App</ion-button>
             </ion-toolbar>
         </ion-footer>
-    </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonCard, IonGrid, IonButton } from '@ionic/vue';
+import { IonContent, IonCard, IonGrid, modalController } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
-import CustomHeader from '@/components/CustomHeader.vue';
 import GMap from '@/components/GMapTracker.vue';
 export default defineComponent({
-    name: 'OrderDetails',
-    components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton , GMap },
+    name: 'MerchantOrderDetails',
+    components: { IonContent, IonCard, IonGrid , GMap },
     setup() {
         const router = useRouter();
         return { router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline}
     },
+    methods : {
+        dismissModal() {
+            modalController.dismiss();
+        },
+    }
 })
 </script>
 
