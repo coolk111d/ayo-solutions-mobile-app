@@ -6,10 +6,10 @@
         <div class="container">
             <ion-header collapse="condense">
                 <ion-toolbar>
-                    <ion-title size="large">AYO Courier</ion-title>
+                    <ion-title size="large">Same Day Courier</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <ExploreContainer name="AYO Courier" service="Courier" link="https://ayosolution.com/same-day" />
+            <ExploreContainer name="Same Day Courier" service="Same Day Courier" link="https://ayosolution.com/same-day" />
         </div>
         </ion-content>
     </ion-page>
