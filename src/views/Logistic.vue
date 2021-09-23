@@ -6,11 +6,11 @@
             <div class="container">
             <ion-header collapse="condense">
                 <ion-toolbar>
-                    <ion-title size="large">AYO Logistic</ion-title>
+                    <ion-title size="large">National Logistic</ion-title>
                 </ion-toolbar>
             </ion-header>
 
-            <ExploreContainer name="AYO Logistic" service="Logistic" link="https://ayosolution.com/ayo-box/calculator-rate"/>
+            <ExploreContainer name="National Logistic" service="National Logistic" link="https://ayosolution.com/ayo-box/calculator-rate"/>
             <!-- <ion-button @click="openModal">Register Now!</ion-button> -->
             </div>
         </ion-content>
