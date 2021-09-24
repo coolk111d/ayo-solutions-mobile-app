@@ -69,19 +69,27 @@
             
             const storage = new Storage();
             storage.create();
+
             return { router, storage, bagOutline, mapOutline, keypadOutline, logOutOutline };
         },
         
         methods: {
             logOut() {
+                /**
+                 * todo:
+                 * if current logged in is guest, add confirmation before proceed it on logout
+                 * because all items he add on cart will be lost.
+                 */
+
                 this.storage.clear();
                 this.router.push("/login");
             },
+
             logIn() {
                 this.router.push("/login");
             },
+
             async getName() {
-            
                     const name = await this.storage.get('authUser');
                     if(name == null) {
                         this.name = "Guest" 

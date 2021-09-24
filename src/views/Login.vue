@@ -8,7 +8,7 @@
             </ion-header>
 
             <div class="login-container" style="">
-                <a href="/home" class="guest-signin-link"><ion-icon :icon="arrowBackOutline" /> Sign in as Guest</a>
+                <a href="javascript:void(0)" class="guest-signin-link" @click="loginAsGuest"><ion-icon :icon="arrowBackOutline" /> Sign in as Guest</a>
 
                 <img src="/assets/images/logo-trans.png" alt="" style="width: 30%; margin: 0 auto;">
 
@@ -174,12 +174,12 @@ export default  {
                 this.toastMessage = "You are already login";
                 this.setOpenToast(true);
                 if(authUser.role == "rider") {
-                        this.router.push('/rider-dashboard')
-                    } else if(authUser.role == "merchant") {
-                        this.router.push('/merchant-dashboard')
-                    } else {
-                        this.router.push('/home')
-                    }
+                    this.router.push('/rider-dashboard')
+                } else if(authUser.role == "merchant") {
+                    this.router.push('/merchant-dashboard')
+                } else {
+                    this.router.push('/home')
+                }
             } else {
                 this.notAuth = true;
             }
@@ -200,7 +200,7 @@ export default  {
                 }
             }).then(res => {
                 const data = res.data;
-                console.log(data);
+
                 this.setOpenLoading(false);
                 if (data.success) {
                     if(data.user.role == "rider") {
@@ -219,7 +219,6 @@ export default  {
                             role: data.user.role
                         }
                     );
-                    
                 } else {
                     this.toastMessage = "Invalid email and password."
                 }
@@ -232,6 +231,41 @@ export default  {
                 this.setOpenToast(true);
             });
         },
+
+        loginAsGuest() {
+            this.setOpenLoading(true);
+
+            axios({
+                method: "POST",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/cart/take`
+            }).then(res => {
+                const data = res.data;
+
+                this.setOpenLoading(false);
+                if (data.success) {
+                    this.router.push('/home')
+                    this.toastMessage = `Successfully Login as Guest!`;
+
+                    // eslint-disable-next-line no-undef
+                    this.storage.set('authUser', {
+                            token: data.cart_token,
+                            name: null,
+                            email: null,
+                            role: "guest"
+                        }
+                    );
+                } else {
+                    this.toastMessage = "Invalid email and password."
+                }
+
+                this.setOpenToast(true);
+            }).catch(err => {
+                this.setOpenLoading(false);
+
+                this.toastMessage = err.response.data.message;
+                this.setOpenToast(true);
+            });
+        }
     },
 }
 </script>
