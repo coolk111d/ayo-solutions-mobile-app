@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "52891260062",
+    "project_id": "ayo-cc148",
+    "storage_bucket": "ayo-cc148.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:52891260062:android:0e1e5aed24e990b41e178f",
+        "android_client_info": {
+          "package_name": "com.ayosolution.inc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "52891260062-jquc81vs8ucegr4tcuankq9n68i4bkr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhtIdToNRTQnQ4WpJAVXIonSIkHEXY3Wk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "52891260062-jquc81vs8ucegr4tcuankq9n68i4bkr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
