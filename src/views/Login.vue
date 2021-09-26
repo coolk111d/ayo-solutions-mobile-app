@@ -38,7 +38,6 @@
                 <div class="login-meta-data text-center">
                     <a class="stretched-link" href="/">Forgot Password?</a>
                     <p>Didn't have an account? <a class="stretched-link" href="/">Register Now</a></p>
-                    <p>Administrator? <a class="stretched-link" href="/">Login Now</a></p>
                 </div>
             </div>
             <!--<ion-list>
