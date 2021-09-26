@@ -213,6 +213,7 @@ export default  {
                     this.toastMessage = `Successfully Login! Welcome ${data.user.name}`;
                     // eslint-disable-next-line no-undef
                     this.storage.set('authUser', {
+                            id: data.user.id,
                             token: data.token,
                             name: data.user.name,
                             email: data.user.email,
