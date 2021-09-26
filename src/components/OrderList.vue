@@ -9,69 +9,14 @@
     </ion-header>
 
     <ion-content class="ion-padding  cart-content">
-            <ion-row class="ion-align-items-center">
+            <ion-row class="ion-align-items-center" v-for="order of orders" :key="order.id">
                     <ion-col size="12" style="text-align:center;">
-                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Jolibee- Batangas</span></a>
+                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Order #{{order.tracking_number}}</span></a>
                             <!-- Product Price -->
-                            <p class="sale-price">Order #S10928102</p>
-                            <p class="sale-price">Ordered: <span class="price">09/21/2021 8:10pm</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;230</span></p>       
-                            <ion-button size="small" @click="orderDetails">Order Details</ion-button>
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="12" style="text-align:center;">
-                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Order #S61910121</p>
-                            <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p>       
-                            <ion-button size="small" @click="orderDetails">Order Details</ion-button>
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="12" style="text-align:center;">
-                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Chowking - Batangas</span></a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Order #S61910801</p>
-                            <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;520</span></p>       
-                            <ion-button size="small" @click="orderDetails">Order Details</ion-button>
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="12" style="text-align:center;">
-                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Mcdo - Batangas</span></a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Order #S61213411</p>
-                            <p class="sale-price">Ordered: <span class="price">09/14/2021 9:10pm</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;120</span></p>       
-                            <ion-button size="small" @click="orderDetails">Order Details</ion-button>
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="12" style="text-align:center;">
-                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Mcdo - Batangas</span></a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Order #S61213411</p>
-                            <p class="sale-price">Ordered: <span class="price">09/14/2021 9:10pm</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;120</span></p>       
-                            <ion-button size="small" @click="orderDetails">Order Details</ion-button>
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="12" style="text-align:center;">
-                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Mcdo - Batangas</span></a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Order #S61213411</p>
-                            <p class="sale-price">Ordered: <span class="price">09/14/2021 9:10pm</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;120</span></p>       
-                            <ion-button size="small" @click="orderDetails">Order Details</ion-button>
+                            <p class="sale-price">Status: {{order.status}}</p>
+                            <p class="sale-price">Delivery Time: <span class="price">{{order.delivery_date}}</span></p>       
+                            <p class="sale-price">Total Price: <span class="price">&#8369;{{order.total_price_with_tax}}</span></p>       
+                            <ion-button size="small" @click="orderDetails(order.id)">Order Details</ion-button>
                     </ion-col>
             </ion-row>
 
@@ -98,7 +43,8 @@ import {
 import {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline } from 'ionicons/icons';
 import { defineComponent} from 'vue';
 import { useRouter } from 'vue-router';
-
+import { Storage } from '@ionic/storage';
+import axios from "axios";
 export default defineComponent({
     name: "OrderList",
 
@@ -106,21 +52,49 @@ export default defineComponent({
         IonHeader, IonContent, IonToolbar, IonTitle,
         IonButtons, IonButton,
     },
-
+    data() {
+            return {
+                customerId: Number,
+                orders: []
+            }
+        },
     setup() {
+
+        const storage = new Storage();
+        storage.create();
+
         const router = useRouter();
-        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router};
+        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router, storage};
     },
 
     methods : {
         dismissModal() {
             modalController.dismiss();
         },
-        orderDetails() {
+        orderDetails(id) {
             modalController.dismiss();
-            this.router.push('/order-details');
-        }    
-    }
+            this.router.push(`/order-details/${id}`);
+        },
+        async getOrders() {
+            
+                    const customer = await this.storage.get('authUser');
+                    console.log(customer);
+                    this.customerId = customer.id;
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${customer.id}`,
+                    }).then(res => {
+                        console.log(res.data);
+                        this.orders = res.data;
+                    }).catch(err => {
+                        console.log(err);
+                    });
+        },
+         
+    },
+    beforeMount() {
+        this.getOrders();
+    },
 })
 </script>
 

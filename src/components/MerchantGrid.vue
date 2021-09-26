@@ -1,6 +1,6 @@
 <template>
   <h5 class="title">All Restaurants in City of Tanauan</h5>
-            <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
+            <ion-searchbar placeholder="What are you craving?" color="transparent" @ionChange="searchMerchant($event.target.value)"></ion-searchbar>
             <ion-grid>
                 <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
                     <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
@@ -16,6 +16,7 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
+            
             <div style="margin: -5px auto 10px; text-align:center">
             <ion-button v-if="!loc" @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
             </div>
@@ -34,7 +35,8 @@ export default defineComponent({
       merchants: [],
       page: 1,
       arr: [],
-      loc: false
+      loc: false,
+      merchantsisNull: false
     }
   },
   methods: {
@@ -73,6 +75,23 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
+      },
+
+      searchMerchant: function(loc) {
+                const query = loc;
+            if(query != "") {
+              axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantsbySearch/${query}`,
+            }).then(res => {
+                        console.log(res.data.length);
+                            this.merchants = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
+            } else {
+                this.initialLoad();
+            }
       },
 
   },

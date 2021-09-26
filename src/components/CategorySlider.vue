@@ -3,14 +3,16 @@
 <div class="container">
                 <swiper
     :slides-per-view="2.3"
-    :space-between="0"
+    :space-between="5"
     @swiper="onSwiper"
     @slideChange="onSlideChange"
   >
-    <swiper-slide v-for="category of categories" :key="category.name">
-                    <div class="services-slider"  v-bind:style="{'background-image':'url('+ env + '/storage/' + category.image + ')' }" @click="() => router.push('/food')">
-                        <h5 class="service-title" :key="i">{{category.name }}</h5>
+    <swiper-slide v-for="category of categories" :key="category.id">
+                    <a v-bind:href="'/merchant-category/'+ category.id" style="text-decoration:none;">
+                    <div class="services-slider"  v-bind:style="{'background-image':'url('+ env + '/storage/' + category.image + ')' }">
+                        <h5 class="service-title">{{category.name }}</h5>
                     </div> 
+                    </a>
     </swiper-slide>
   </swiper>
   
@@ -52,7 +54,12 @@ export default defineComponent({
       };
     const router = useRouter();
     return { router, onSwiper, onSlideChange, env }
-}
+},
+  methods: {
+    gotoCategory(id) {
+      this.router.push(`/merchant-category/${id}`);
+    }
+  }
 })
 </script>
 
