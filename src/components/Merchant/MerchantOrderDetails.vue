@@ -4,22 +4,28 @@
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
            <g-map 
                 mapType="roadmap"
-                :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
+                :center="{lat: JSON.parse(shipping).latitude, lng: JSON.parse(shipping).longitude}"
                 :zoom="14"
                 :disableUI="true"
              style="height: 200px;"></g-map>
            <ion-card class="status">
                 <h4>Customer's Order</h4>
-                <h5>Order #S19820101</h5>   
-                <h6>Estimated Delivery Time: 09/20/2021 8:45pm-9:00pm</h6>
+                <h5>Order #{{orderDetails.tracking_number}}</h5>   
+                <h6>Estimated Delivery Time: {{orderDetails.delivery_date}}</h6>
                 <ion-grid>
                     <ion-row>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status ">Processing</p></ion-col>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"  color="warning"></ion-icon><p class="text-status active">Assembled</p></ion-col>
+                        <ion-col size="6" v-if="orderDetails.status != 'processing'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status ">Processing</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></ion-col>
+
+                        <ion-col size="6" v-if="orderDetails.status != 'assembled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Assembled</p></ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
+                        <ion-col size="6" v-if="orderDetails.status != 'delivering'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivering</p></ion-col>
+
+                        <ion-col size="6" v-if="orderDetails.status != 'delivered'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivered</p></ion-col>
                     </ion-row>
                 </ion-grid>
            </ion-card>
@@ -34,7 +40,7 @@
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">John Smith</p>
+                            <p style="font-size: 15px;">{{JSON.parse(shipping).name}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -42,7 +48,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <ion-button target="_blank" rel="noopener noreferrer" href="tel:09567387836" color="tertiary">Call: 09567387836</ion-button>
+                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + JSON.parse(shipping).mobile_number" color="tertiary">Call: {{JSON.parse(shipping).mobile_number}}</ion-button>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -50,19 +56,19 @@
                             <ion-icon :icon="navigate" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">Blk 21 Lot 1 John St. Batangas City, Batangas</p>
+                            <p style="font-size: 15px;">{{JSON.parse(shipping).address}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Customer's ID:</p>
                         <ion-col size="12"> 
-                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
+                            <img :src="env + '/storage/' + orderDetails.gov_id" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Customer's Selfie:</p>
                         <ion-col size="12"> 
-                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
+                            <img :src="env + '/storage/' + orderDetails.selfie" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -70,25 +76,26 @@
            </ion-card>
            <ion-card>
                 <div class="title-icon">
-                    <p style="text-align:left; font-size: 18px">Summary</p> 
+                    <ion-icon :icon="receiptOutline" class="map"></ion-icon>
+                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p> 
                 </div>
                 <div class="summary-details">
                     <div class="display-flex">
-                        <p>1x Burger</p>
-                        <p>&#8369; 100.00</p>
+                        <p>1x Burger(not dynamic)</p>
+                        <p>&#8369; {{orderDetails.sub_total_price}}</p>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; 30.00</p>
+                        <p>&#8369; {{orderDetails.total_price - orderDetails.sub_total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; 130.00</p>
+                        <p>&#8369; {{orderDetails.total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
-                        <p style="font-size: 16px;">&#8369; 250.00</p>
+                        <p style="font-size: 16px;">&#8369; {{orderDetails.total_price_with_tax}}</p>
                     </div>
                 </div>
            </ion-card>
@@ -102,23 +109,48 @@
 </template>
 
 <script lang="ts">
-import { IonContent, IonCard, IonGrid, modalController } from '@ionic/vue';
+import { IonContent, IonCard, IonGrid, modalController, IonFooter, IonToolbar, IonButton } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import GMap from '@/components/GMapTracker.vue';
+import axios from "axios";
 export default defineComponent({
     name: 'MerchantOrderDetails',
-    components: { IonContent, IonCard, IonGrid , GMap },
+    props: {
+        orderID: Number
+    },
+    data() {
+        return {
+            orderDetails : [],
+            shipping: []
+        }
+    },
+    components: { IonContent, IonCard, IonGrid , GMap,  IonFooter, IonToolbar, IonButton },
     setup() {
+        const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
-        return { router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline}
+        return { env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline}
     },
     methods : {
         dismissModal() {
             modalController.dismiss();
         },
-    }
+        getDetails(props) {
+            axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${props.orderID}`,
+                    }).then(res => {
+                       this.shipping = res.data[0].shipping_address;
+                        this.orderDetails = res.data[0];
+                    }).catch(err => {
+                        console.log(err);
+                    });
+        }
+    },
+    beforeMount() {
+        this.getDetails(this.$props);
+    },
 })
 </script>
 

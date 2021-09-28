@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">AYO SOLUTIONS</string>
     <string name="title_activity_main">AYO SOLUTIONS</string>
+    <string name="activity_name">AYO SOLUTIONS</string>
     <string name="package_name">com.ayosolution.inc</string>
     <string name="custom_url_scheme">com.ayosolution.inc</string>
 </resources>
