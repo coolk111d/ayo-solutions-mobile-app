@@ -33,7 +33,7 @@
                         <ion-item>
                             
                             <ion-radio value="Cash"></ion-radio>
-                            <ion-label style="margin-left: 10px">Cash</ion-label>
+                            <ion-label style="margin-left: 10px">Cash to Cash on Delivery</ion-label>
                         </ion-item>
 
                         <ion-item>
