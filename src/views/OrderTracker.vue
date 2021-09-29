@@ -1,26 +1,35 @@
 <template>
     <ion-page>
-        <CustomHeader link="/order-details"/>
-        
+        <CustomHeader :reset="'/order-details/' + id"/>
         <ion-content :fullscreen="true">
-           <g-map 
+          <g-map 
                 mapType="roadmap"
-                :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
-                :zoom="10"
+                :center="{lat: latitude, lng: longitude}"
+                :zoom="14"
                 :disableUI="true"
              style="height: 200px;"></g-map>
            <ion-card class="status">
                 <h4>Your Order</h4>
-                <h5>Order #S19820101</h5>   
-                <h6>Estimated Delivery Time: 09/20/2021 8:45pm-9:00pm</h6>
+                <h5>Order #{{orderDetails.tracking_number}}</h5>   
+                <h6>Estimated Delivery Time: {{orderDetails.delivery_date}}</h6>
                 <ion-grid>
                     <ion-row>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></ion-col>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
+                        <ion-col size="6" v-if="orderDetails.status != 'processing'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status ">Processing</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></ion-col>
+
+                        <ion-col size="6" v-if="orderDetails.status != 'assembled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Assembled</p></ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
-                        <ion-col size="6"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
+                        <ion-col size="6" v-if="orderDetails.status != 'delivering'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivering</p></ion-col>
+
+                        <ion-col size="6" v-if="orderDetails.status != 'delivered'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivered</p></ion-col>
+                    </ion-row>
+                    <ion-row style="display:flex; justify-content:center">
+                        <ion-col size="6" v-if="orderDetails.status != 'canceled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Cancelled</p></ion-col>
+                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Cancelled</p></ion-col>
                     </ion-row>
                 </ion-grid>
            </ion-card>
@@ -35,7 +44,7 @@
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">John Rider</p>
+                            <p style="font-size: 15px;">{{riderDetails.name}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -43,7 +52,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <ion-button target="_blank" rel="noopener noreferrer" href="tel:09567387836" color="warning">Call Rider 09567387836</ion-button>
+                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + riderDetails.mobile_number" color="warning">Call Rider {{riderDetails.mobile_number}}</ion-button>
                         </ion-col>
                     </ion-row>
                     
@@ -52,13 +61,13 @@
                     <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
                     </ion-row>
                     <ion-row>
-                            <p style="font-size: 12px;">Make and Model: Mio i124</p>
-                            <p style="font-size: 12px;">Plate Number: XGY210</p>
+                            <p style="font-size: 12px;">Make and Model: {{riderDetails.make_and_model}}</p>
+                            <p style="font-size: 12px;">Plate Number: {{riderDetails.plate_number}}</p>
                             </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
                         <ion-col size="12"> 
-                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
+                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: 0px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -76,7 +85,7 @@
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">John Smith</p>
+                            <p style="font-size: 15px;">{{shipping.name}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -84,7 +93,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">09567387836</p>
+                            {{shipping.mobile_number}}
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -92,7 +101,19 @@
                             <ion-icon :icon="navigate" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">Blk 21 Lot 1 John St. Batangas City, Batangas</p>
+                            <p style="font-size: 15px;">{{shipping.address}}</p>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Customer's ID:</p>
+                        <ion-col size="12"> 
+                            <img :src="env + '/storage/' + orderDetails.gov_id" style="margin-top: -10px">
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Customer's Selfie:</p>
+                        <ion-col size="12"> 
+                            <img :src="env + '/storage/' + orderDetails.selfie" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -105,21 +126,21 @@
                 </div>
                 <div class="summary-details">
                     <div class="display-flex">
-                        <p>1x Burger</p>
-                        <p>&#8369; 100.00</p>
+                        <p>1x Burger(not dynamic)</p>
+                        <p>&#8369; {{orderDetails.sub_total_price}}</p>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; 30.00</p>
+                        <p>&#8369; {{orderDetails.total_price - orderDetails.sub_total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; 130.00</p>
+                        <p>&#8369; {{orderDetails.total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
-                        <p style="font-size: 16px;">&#8369; 250.00</p>
+                        <p style="font-size: 16px;">&#8369; {{orderDetails.total_price_with_tax}}</p>
                     </div>
                 </div>
            </ion-card>
@@ -142,12 +163,56 @@ import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import GMap from '@/components/GMapTracker.vue';
+import axios from "axios";
 export default defineComponent({
     name: 'OrderDetails',
+    data() {
+        return {
+            id: null,
+            orderDetails : [],
+            shipping: [],
+            latitude: null,
+            longitude: null,
+            riderDetails: []
+        }
+    },
     components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton , GMap },
     setup() {
+        const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
-        return { router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline}
+        return { env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline}
+    },
+    methods: {
+        getID() {
+            this.id = this.$route.params.id;
+        },
+        getDetails() {
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.id}`,
+                    }).then(res => {
+                        console.log(res.data[0])
+                       this.shipping = JSON.parse(res.data[0].shipping_address);
+                        this.orderDetails = res.data[0];
+                        this.latitude = parseFloat(this.shipping['latitude']);
+                        this.longitude = parseFloat(this.shipping['longitude']);
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.id}`,
+                    }).then(res => {
+                        console.log(res.data[0]);
+                        this.riderDetails = res.data[0];
+                    }).catch(err => {
+                        console.log(err);
+                    });
+        }
+    },
+    beforeMount() {
+        this.getID();
+        this.getDetails();
     },
 })
 </script>

@@ -42,7 +42,7 @@
                     <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
                         <ion-col size="12"> 
-                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: -40px">
+                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: 0px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -113,7 +113,7 @@
         
         <ion-footer>
             <ion-toolbar>
-                <ion-button @click="() => router.push(`/order-tracker`)">TRACK MY ORDER</ion-button>
+                <ion-button @click="() => router.push(`/order-tracker/${order.id}`)">TRACK MY ORDER</ion-button>
             </ion-toolbar>
         </ion-footer>
     </ion-page>
@@ -148,8 +148,8 @@ export default defineComponent({
                         url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.$route.params.id}`,
                     }).then(res => {
                         console.log(res.data);
-                        this.order = res.data;
-                        this.shippingAddress = res.data.shipping_address;
+                        this.order = res.data[0];
+                        this.shippingAddress = JSON.parse(res.data[0].shipping_address);
                     }).catch(err => {
                         console.log(err);
                     });

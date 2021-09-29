@@ -59,7 +59,7 @@ const routes: Array < RouteRecordRaw > = [
         component: () => import('@/views/OrderDetails.vue'),
     },
     {
-        path: '/order-tracker',
+        path: '/order-tracker/:id',
         name: 'Order Tracker',
         component: () => import('@/views/OrderTracker.vue'),
     },
