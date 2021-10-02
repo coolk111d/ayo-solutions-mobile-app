@@ -3,10 +3,59 @@
         <CustomHeader link="/food" />
         
         <ion-content :fullscreen="true">
-          <div class="header-container">
-            <h5 style="text-align:center">Checkout</h5>
+            <div class="header-container">
+                <h5 style="text-align:center">Checkout</h5>
             </div>
-           <ion-card>
+
+            <ion-card>
+                <div class="title-icon">
+                    <ion-icon :icon="mapOutline" class="map"></ion-icon>
+                    <p class="title">Billing Address</p>
+                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="onChangeBilling"></ion-icon>
+                </div>
+
+                <div v-show="billing.google_address">
+                    <p class="address" @click="onChangeBilling">{{ billing.google_address }}</p>
+                    <hr style="margin-bottom: 30px;">
+                </div>
+                <div v-show="billing.first_name">
+                    <p class="title">Details:</p>
+                    <p class="address" @click="onChangeBilling">
+                        <ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ billing.first_name }} {{ billing.last_name }}
+                    </p>
+                </div>
+                <div v-show="billing.mobile_number">
+                    <p class="address" @click="onChangeBilling">
+                        <ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ billing.mobile_number }}
+                    </p>
+                </div>
+            </ion-card>
+
+            <ion-card>
+                <div class="title-icon">
+                    <ion-icon :icon="mapOutline" class="map"></ion-icon>
+                    <p class="title">Shipping Address</p>
+                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="onChangeShipping"></ion-icon>
+                </div>
+
+                <div v-show="shipping.google_address">
+                    <p class="address" @click="onChangeShipping">{{ shipping.google_address }}</p>
+                    <hr style="margin-bottom: 30px;">
+                </div>
+                <div v-show="shipping.first_name">
+                    <p class="title">Details:</p>
+                    <p class="address" @click="onChangeShipping">
+                        <ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ shipping.first_name }} {{ shipping.last_name }}
+                    </p>
+                </div>
+                <div v-show="shipping.mobile_number">
+                    <p class="address" @click="onChangeShipping">
+                        <ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ shipping.mobile_number }}
+                    </p>
+                </div>
+            </ion-card>
+
+           <!-- <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
                     <p class="title">Delivery Address</p> 
@@ -22,7 +71,7 @@
                         <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
                         <ion-textarea></ion-textarea>
                     </ion-item>
-           </ion-card>
+           </ion-card> -->
 
            <ion-card>
                 <div class="title-icon">
@@ -68,6 +117,11 @@
                     <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
                     <ion-input name="selfie" type="file" accept="image/*" > </ion-input>
                     <ErrorMessage as="ion-text" name="government_id" color="danger" />
+                </ion-item>
+
+                <ion-item>
+                    <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
+                    <ion-textarea></ion-textarea>
                 </ion-item>
             </ion-card>
            <ion-card>
@@ -120,26 +174,97 @@ import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import Address from '@/components/Address.vue';
+import { Storage } from "@ionic/storage";
+import axios from "axios";
+
 export default defineComponent({
     name: 'Checkout',
     components: { IonContent, IonPage, IonCard, CustomHeader, IonTextarea, IonLabel, IonItem, 
     IonFooter, IonRadioGroup, IonRadio},
-    setup() {
-        const router = useRouter();
-        return { router, arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutline, bicycleOutline, person, call, personOutline}
+
+    data() {
+        return {
+            billing: {},
+            shipping: {}
+        }
     },
+
+    setup() {
+        const storage = new Storage();
+        storage.create();
+
+        const router = useRouter();
+        return {
+            router, arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutline, bicycleOutline, person, call, personOutline,
+            storage
+        }
+    },
+
+    mounted() {
+        this.storage.get("authUser").then(user => {
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/customers/billing-shipping`,
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    this.billing = data.data.billing;
+                    this.shipping = data.data.shipping;
+
+                    console.log(this.billing);
+                    console.log(this.shipping);
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err.response.data.message);
+            });
+        });
+    },
+
     methods: {
         async addAddress() {
-        const modal = await modalController
-        .create({
-          component: Address,
-          cssClass: 'my-custom-class',
-          componentProps: {
-            title: 'Address'
-          },
-        })
-      return modal.present();
-    }
+            const modal = await modalController
+            .create({
+              component: Address,
+              cssClass: 'my-custom-class',
+              componentProps: {
+                title: 'Address'
+              },
+            });
+
+            return modal.present();
+        },
+
+        async onChangeBilling() {
+            const modal = await modalController
+            .create({
+                component: Address,
+                componentProps: {
+                    title: "Billing Address",
+                    address: this.billing
+                },
+            });
+
+            return modal.present();
+        },
+
+        async onChangeShipping() {
+            const modal = await modalController
+            .create({
+                component: Address,
+                componentProps: {
+                    title: "Shipping Address",
+                    address: this.shipping
+                },
+            });
+
+            return modal.present();
+        },
     }
 })
 </script>

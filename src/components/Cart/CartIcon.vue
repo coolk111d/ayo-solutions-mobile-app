@@ -29,7 +29,6 @@ export default {
     },
 
     mounted() {
-
         this.storage.get("authUser").then(user => {
             axios({
                 method: "GET",
