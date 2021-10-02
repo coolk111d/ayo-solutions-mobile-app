@@ -39,7 +39,7 @@
                     <h6 style="color:black; text-align: center; font-weight: 500">Subtotal:</h6>
                     </ion-col>
                     <ion-col size="6">
-                    <h6 style="color:black;  text-align: center;  font-weight: 500">156.00</h6>
+                    <h6 style="color:black;  text-align: center;  font-weight: 500" v-text="subTotal"></h6>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -47,7 +47,7 @@
                     <h5 style="color:black; text-align: center; font-weight: 600">Total:</h5>
                     </ion-col>
                     <ion-col size="6">
-                    <h5 style="color:black;  text-align: center;  font-weight: 600">256.00</h5>
+                    <h5 style="color:black;  text-align: center;  font-weight: 600" v-text="total"></h5>
                     </ion-col>
                 </ion-row>
                 <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Review Payment</ion-button>
@@ -75,12 +75,15 @@ import { useRouter } from 'vue-router';
 
 import { Storage } from '@ionic/storage';
 import axios from "axios";
+import { throttle, isFunction } from "lodash";
 
 export default defineComponent({
     name: "Cart",
     data() {
         return {
-            items: []
+            items: [],
+            subTotal: 0,
+            total: 0,
         };
     },
     props: {
@@ -96,18 +99,18 @@ export default defineComponent({
     },
 
     setup() {
+        const storage = new Storage();
         const router = useRouter();
-        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router};
+        return {
+            addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router,
+            storage
+        };
     },
 
     mounted() {
-        const storage = new Storage();
-        storage.create();
+        this.storage.create();
 
-        this.cart = null;
-        this.items = null;
-
-        storage.get("authUser").then(user => {
+        this.storage.get("authUser").then(user => {
             axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items`,
@@ -119,6 +122,8 @@ export default defineComponent({
 
                 if (data.success) {
                     this.items = data.items;
+                    this.subTotal = data.cart.sub_total_price;
+                    this.total = data.cart.total_price;
                 } else {
                     console.log(data.message);
                 }
@@ -133,14 +138,47 @@ export default defineComponent({
             modalController.dismiss();
         },
 
-        increaseQuantity(item) {
+        increaseQuantity: throttle(function(item) {
             item.quantity++;
-        },
+            this.changeQuantity(item, item.quantity, (data) => {
+                this.subTotal = data.cart.sub_total_price;
+                this.total = data.cart.total_price;
+            });
+        }, 500),
 
-        decreaseQuantity(item) {
-            if(item.quantity >= 1) {
-                item.quantity--;
-            }
+        decreaseQuantity: throttle(function(item) {
+            item.quantity--;
+            this.changeQuantity(item, item.quantity, (data) => {
+                this.subTotal = data.cart.sub_total_price;
+                this.total = data.cart.total_price;
+            });
+        }, 500),
+
+        changeQuantity(item, quantity, cb) {
+            this.storage.get("authUser").then(user => {
+                axios({
+                    method: "PUT",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items/${item.id}`,
+                    headers: {
+                        Authorization: `Bearer ${user.cart_token}`
+                    },
+                    data: {
+                        quantity: quantity
+                    }
+                }).then(res => {
+                    const data = res.data;
+
+                    if (data.success) {
+                        if (isFunction(cb)) {
+                            cb(data.data);
+                        }
+                    } else {
+                        console.log(data.message);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            }, 800);
         },
 
         checkout() {

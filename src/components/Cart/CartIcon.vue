@@ -22,17 +22,14 @@ export default {
     components: { IonIcon, IonBadge },
 
     setup() {
-        return { basketOutline };
+        const storage = new Storage();
+        return { storage, basketOutline };
     },
 
     mounted() {
-        const storage = new Storage();
-        storage.create();
+        this.storage.create();
 
-        this.cart = null;
-        this.items = null;
-
-        storage.get("authUser").then(user => {
+        this.storage.get("authUser").then(user => {
             axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items`,
@@ -49,7 +46,7 @@ export default {
                     console.log(data.message);
                 }
             }).catch(err => {
-                console.log(err.response.data.message);
+                console.log(err);
             });
         });
     },
