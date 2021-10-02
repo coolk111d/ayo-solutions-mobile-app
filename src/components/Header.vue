@@ -16,10 +16,7 @@
                             </div>
                         </ion-col>
                         <ion-col>
-                            <div class="cart-container ion-text-end">
-                                <ion-icon :icon="basketOutline" @click="onClick" class="cart-head"/>
-                                <ion-badge color="warning">5</ion-badge>
-                            </div>
+                            <CartIcon />
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -35,10 +32,10 @@ import {
     // IonButtons, IonMenuButton,
 
     IonGrid, IonRow, IonCol,
-    IonIcon,modalController , IonBadge
+    IonIcon
 } from '@ionic/vue';
-import { menu, basketOutline } from 'ionicons/icons';
-import CartModal from './CartModal.vue';
+import { menu } from 'ionicons/icons';
+import CartIcon from './Cart/CartIcon.vue';
 import { menuController } from '@ionic/vue';
 
 import Menu from '@/components/Menu.vue';
@@ -52,28 +49,19 @@ export default {
 
         IonGrid, IonRow, IonCol,
         IonIcon,
-        IonBadge,
-        Menu
+        Menu,
+
+        CartIcon
     },
     methods: {
-        async onClick() {
-            const modal = await modalController
-        .create({
-          component: CartModal,
-          cssClass: 'my-custom-class',
-          componentProps: {
-            title: 'My Cart'
-          },
-        })
-      return modal.present();
-    },
-    openMenu() {
+        openMenu() {
             menuController.enable(true, "menu");
             menuController.open("menu");
         },
-  },
+    },
+
     setup() {
-        return { menu, basketOutline };
+        return { menu };
     }
 }
 </script>
