@@ -15,10 +15,7 @@
                             </div>
                         </ion-col>
                         <ion-col>
-                            <div class="cart-container ion-text-end">
-                                <ion-icon :icon="basketOutline" @click="onClick" class="cart-head"/>
-                                <ion-badge color="warning">5</ion-badge>
-                            </div>
+                            <CartIcon style="color: white" />
                         </ion-col>
                     </ion-row>
                 </ion-grid>
@@ -31,7 +28,9 @@
 import {
     IonHeader, IonToolbar, IonTitle,
     IonGrid, IonRow, IonCol,
-    IonIcon,modalController, IonBadge
+    IonIcon,modalController,
+
+    // IonBadge
 } from '@ionic/vue';
 import { useRouter } from 'vue-router';
 import { arrowBackOutline, menu, basketOutline } from 'ionicons/icons';
@@ -39,6 +38,7 @@ import CartModal from './CartModal.vue';
 import { menuController } from '@ionic/vue';
 
 import Menu from '@/components/Menu.vue';
+import CartIcon from '@/components/Cart/CartIcon.vue';
 
 export default {
     name: 'CustomHeader',
@@ -50,8 +50,10 @@ export default {
         IonHeader, IonToolbar, IonTitle,
         IonGrid, IonRow, IonCol,
         IonIcon,
-        IonBadge,
-        Menu
+        // IonBadge,
+        Menu,
+
+        CartIcon
     },
     setup() {
         const router = useRouter();

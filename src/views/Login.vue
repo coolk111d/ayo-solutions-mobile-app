@@ -8,7 +8,7 @@
             </ion-header>
 
             <div class="login-container" style="">
-                <a href="/home" class="guest-signin-link"><ion-icon :icon="arrowBackOutline" /> Sign in as Guest</a>
+                <a href="javascript:void(0)" class="guest-signin-link" @click="loginAsGuest"><ion-icon :icon="arrowBackOutline" /> Sign in as Guest</a>
 
                 <img src="/assets/images/logo-trans.png" alt="" style="width: 30%; margin: 0 auto;">
 
@@ -130,10 +130,8 @@ export default  {
 
         // Initial values
         const formValues = {
-            // email: "jones.krista@example.org",
-            // password: "jones.krista@example.org",
-            email: "",
-            password: "",
+            email: `${process.env.VUE_APP_LOGIN_EMAIL}`,
+            password: `${process.env.VUE_APP_LOGIN_PASSWORD}`,
         };
 
         const isOpenLoadingRef = ref(false);
@@ -172,12 +170,12 @@ export default  {
                 this.toastMessage = "You are already login";
                 this.setOpenToast(true);
                 if(authUser.role == "rider") {
-                        this.router.push('/rider-dashboard')
-                    } else if(authUser.role == "merchant") {
-                        this.router.push('/merchant-dashboard')
-                    } else {
-                        this.router.push('/home')
-                    }
+                    this.router.push('/rider-dashboard')
+                } else if(authUser.role == "merchant") {
+                    this.router.push('/merchant-dashboard')
+                } else {
+                    this.router.push('/home')
+                }
             } else {
                 this.notAuth = true;
             }
@@ -197,8 +195,8 @@ export default  {
                     password: inputs.password
                 }
             }).then(res => {
-                const data = res.data;
-                console.log(data);
+                let data = res.data;
+
                 this.setOpenLoading(false);
                 if (data.success) {
 
@@ -241,14 +239,13 @@ export default  {
                     this.toastMessage = `Successfully Login! Welcome ${data.user.name}`;
                     // eslint-disable-next-line no-undef
                     this.storage.set('authUser', {
-                            id: data.user.id,
+                            user: data.user,
+
                             token: data.token,
-                            name: data.user.name,
-                            email: data.user.email,
-                            role: data.user.role
+                            // eslint-disable-next-line @typescript-eslint/camelcase
+                            cart_token: data.cart_token,
                         }
                     );
-                    
                 } else {
                     this.toastMessage = "Invalid email and password."
                 }
@@ -257,10 +254,63 @@ export default  {
             }).catch(err => {
                 this.setOpenLoading(false);
 
-                this.toastMessage = err.response.data.message;
+                console.log(err);
+                // this.toastMessage = err.response.data.message;
                 this.setOpenToast(true);
             });
         },
+
+        loginAsGuest() {
+            this.router.push('/home')
+            this.toastMessage = `Successfully Login as Guest!`;
+
+            // eslint-disable-next-line no-undef
+            this.storage.set('authUser', {
+                    token: null,
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    cart_token: "STuVkR4toQnnS994I7emmxjYw3ibca05daaHt4Mv1uXdXqkTw5fNvwY6XSS0gu",
+                    // cart_token: data.cart_token,
+                    name: null,
+                    email: null,
+                    role: "guest"
+                }
+            );
+
+            // this.setOpenLoading(true);
+
+            // axios({
+            //     method: "POST",
+            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/cart/take`
+            // }).then(res => {
+            //     const data = res.data;
+
+            //     this.setOpenLoading(false);
+            //     if (data.success) {
+            //         this.router.push('/home')
+            //         this.toastMessage = `Successfully Login as Guest!`;
+
+            //         // eslint-disable-next-line no-undef
+            //         this.storage.set('authUser', {
+            //                 token: null,
+            //                 // eslint-disable-next-line @typescript-eslint/camelcase
+            //                 cart_token: data.cart_token,
+            //                 name: null,
+            //                 email: null,
+            //                 role: "guest"
+            //             }
+            //         );
+            //     } else {
+            //         this.toastMessage = "Invalid email and password."
+            //     }
+
+            //     this.setOpenToast(true);
+            // }).catch(err => {
+            //     this.setOpenLoading(false);
+
+            //     this.toastMessage = err.response.data.message;
+            //     this.setOpenToast(true);
+            // });
+        }
     },
 }
 </script>

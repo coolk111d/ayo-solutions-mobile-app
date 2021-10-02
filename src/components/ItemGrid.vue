@@ -11,7 +11,8 @@
                             <!-- Product Price -->
                             <p class="sale-price" style="margin-bottom:0px">{{item.description}} </p>
                             <span class="store-hours open" v-if="item.price != null">&#8369; {{item.price}}</span>
-                            <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)">Add to Basket</ion-button>
+                            <!-- <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)">Add to Basket</ion-button> -->
+                            <ion-button color="warning" expand="full" shape="round" size="small" @click="addToCart(item.menu_item_unique_key)">Add to Basket</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -20,11 +21,13 @@
             </div>-->
 </template>
 
-<script lang="ts">
+<script>
 import { useRouter } from 'vue-router';
-import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow,} from '@ionic/vue';
+import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController } from '@ionic/vue';
 import { defineComponent} from "vue";
 import axios from "axios";
+import { Storage } from "@ionic/storage";
+import CartModal from './CartModal.vue';
 
 export default defineComponent({
   name: 'ItemGrid',
@@ -35,7 +38,7 @@ export default defineComponent({
   },
   methods: {
       initialLoad: function() {
-     axios({
+            axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/items/` + this.$route.params.id,
             }).then(res => {
@@ -44,22 +47,62 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
-            
       },
 
-      
+      addToCart(menuItemKey) {
+        this.storage.get("authUser").then(user => {
+            axios({
+                method: "POST",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items`,
+                headers: {
+                    Authorization: `Bearer ${user.cart_token}`
+                },
+                data: {
+                    quantity: 1,
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    menu_item_unique_key: menuItemKey
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    this.openCartModal();
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        });
+      },
+
+      async openCartModal() {
+        const modal = await modalController.create({
+            component: CartModal,
+            cssClass: 'my-custom-class',
+            componentProps: {
+                title: 'My Cart'
+            },
+        });
+
+        return modal.present();
+      }
   },
   beforeMount() {
       this.initialLoad();
   },
   components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow },
-  setup() {
-    const env = process.env.VUE_APP_ROOT_API;
-    
-    const router = useRouter();
+    setup() {
+        const env = process.env.VUE_APP_ROOT_API;
+        const router = useRouter();
 
-    return { router, env }
-}
+        const storage = new Storage();
+        storage.create();
+
+        return { router, env, storage }
+    },
+
+
 })
 </script>
 

@@ -41,6 +41,7 @@ import CustomHeader from '@/components/CustomHeader.vue';
 import ItemGrid from '@/components/ItemGrid.vue';
 import MenuCategorySlider from '@/components/MenuCategorySlider.vue';
 import axios from "axios";
+
 export default defineComponent({
     name: 'Merchant Details',
     data(){
@@ -68,9 +69,11 @@ export default defineComponent({
   },
  
     setup() {
-    const router = useRouter();
-    return { router, arrowBackOutline}
-  }
+        const router = useRouter();
+        return {
+            router, arrowBackOutline
+        }
+    }
 })
 </script>
 

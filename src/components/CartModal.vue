@@ -5,125 +5,41 @@
                 <ion-button @click="dismissModal"><ion-icon :icon="closeCircleOutline" /></ion-button>
             </ion-buttons>
             <ion-title>{{ title }}</ion-title>
-        </ion-toolbar>  
+        </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding  cart-content">
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="3">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/products/fries.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="6">
-                         <!-- Product Title --><a class="product-title" href="">Burger Meal</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">1 x <span class="price">&#8369;230</span></p>       
-                    </ion-col>
-                    <ion-col size="3">
-                    <div class="quantity">
-                    <ion-icon :icon="removeCircleOutline" @click="removeNumber()"></ion-icon>
-                        <input :value="amount"/>
-                    <ion-icon :icon="addCircleOutline"  @click="addNumber()"></ion-icon>
-                    </div>
+    <ion-content class="ion-padding cart-content">
+        <ion-row class="ion-align-items-center" v-for="item in items" :key="item.id" v-show="item.id !== null">
+            <ion-col size="3">
+                <a class="product-thumbnail" href=""><img :src="item.image" alt=""></a>
+            </ion-col>
+            <ion-col size="6">
+                <!-- Product Title --><a class="product-title" href="" v-text="item.name"></a>
+                <!-- Product Price -->
+                <p class="sale-price">{{item.quantity}} x <span class="price">&#8369;{{item.price}}</span></p>
+            </ion-col>
+            <ion-col size="3">
+                <div class="quantity">
+                    <ion-icon :icon="removeCircleOutline" @click="decreaseQuantity(item)"></ion-icon>
+                    <input :value="item.quantity"/>
+                    <ion-icon :icon="addCircleOutline"  @click="increaseQuantity(item)"></ion-icon>
+                </div>
 
-                    <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a>
-                    <a class="delete-link"><ion-icon :icon="trashOutline"  @click="dismissModal()"></ion-icon></a> 
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="3">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/products/burger.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="6">
-                         <!-- Product Title --><a class="product-title" href="">Burger Meal</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">1 x <span class="price">&#8369;230</span></p>       
-                    </ion-col>
-                    <ion-col size="3">
-                    <div class="quantity">
-                    <ion-icon :icon="removeCircleOutline" @click="removeNumber()"></ion-icon>
-                        <input :value="amount"/>
-                    <ion-icon :icon="addCircleOutline"  @click="addNumber()"></ion-icon>
-                    </div>
-
-                    <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a>
-                    <a class="delete-link"><ion-icon :icon="trashOutline"  @click="dismissModal()"></ion-icon></a> 
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="3">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/products/burger.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="6">
-                         <!-- Product Title --><a class="product-title" href="">Burger Meal</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">1 x <span class="price">&#8369;230</span></p>       
-                    </ion-col>
-                    <ion-col size="3">
-                    <div class="quantity">
-                    <ion-icon :icon="removeCircleOutline" @click="removeNumber()"></ion-icon>
-                        <input :value="amount"/>
-                    <ion-icon :icon="addCircleOutline"  @click="addNumber()"></ion-icon>
-                    </div>
-
-                    <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a>
-                    <a class="delete-link"><ion-icon :icon="trashOutline"  @click="dismissModal()"></ion-icon></a> 
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="3">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/products/fries.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="6">
-                         <!-- Product Title --><a class="product-title" href="">Burger Meal</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">1 x <span class="price">&#8369;230</span></p>       
-                    </ion-col>
-                    <ion-col size="3">
-                    <div class="quantity">
-                    <ion-icon :icon="removeCircleOutline" @click="removeNumber()"></ion-icon>
-                        <input :value="amount"/>
-                    <ion-icon :icon="addCircleOutline"  @click="addNumber()"></ion-icon>
-                    </div>
-
-                    <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a>
-                    <a class="delete-link"><ion-icon :icon="trashOutline"  @click="dismissModal()"></ion-icon></a> 
-                    </ion-col>
-            </ion-row>
-
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="3">
-                            <!-- Product Thumbnail --><a class="product-thumbnail" href=""><img src="assets/images/products/burger.jpg" alt=""></a>
-                    </ion-col>
-                    <ion-col size="6">
-                         <!-- Product Title --><a class="product-title" href="">Burger Meal</a>
-                            <!-- Product Price -->
-                            <p class="sale-price">1 x <span class="price">&#8369;230</span></p>       
-                    </ion-col>
-                    <ion-col size="3">
-                    <div class="quantity">
-                    <ion-icon :icon="removeCircleOutline" @click="removeNumber()"></ion-icon>
-                        <input :value="amount"/>
-                    <ion-icon :icon="addCircleOutline"  @click="addNumber()"></ion-icon>
-                    </div>
-
-                    <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a>
-                    <a class="delete-link"><ion-icon :icon="trashOutline"  @click="dismissModal()"></ion-icon></a> 
-                    </ion-col>
-            </ion-row>
+                <!-- <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a> -->
+                <a class="delete-link"><ion-icon :icon="trashOutline"  @click="deleteItem(item)"></ion-icon></a>
+            </ion-col>
+        </ion-row>
     </ion-content>
 
     <ion-footer>
-     <ion-toolbar>
-             <ion-grid>
+        <ion-toolbar>
+            <ion-grid>
                 <ion-row>
                     <ion-col size="6">
                     <h6 style="color:black; text-align: center; font-weight: 500">Subtotal:</h6>
                     </ion-col>
                     <ion-col size="6">
-                    <h6 style="color:black;  text-align: center;  font-weight: 500">156.00</h6>
+                    <h6 style="color:black;  text-align: center;  font-weight: 500">&#8369;{{subTotal}}</h6>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -131,14 +47,13 @@
                     <h5 style="color:black; text-align: center; font-weight: 600">Total:</h5>
                     </ion-col>
                     <ion-col size="6">
-                    <h5 style="color:black;  text-align: center;  font-weight: 600">256.00</h5>
+                    <h5 style="color:black;  text-align: center;  font-weight: 600">&#8369;{{total}}</h5>
                     </ion-col>
                 </ion-row>
-                    <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Review Payment</ion-button>
+                <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Review Payment</ion-button>
             </ion-grid>
-        </ion-toolbar>  
+        </ion-toolbar>
     </ion-footer>
-    
 </template>
 
 
@@ -158,18 +73,34 @@ import {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, clos
 import { defineComponent} from 'vue';
 import { useRouter } from 'vue-router';
 
+import { Storage } from '@ionic/storage';
+import axios from "axios";
+import { throttle, isFunction } from "lodash";
+
 export default defineComponent({
     name: "Cart",
     data() {
-    return {
-      amount: 0,
-    };
-  },
+        return {
+            items: [],
+            subTotal: 0,
+            total: 0,
+        };
+    },
     props: {
         title: {
             type: String,
             default: "Cart"
         },
+
+        MAX_QUANTITY: {
+            type: Number,
+            default: 10
+        },
+
+        MIN_QUANTITY: {
+            type: Number,
+            default: 1
+        }
     },
 
     components: {
@@ -178,27 +109,120 @@ export default defineComponent({
     },
 
     setup() {
-        let currentNumber;
+        const storage = new Storage();
+        storage.create();
+
         const router = useRouter();
-        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router};
+        return {
+            addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router,
+            storage
+        };
+    },
+
+    mounted() {
+        this.storage.get("authUser").then(user => {
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items`,
+                headers: {
+                    Authorization: `Bearer ${user.cart_token}`
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    this.items = data.items;
+                    this.subTotal = data.cart.sub_total_price;
+                    this.total = data.cart.total_price;
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err.response.data.message);
+            });
+        });
     },
 
     methods : {
         dismissModal() {
             modalController.dismiss();
         },
-        addNumber() {
-            this.amount++;
-        },  
-        removeNumber() {
-            if(this.amount >= 1) {
-            this.amount--;
+
+        increaseQuantity: throttle(function(item) {
+            if (item.quantity < this.MAX_QUANTITY) {
+                item.quantity++;
+                this.changeQuantity(item, item.quantity, (data) => {
+                    this.subTotal = data.cart.sub_total_price;
+                    this.total = data.cart.total_price;
+                });
             }
-        }, 
+        }, 500),
+
+        decreaseQuantity: throttle(function(item) {
+            if (item.quantity > this.MIN_QUANTITY) {
+                item.quantity--;
+                this.changeQuantity(item, item.quantity, (data) => {
+                    this.subTotal = data.cart.sub_total_price;
+                    this.total = data.cart.total_price;
+                });
+            }
+        }, 500),
+
+        changeQuantity(item, quantity, cb) {
+            this.storage.get("authUser").then(user => {
+                axios({
+                    method: "PUT",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items/${item.id}`,
+                    headers: {
+                        Authorization: `Bearer ${user.cart_token}`
+                    },
+                    data: {
+                        quantity: quantity
+                    }
+                }).then(res => {
+                    const data = res.data;
+
+                    if (data.success) {
+                        if (isFunction(cb)) {
+                            cb(data.data);
+                        }
+                    } else {
+                        console.log(data.message);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            }, 800);
+        },
+
+        deleteItem(item) {
+            this.storage.get("authUser").then(user => {
+                axios({
+                    method: "DELETE",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items/${item.id}`,
+                    headers: {
+                        Authorization: `Bearer ${user.cart_token}`
+                    }
+                }).then(res => {
+                    const data = res.data;
+
+                    if (data.success) {
+                        item.id = null;
+                        this.subTotal = data.data.cart.sub_total_price;
+                        this.total = data.data.cart.total_price;
+                    } else {
+                        console.log(data.message);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            }, 800);
+        },
+
         checkout() {
             modalController.dismiss();
             this.router.push('/checkout');
-        }     
+        }
     }
 })
 </script>
@@ -256,5 +280,15 @@ margin: 5px;
 }
 h6 {
     margin: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
