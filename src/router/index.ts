@@ -54,12 +54,12 @@ const routes: Array < RouteRecordRaw > = [
         component: () => import('@/views/Checkout.vue'),
     },
     {
-        path: '/order-details',
+        path: '/order-details/:id',
         name: 'Order Details',
         component: () => import('@/views/OrderDetails.vue'),
     },
     {
-        path: '/order-tracker',
+        path: '/order-tracker/:id',
         name: 'Order Tracker',
         component: () => import('@/views/OrderTracker.vue'),
     },
@@ -73,6 +73,11 @@ const routes: Array < RouteRecordRaw > = [
         path: '/merchant-dashboard',
         name: 'Merchant Dashboard',
         component: () => import('@/views/Merchant/Dashboard.vue'),
+    },
+    {
+        path: '/merchant-category/:id',
+        name: 'Merchant Category',
+        component: () => import('@/views/MerchantCategory.vue'),
     },
 ]
 

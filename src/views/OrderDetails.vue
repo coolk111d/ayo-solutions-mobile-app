@@ -1,15 +1,14 @@
 <template>
     <ion-page>
-        <CustomHeader link="/checkout"/>
-        
+        <CustomHeader reset="/checkout"/>
         <ion-content :fullscreen="true">
            <div class="head-container">   
                 <h4>Thank you for ordering!</h4>
-                <h5>Order #S19820101</h5>
-                <h6>Ordered: 09/20/2021 8:15pm</h6>
-                <h6>Estimated Delivery: 09/20/2021 8:45pm-9:00pm</h6>
+                <h5>Order #{{order.tracking_number}}</h5>
+                <h6 v-if="order.received_time">Ordered: {{order.received_time}}</h6>
+                <h6 v-if="order.delivery_date">Estimated Delivery: {{order.delivery_date}}</h6>
            </div>
-           <ion-card>
+           <ion-card v-if="order.assigned_rider != null">
                 <div class="title-icon">
                     <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p> 
                 </div>
@@ -20,7 +19,7 @@
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">John Rider</p>
+                            <p style="font-size: 15px;">{{riderDetails.name}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -28,7 +27,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <ion-button target="_blank" rel="noopener noreferrer" href="tel:09567387836" color="warning">Call Rider 09567387836</ion-button>
+                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + riderDetails.mobile_number" color="warning">Call Rider {{riderDetails.mobile_number}}</ion-button>
                         </ion-col>
                     </ion-row>
                     
@@ -37,13 +36,13 @@
                     <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
                     </ion-row>
                     <ion-row>
-                            <p style="font-size: 12px;">Make and Model: Mio i124</p>
-                            <p style="font-size: 12px;">Plate Number: XGY210</p>
+                            <p style="font-size: 12px;">Make and Model: {{riderDetails.make_and_model}}</p>
+                            <p style="font-size: 12px;">Plate Number: {{riderDetails.plate_number}}</p>
                             </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
                         <ion-col size="12"> 
-                            <img src="/assets/images/companyid.png" style="margin-top: -40px">
+                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: 0px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -61,7 +60,7 @@
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">John Smith</p>
+                            <p style="font-size: 15px;">{{shippingAddress.name}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -69,7 +68,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">09567387836</p>
+                            <p style="font-size: 15px;">{{shippingAddress.mobile_number}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -77,7 +76,7 @@
                             <ion-icon :icon="navigate" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">Blk 21 Lot 1 John St. Batangas City, Batangas</p>
+                            <p style="font-size: 15px;">{{shippingAddress.address}}</p>
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -90,21 +89,21 @@
                 </div>
                 <div class="summary-details">
                     <div class="display-flex">
-                        <p>1x Burger</p>
-                        <p>&#8369; 100.00</p>
+                        <p>1x Burger(not dynamic)</p>
+                        <p>&#8369; {{order.sub_total_price}}</p>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; 30.00</p>
+                        <p>&#8369; {{order.total_price - order.sub_total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; 130.00</p>
+                        <p>&#8369; {{order.total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
-                        <p style="font-size: 16px;">&#8369; 250.00</p>
+                        <p style="font-size: 16px;">&#8369; {{order.total_price_with_tax}}</p>
                     </div>
                 </div>
            </ion-card>
@@ -114,7 +113,7 @@
         
         <ion-footer>
             <ion-toolbar>
-                <ion-button @click="() => router.push(`/order-tracker`)">TRACK MY ORDER</ion-button>
+                <ion-button @click="() => router.push(`/order-tracker/${order.id}`)">TRACK MY ORDER</ion-button>
             </ion-toolbar>
         </ion-footer>
     </ion-page>
@@ -126,12 +125,47 @@ import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
+import axios from "axios";
 export default defineComponent({
     name: 'OrderDetails',
     components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton },
+    data() {
+            return {
+                order: [],
+                shippingAddress: {},
+                riderDetails: [],
+            }
+        },
     setup() {
+        const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
-        return { router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline}
+        return { router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, env}
+    },
+    methods: {
+        async getOrders() {
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.$route.params.id}`,
+                    }).then(res => {
+                        console.log(res.data);
+                        this.order = res.data[0];
+                        this.shippingAddress = JSON.parse(res.data[0].shipping_address);
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
+                    }).then(res => {
+                        console.log(res.data);
+                        this.riderDetails = res.data[0];
+                    }).catch(err => {
+                        console.log(err);
+                    });
+        },
+    },
+    beforeMount() {
+        this.getOrders();
     },
 })
 </script>

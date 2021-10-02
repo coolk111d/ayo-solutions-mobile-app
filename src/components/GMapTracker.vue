@@ -53,7 +53,7 @@ export default {
             };
 
                 const newMarker = new window.google.maps.Marker({
-                    position: {lat: 14.124561213272877, lng: 121.164106030269481},
+                    position: props.center,
                     map: map.value,
                     icon: image
                 });

@@ -25,45 +25,15 @@
                     </ion-col>
             </ion-row>
             <hr style="border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom:15px;">
-            <ion-row class="ion-align-items-center">
+            <ion-row class="ion-align-items-center" v-for="order of orders" :key="order.id">
                     <ion-col size="12" style="text-align:center;">
-                        
-                            <ion-badge color="tertiary">Assembled</ion-badge><br>
-                         <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
+                         <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Order #{{order.tracking_number}}</span></a>
                             <!-- Product Price -->
-                            <p class="sale-price">Order #S61910121</p>
-                            <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>   
-                            <p class="sale-price">Received: <span class="price">09/17/2021 10:10pm</span></p>      
-                            <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p>
-                            
-                            <ion-button color="success" size="small" @click="details">View Details</ion-button> 
+                            <p class="sale-price">Status: {{order.status}}</p>
+                            <p class="sale-price">Delivery Time: <span class="price">{{order.delivery_date}}</span></p>       
+                            <p class="sale-price">Total Price: <span class="price">&#8369;{{order.total_price_with_tax}}</span></p>       
+                            <ion-button size="small" @click="orderDetails(order.id)">View Details</ion-button>
                     </ion-col>
-            </ion-row>
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="12" style="text-align:center;">
-                        
-                            <ion-badge  color="tertiary">Delivering</ion-badge><br>
-                         <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Order #S61910121</p>
-                            <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p> 
-
-                            <ion-button color="success" size="small" @click="details">View Details</ion-button> 
-                    </ion-col>
-            </ion-row>
-            <ion-row class="ion-align-items-center">
-                    <ion-col size="12" style="text-align:center;">
-                        
-                            <ion-badge color="tertiary">Delivered</ion-badge><br>
-                         <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
-                            <!-- Product Price -->
-                            <p class="sale-price">Order #S61910121</p>
-                            <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>    
-                            <p class="sale-price">Delivered: <span class="price">09/17/2021 10:10pm</span></p>     
-                            <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p> 
-                        <ion-button size="small" color="success" @click="details">View Details</ion-button>
-                        </ion-col>
             </ion-row>
     </ion-content>
 
@@ -87,6 +57,8 @@ import {
 import {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline } from 'ionicons/icons';
 import { defineComponent} from 'vue';
 import { useRouter } from 'vue-router';
+import axios from "axios";
+import { Storage } from '@ionic/storage';
 import RiderOrderDetails from '@/components/Rider/RiderOrderDetails.vue';
 export default defineComponent({
     name: "RiderOrderList",
@@ -95,10 +67,17 @@ export default defineComponent({
         IonHeader, IonContent, IonToolbar, IonTitle,
         IonButtons, IonButton, IonBadge
     },
-
+    data() {
+            return {
+                customerId: Number,
+                orders: []
+            }
+        },
     setup() {
+        const storage = new Storage();
+        storage.create();
         const router = useRouter();
-        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router};
+        return {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router, storage};
     },
 
     methods : {
@@ -113,9 +92,39 @@ export default defineComponent({
                 cssClass: 'my-custom-class',
                 })
             return modal.present();
-        }    
+        },
+        async getOrders() {
+            
+                    const customer = await this.storage.get('authUser');
+                    console.log(customer);
+                    this.customerId = customer.id;
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-orders/${customer.id}`,
+                    }).then(res => {
+                        console.log(res.data);
+                        this.orders = res.data;
+                    }).catch(err => {
+                        console.log(err);
+                    });
+        },  
+        async orderDetails(id) {
+            modalController.dismiss();
+            const modal = await modalController
+                .create({
+                component: RiderOrderDetails,
+                cssClass: 'my-custom-class',
+                componentProps: {
+                    orderID: id
+                }
+                })
+            return modal.present();
+        }, 
 
-    }
+    },
+    beforeMount() {
+        this.getOrders();
+    },
 })
 </script>
 
