@@ -86,11 +86,10 @@ import { ref } from 'vue';
 
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { object, string } from "yup";
-
 import { Storage } from '@ionic/storage';
 
 import axios from "axios";
-
+import OneSignal from 'onesignal-cordova-plugin';
 export default  {
     /*data: () => ({
     users: []
@@ -202,6 +201,36 @@ export default  {
                 console.log(data);
                 this.setOpenLoading(false);
                 if (data.success) {
+
+
+                    const externalUserId = data.user.id; // You will supply the external user id to the OneSignal SDK
+
+                    // Setting External User Id with Callback Available in SDK Version 2.11.2+
+                    OneSignal.setExternalUserId(externalUserId, (results) => {
+                    // The results will contain push and email success statuses
+                    console.log('Results of setting external user id');
+                    console.log(results);
+                    
+                    // Push can be expected in almost every situation with a success status, but
+                    // as a pre-caution its good to verify it exists
+                    if (results.push && results.push.success) {
+                        console.log('Results of setting external user id push status:');
+                        console.log(results.push.success);
+                    }
+                    
+                    // Verify the email is set or check that the results have an email success status
+                    if (results.email && results.email.success) {
+                        console.log('Results of setting external user id email status:');
+                        console.log(results.email.success);
+                    }
+
+                    // Verify the number is set or check that the results have an sms success status
+                    if (results.sms && results.sms.success) {
+                        console.log('Results of setting external user id sms status:');
+                        console.log(results.sms.success);
+                    }
+                    });
+
                     if(data.user.role == "rider") {
                         this.router.push('/rider-dashboard')
                     } else if(data.user.role == "merchant") {
