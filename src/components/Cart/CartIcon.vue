@@ -23,11 +23,12 @@ export default {
 
     setup() {
         const storage = new Storage();
+        storage.create();
+
         return { storage, basketOutline };
     },
 
     mounted() {
-        this.storage.create();
 
         this.storage.get("authUser").then(user => {
             axios({

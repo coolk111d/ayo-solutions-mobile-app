@@ -9,7 +9,7 @@
     </ion-header>
 
     <ion-content class="ion-padding cart-content">
-        <ion-row class="ion-align-items-center" v-for="item in items" :key="item.id">
+        <ion-row class="ion-align-items-center" v-for="item in items" :key="item.id" v-show="item.id !== null">
             <ion-col size="3">
                 <a class="product-thumbnail" href=""><img :src="item.image" alt=""></a>
             </ion-col>
@@ -25,8 +25,8 @@
                     <ion-icon :icon="addCircleOutline"  @click="increaseQuantity(item)"></ion-icon>
                 </div>
 
-                <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a>
-                <a class="delete-link"><ion-icon :icon="trashOutline"  @click="dismissModal()"></ion-icon></a>
+                <!-- <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a> -->
+                <a class="delete-link"><ion-icon :icon="trashOutline"  @click="deleteItem(item)"></ion-icon></a>
             </ion-col>
         </ion-row>
     </ion-content>
@@ -39,7 +39,7 @@
                     <h6 style="color:black; text-align: center; font-weight: 500">Subtotal:</h6>
                     </ion-col>
                     <ion-col size="6">
-                    <h6 style="color:black;  text-align: center;  font-weight: 500" v-text="subTotal"></h6>
+                    <h6 style="color:black;  text-align: center;  font-weight: 500">&#8369;{{subTotal}}</h6>
                     </ion-col>
                 </ion-row>
                 <ion-row>
@@ -47,7 +47,7 @@
                     <h5 style="color:black; text-align: center; font-weight: 600">Total:</h5>
                     </ion-col>
                     <ion-col size="6">
-                    <h5 style="color:black;  text-align: center;  font-weight: 600" v-text="total"></h5>
+                    <h5 style="color:black;  text-align: center;  font-weight: 600">&#8369;{{total}}</h5>
                     </ion-col>
                 </ion-row>
                 <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Review Payment</ion-button>
@@ -91,6 +91,16 @@ export default defineComponent({
             type: String,
             default: "Cart"
         },
+
+        MAX_QUANTITY: {
+            type: Number,
+            default: 10
+        },
+
+        MIN_QUANTITY: {
+            type: Number,
+            default: 1
+        }
     },
 
     components: {
@@ -100,6 +110,8 @@ export default defineComponent({
 
     setup() {
         const storage = new Storage();
+        storage.create();
+
         const router = useRouter();
         return {
             addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router,
@@ -108,8 +120,6 @@ export default defineComponent({
     },
 
     mounted() {
-        this.storage.create();
-
         this.storage.get("authUser").then(user => {
             axios({
                 method: "GET",
@@ -139,19 +149,23 @@ export default defineComponent({
         },
 
         increaseQuantity: throttle(function(item) {
-            item.quantity++;
-            this.changeQuantity(item, item.quantity, (data) => {
-                this.subTotal = data.cart.sub_total_price;
-                this.total = data.cart.total_price;
-            });
+            if (item.quantity < this.MAX_QUANTITY) {
+                item.quantity++;
+                this.changeQuantity(item, item.quantity, (data) => {
+                    this.subTotal = data.cart.sub_total_price;
+                    this.total = data.cart.total_price;
+                });
+            }
         }, 500),
 
         decreaseQuantity: throttle(function(item) {
-            item.quantity--;
-            this.changeQuantity(item, item.quantity, (data) => {
-                this.subTotal = data.cart.sub_total_price;
-                this.total = data.cart.total_price;
-            });
+            if (item.quantity > this.MIN_QUANTITY) {
+                item.quantity--;
+                this.changeQuantity(item, item.quantity, (data) => {
+                    this.subTotal = data.cart.sub_total_price;
+                    this.total = data.cart.total_price;
+                });
+            }
         }, 500),
 
         changeQuantity(item, quantity, cb) {
@@ -172,6 +186,30 @@ export default defineComponent({
                         if (isFunction(cb)) {
                             cb(data.data);
                         }
+                    } else {
+                        console.log(data.message);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            }, 800);
+        },
+
+        deleteItem(item) {
+            this.storage.get("authUser").then(user => {
+                axios({
+                    method: "DELETE",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items/${item.id}`,
+                    headers: {
+                        Authorization: `Bearer ${user.cart_token}`
+                    }
+                }).then(res => {
+                    const data = res.data;
+
+                    if (data.success) {
+                        item.id = null;
+                        this.subTotal = data.data.cart.sub_total_price;
+                        this.total = data.data.cart.total_price;
                     } else {
                         console.log(data.message);
                     }
@@ -242,5 +280,15 @@ margin: 5px;
 }
 h6 {
     margin: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
