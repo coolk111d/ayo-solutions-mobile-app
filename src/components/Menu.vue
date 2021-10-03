@@ -90,15 +90,16 @@
             },
 
             async getName() {
-                    const name = await this.storage.get('authUser');
-                    if(name == null) {
+                    const user = await this.storage.get('authUser');
+                    console.log(user);
+                    if(user == null) {
                         this.name = "Guest" 
                         this.email = "Not Available"
                         this.role = "Customer"
                     } else {
-                    this.name = name.name;
-                    this.email = name.email;
-                    this.role = name.role;
+                    this.name = user.user.name;
+                    this.email = user.user.email;
+                    this.role = user.user.role;
                     }
             },
             async orders() {

@@ -19,8 +19,6 @@
            <ServicesSlider slide1="Food" slide2="Express" slide3="Same Day" slide4="Handyman" slide5="Store" />
 
            <CategorySlider/>
-            
-            <ion-button  @click="sendNotif()">Send</ion-button>
             <ion-card class="footer">
             <div class="footer-div">
                  <h2 class="text-white">AYO SOLUTIONS INC!</h2>
@@ -39,7 +37,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButto
 import ServicesSlider from '@/components/ServicesSlider.vue';
 import CategorySlider from '@/components/CategorySlider.vue';
 import Header from '@/components/Header.vue';
-import axios from "axios";
+// import axios from "axios";
 
 export default  {
     name: 'Home',
@@ -49,22 +47,22 @@ export default  {
           const modal = await modalController.create({component: PreRegistrationModal});
           modal.present();
       },
-      sendNotif() {
-           axios({
-                method: "POST",
-                url: "https://onesignal.com/api/v1/notifications",
-                data: {
-                    "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
-                    "included_segments": ["Subscribed Users"],
-                    "data": {"foo": "bar"},
-                    "contents": {"en": "English Message"}
-                    }
-            }).then(res => {
-                alert(res);
-            }).catch(err => {
-                console.log(err);
-            });
-      }
+    //   sendNotif() {
+    //        axios({
+    //             method: "POST",
+    //             url: "https://onesignal.com/api/v1/notifications",
+    //             data: {
+    //                 "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
+    //                 "included_segments": ["Subscribed Users"],
+    //                 "data": {"foo": "bar"},
+    //                 "contents": {"en": "English Message"}
+    //                 }
+    //         }).then(res => {
+    //             alert(res);
+    //         }).catch(err => {
+    //             console.log(err);
+    //         });
+    //   }
   }
 }
 

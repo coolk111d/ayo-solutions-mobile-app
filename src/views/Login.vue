@@ -89,7 +89,7 @@ import { object, string } from "yup";
 import { Storage } from '@ionic/storage';
 
 import axios from "axios";
-import OneSignal from 'onesignal-cordova-plugin';
+// import OneSignal from 'onesignal-cordova-plugin';
 export default  {
     /*data: () => ({
     users: []
@@ -195,55 +195,55 @@ export default  {
                     password: inputs.password
                 }
             }).then(res => {
-                let data = res.data;
+                console.log(res);
+                const data = res.data;
 
                 this.setOpenLoading(false);
                 if (data.success) {
 
 
-                    const externalUserId = data.user.id; // You will supply the external user id to the OneSignal SDK
+                    // const externalUserId = data.user.id; // You will supply the external user id to the OneSignal SDK
 
-                    // Setting External User Id with Callback Available in SDK Version 2.11.2+
-                    OneSignal.setExternalUserId(externalUserId, (results) => {
-                    // The results will contain push and email success statuses
-                    console.log('Results of setting external user id');
-                    console.log(results);
+                    // // Setting External User Id with Callback Available in SDK Version 2.11.2+
+                    // OneSignal.setExternalUserId(externalUserId, (results) => {
+                    // // The results will contain push and email success statuses
+                    // console.log('Results of setting external user id');
+                    // console.log(results);
                     
-                    // Push can be expected in almost every situation with a success status, but
-                    // as a pre-caution its good to verify it exists
-                    if (results.push && results.push.success) {
-                        console.log('Results of setting external user id push status:');
-                        console.log(results.push.success);
-                    }
+                    // // Push can be expected in almost every situation with a success status, but
+                    // // as a pre-caution its good to verify it exists
+                    // if (results.push && results.push.success) {
+                    //     console.log('Results of setting external user id push status:');
+                    //     console.log(results.push.success);
+                    // }
                     
-                    // Verify the email is set or check that the results have an email success status
-                    if (results.email && results.email.success) {
-                        console.log('Results of setting external user id email status:');
-                        console.log(results.email.success);
-                    }
+                    // // Verify the email is set or check that the results have an email success status
+                    // if (results.email && results.email.success) {
+                    //     console.log('Results of setting external user id email status:');
+                    //     console.log(results.email.success);
+                    // }
 
-                    // Verify the number is set or check that the results have an sms success status
-                    if (results.sms && results.sms.success) {
-                        console.log('Results of setting external user id sms status:');
-                        console.log(results.sms.success);
-                    }
-                    });
-
-                    if(data.user.role == "rider") {
+                    // // Verify the number is set or check that the results have an sms success status
+                    // if (results.sms && results.sms.success) {
+                    //     console.log('Results of setting external user id sms status:');
+                    //     console.log(results.sms.success);
+                    // }
+                    // });
+                    if(data.data.user.role == "rider") {
                         this.router.push('/rider-dashboard')
-                    } else if(data.user.role == "merchant") {
+                    } else if(data.data.user.role == "merchant") {
                         this.router.push('/merchant-dashboard')
                     } else {
                         this.router.push('/home')
                     }
-                    this.toastMessage = `Successfully Login! Welcome ${data.user.name}`;
+                    this.toastMessage = `Successfully Login! Welcome ${data.data.user.name}`;
                     // eslint-disable-next-line no-undef
                     this.storage.set('authUser', {
-                            user: data.user,
+                            user: data.data.user,
 
-                            token: data.token,
+                            token: data.data.token,
                             // eslint-disable-next-line @typescript-eslint/camelcase
-                            cart_token: data.cart_token,
+                            cart_token: data.data.cart_token,
                         }
                     );
                 } else {
