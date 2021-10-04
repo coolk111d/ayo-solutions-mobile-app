@@ -79,6 +79,12 @@ const routes: Array < RouteRecordRaw > = [
         name: 'Merchant Category',
         component: () => import('@/views/MerchantCategory.vue'),
     },
+
+    {
+        path: '/select-vehicle',
+        name: 'Same Day Vehicle',
+        component: () => import('@/views/SameDayVehicle.vue'),
+    },
 ]
 
 const router = createRouter({

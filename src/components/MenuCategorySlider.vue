@@ -1,25 +1,5 @@
 <template>
 <div class="container-menu">
-                <!--<swiper
-    :slides-per-view="3"
-    :space-between="0"
-    @swiper="onSwiper"
-    @slideChange="onSlideChange"
-  >
-    <swiper-slide>
-                    <a class="active">Rice Meal</a>
-    </swiper-slide>
-    <swiper-slide>
-                    <a>Burger</a>
-    </swiper-slide>
-    <swiper-slide>
-                    <a>Fries</a>
-    </swiper-slide>
-    <swiper-slide>
-                    <a>Soup</a>
-    </swiper-slide>
-  </swiper>-->
-
   <ion-slides pager="true" :options="slideOpts">
     <ion-slide>
                     <a class="active">Rice Meal</a>
