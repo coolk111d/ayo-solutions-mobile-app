@@ -58,13 +58,11 @@
                     </div>
                 </ion-card>
             </div>
-            
-            <CategorySlider slide1="Fast Food & Restaurants" slide2="Milk Tea and Coffee Shops" slide3="Pet Food and Care" slide4="BakeShops" slide5="Groceries" />
 
+            <CategorySlider slide1="Fast Food & Restaurants" slide2="Milk Tea and Coffee Shops" slide3="Pet Food and Care" slide4="BakeShops" slide5="Groceries" />
 
             <HotPicks slide1="Store A" slide2="Store B" slide3="Store C" slide4="Store D" slide5="Store E" />
 
-            
             <MerchantGrid ref="merchantGrid"/>
 
             <ion-card class="footer">
@@ -74,13 +72,13 @@
                 <ion-button fill="outline" target="_blank" rel="noopener noreferrer" href="https://ayosolution.com">Visit our Site!</ion-button>
             </div>
             </ion-card>
-            <g-map 
+            <!-- <g-map
                 mapType="roadmap"
                 :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
                 :zoom="10"
                 :disableUI="true"
                 :mapDidLoad="handleMapDidLoad" style="display:none"
-            ></g-map>
+            ></g-map> -->
         </ion-content>
     </ion-page>
 </template>
@@ -99,11 +97,10 @@ import MerchantGrid from '@/components/MerchantGrid.vue';
 import Header from '@/components/Header.vue';
 import { defineComponent, ref, onMounted } from "vue";
 import { Geolocation } from '@capacitor/geolocation';
-import GMap from '@/components/GMap.vue';
 export default defineComponent({
     name: 'AYO Food',
     components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
-    Header, HotPicks, MerchantGrid, GMap},
+    Header, HotPicks, MerchantGrid},
     setup() {
         let geocoderService: any = null;
         const options: any = {

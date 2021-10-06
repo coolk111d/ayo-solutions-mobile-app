@@ -18,20 +18,22 @@ export default {
     setup(props) {
 
         const map = ref(null);
-        const mapDivRef = ref(null);  
+        const mapDivRef = ref(null);
         const currentMarkers = [];
         onMounted(() => {
             const key = process.env.VUE_APP_GOOGLEMAPS_KEY;
 
-            const googleMapScript = document.createElement("SCRIPT");
-            googleMapScript.setAttribute(
-                "src",
-                `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap`
-            );
-            googleMapScript.setAttribute("defer", "");
-            googleMapScript.setAttribute("async", "");
-            document.head.appendChild(googleMapScript);
-
+            const mapId = document.getElementById("google-map-script-id");
+            if (!mapId) {
+                const googleMapScript = document.createElement("SCRIPT");
+                googleMapScript.setAttribute(
+                    "src",
+                    `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap`
+                );
+                googleMapScript.setAttribute("defer", "");
+                googleMapScript.setAttribute("async", "");
+                document.head.appendChild(googleMapScript);
+            }
         });
 
 

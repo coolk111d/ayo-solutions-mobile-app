@@ -8,7 +8,7 @@
             </ion-toolbar>  
         </ion-header>
         <ion-content>
-            <g-map 
+            <g-map
                 mapType="roadmap"
                 :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
                 :zoom="10"

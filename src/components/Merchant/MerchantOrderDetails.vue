@@ -2,7 +2,7 @@
         
         <ion-content :fullscreen="true">
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
-           <g-map 
+           <g-map
                 mapType="roadmap"
                 :center="{lat: JSON.parse(shipping).latitude, lng: JSON.parse(shipping).longitude}"
                 :zoom="14"
