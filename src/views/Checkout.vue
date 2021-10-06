@@ -128,22 +128,22 @@
                     <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                 </div>
                 <div class="summary-details">
-                    <div class="display-flex">
-                        <p>1x Burger</p>
-                        <p>&#8369; 100.00</p>
+                    <div class="display-flex" v-for="item in items" :key="item.id">
+                        <p>{{ item.quantity }}x {{ item.name }}</p>
+                        <p>&#8369; {{ item.price }}</p>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; 30.00</p>
+                        <p>&#8369; {{ cart.delivery_charge }}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; 130.00</p>
+                        <p>&#8369; {{ cart.sub_total_price }}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
-                        <p style="font-size: 16px;">&#8369; 250.00</p>
+                        <p style="font-size: 16px;">&#8369; {{ cart.total_price_with_tax }}</p>
                     </div>
                 </div>
            </ion-card>
@@ -159,7 +159,7 @@
 
         <ion-footer>
             <ion-toolbar>
-                <ion-button @click="() => router.push(`/order-details`)">PROCESS ORDER</ion-button>
+                <ion-button>PROCESS ORDER</ion-button>
             </ion-toolbar>
         </ion-footer>
     </ion-page>
@@ -185,7 +185,9 @@ export default defineComponent({
     data() {
         return {
             billing: {},
-            shipping: {}
+            shipping: {},
+            cart: {},
+            items: {}
         }
     },
 
@@ -217,6 +219,28 @@ export default defineComponent({
 
                     console.log(this.billing);
                     console.log(this.shipping);
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err.response.data.message);
+            });
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items`,
+                headers: {
+                    Authorization: `Bearer ${user.cart_token}`
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    this.cart = data.cart;
+                    this.items = data.items;
+
+                    console.log(this.cart);
+                    console.log(this.items);
                 } else {
                     console.log(data.message);
                 }
