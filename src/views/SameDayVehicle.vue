@@ -11,7 +11,7 @@
                     <ion-row>
                          <ion-card style="display:flex;">
                             <ion-col size="4" style="display:flex;align-items:center">
-                                <img src="/assets/images/vehicles/Motorcycle.png" style="width: 100%">
+                                <img src="https://ayosolution.com/images/ayo-box/Motorcycle.png" style="width: 100%">
                             </ion-col>
                             <ion-col>
                                 <div class="vehicle-info">
@@ -25,7 +25,7 @@
                     <ion-row>
                          <ion-card style="display:flex;">
                             <ion-col size="4" style="display:flex;align-items:center">
-                                <img src="/assets/images/vehicles/sedan.png" style="width: 100%">
+                                <img src="https://ayosolution.com/images/ayo-box/sedan.png" style="width: 100%">
                             </ion-col>
                             <ion-col>
                                 <div class="vehicle-info">
@@ -38,7 +38,7 @@
                      <ion-row>
                          <ion-card style="display:flex;">
                             <ion-col size="4" style="display:flex;align-items:center">
-                                <img src="/assets/images/vehicles/MPV-300-kg.png" style="width: 100%">
+                                <img src="https://ayosolution.com/images/ayo-box/MPV-300-kg.png" style="width: 100%">
                             </ion-col>
                             <ion-col>
                                 <div class="vehicle-info">
@@ -51,7 +51,7 @@
                     <ion-row>
                          <ion-card style="display:flex;">
                             <ion-col size="4" style="display:flex;align-items:center">
-                                <img src="/assets/images/vehicles/MPV-600-kg.png" style="width: 100%">
+                                <img src="https://ayosolution.com/images/ayo-box/MPV-600-kg.png" style="width: 100%">
                             </ion-col>
                             <ion-col>
                                 <div class="vehicle-info">
@@ -64,7 +64,7 @@
                     <ion-row>
                          <ion-card style="display:flex;">
                             <ion-col size="4" style="display:flex;align-items:center">
-                                <img src="/assets/images/vehicles/MPV-1000-kg.png" style="width: 100%">
+                                <img src="https://ayosolution.com/images/ayo-box/mpv-1000-kg.png" style="width: 100%">
                             </ion-col>
                             <ion-col>
                                 <div class="vehicle-info">
@@ -77,7 +77,7 @@
                     <ion-row>
                          <ion-card style="display:flex;">
                             <ion-col size="4" style="display:flex;align-items:center">
-                                <img src="/assets/images/vehicles/mediumtruck.png" style="width: 100%">
+                                <img src="https://ayosolution.com/images/ayo-box/mediumtruck.png" style="width: 100%">
                             </ion-col>
                             <ion-col>
                                 <div class="vehicle-info">
