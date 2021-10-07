@@ -9,7 +9,7 @@
                 </ion-toolbar>
             </ion-header>
             <div class="video-div">
-            <iframe width="100%" height="170" src="https://www.youtube.com/embed/MdBkFdRJ420?autoplay=1&showinfo=0&loop=1&rel=0" frameborder="0" allowfullscreen></iframe>
+            <iframe width="100%" height="170" src="https://www.youtube.com/embed/videoseries?list=PLX6R8Kyg0rnyUOXZ8DJBfmOtPQWRQgtgh?autoplay=1&showinfo=0&mute=1&rel=0" frameborder="0" allowfullscreen></iframe>
             </div>
 
             <h3 class="registration-link">
