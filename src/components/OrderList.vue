@@ -79,11 +79,12 @@ export default defineComponent({
             
                     const customer = await this.storage.get('authUser');
                     console.log(customer);
-                    this.customerId = customer.id;
+                    this.customerId = customer.user.id;
                     axios({
                         method: "GET",
-                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${customer.id}`,
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${this.customerId}`,
                     }).then(res => {
+                        console.log(res);
                         console.log(res.data);
                         this.orders = res.data;
                     }).catch(err => {

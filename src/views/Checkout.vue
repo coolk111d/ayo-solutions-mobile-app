@@ -1,13 +1,13 @@
 <template>
     <ion-page>
         <CustomHeader link="/food" />
-        
+
         <ion-content :fullscreen="true">
             <div class="header-container">
                 <h5 style="text-align:center">Checkout</h5>
             </div>
 
-            <ion-card>
+            <!-- <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
                     <p class="title">Billing Address</p>
@@ -29,7 +29,7 @@
                         <ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ billing.mobile_number }}
                     </p>
                 </div>
-            </ion-card>
+            </ion-card> -->
 
             <ion-card>
                 <div class="title-icon">
@@ -58,12 +58,12 @@
            <!-- <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
-                    <p class="title">Delivery Address</p> 
+                    <p class="title">Delivery Address</p>
                     <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="addAddress"></ion-icon>
                 </div>
                 <p class="address" @click="addAddress">Blk 20 Lot 21 Mara St. Cabuyao Laguna</p>
                 <hr style="margin-bottom: 30px;">
-                <p class="title">Receiver Details:</p> 
+                <p class="title">Receiver Details:</p>
                 <p class="address" @click="addAddress"><ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> John Smith</p>
                 <p class="address" @click="addAddress"><ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> 095673877711</p>
                 <hr>
@@ -76,37 +76,35 @@
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="walletOutline" class="map"></ion-icon>
-                    <p class="title">Payment Method</p> 
+                    <p class="title">Payment Method</p>
                 </div>
-                    <ion-radio-group>
-                        <ion-item>
-                            
-                            <ion-radio value="Cash"></ion-radio>
-                            <ion-label style="margin-left: 10px">Cash to Cash on Delivery</ion-label>
-                        </ion-item>
+                <ion-radio-group>
+                    <ion-item>
+                        <ion-radio value="Cash"></ion-radio>
+                        <ion-label style="margin-left: 10px">Cash to Cash on Delivery</ion-label>
+                    </ion-item>
 
-                        <ion-item>
-                            <ion-radio value="GCash"></ion-radio>
-                            <ion-label style="margin-left: 10px">GCash upon Rider Delivery</ion-label>
-                        </ion-item>
+                    <ion-item>
+                        <ion-radio value="GCash"></ion-radio>
+                        <ion-label style="margin-left: 10px">GCash upon Rider Delivery</ion-label>
+                    </ion-item>
 
-                        <ion-item>
-                            <ion-radio value="Paymaya"></ion-radio>
-                            <ion-label style="margin-left: 10px">Paymaya upon Rider Delivery</ion-label>
-                        </ion-item>
-                        
-                        <ion-item>
-                            <ion-radio value="Debit/Credit" disabled></ion-radio>
-                            <ion-label style="margin-left: 10px">Debit/Credit</ion-label>
-                        </ion-item>
-                    </ion-radio-group>
+                    <ion-item>
+                        <ion-radio value="Paymaya"></ion-radio>
+                        <ion-label style="margin-left: 10px">Paymaya upon Rider Delivery</ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-radio value="Debit/Credit" disabled></ion-radio>
+                        <ion-label style="margin-left: 10px">Debit/Credit</ion-label>
+                    </ion-item>
+                </ion-radio-group>
            </ion-card>
-
 
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="personOutline" class="map"></ion-icon>
-                    <p class="title">Proof of Identity</p> 
+                    <p class="title">Proof of Identity</p>
                 </div>
                 <ion-item>
                     <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
@@ -127,40 +125,41 @@
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="receiptOutline" class="map"></ion-icon>
-                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p> 
+                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                 </div>
                 <div class="summary-details">
-                    <div class="display-flex">
-                        <p>1x Burger</p>
-                        <p>&#8369; 100.00</p>
+                    <div class="display-flex" v-for="item in items" :key="item.id">
+                        <p>{{ item.quantity }}x {{ item.name }}</p>
+                        <p>&#8369; {{ item.price }}</p>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; 30.00</p>
+                        <p>&#8369; {{ cart.delivery_charge }}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; 130.00</p>
+                        <p>&#8369; {{ cart.sub_total_price }}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
-                        <p style="font-size: 16px;">&#8369; 250.00</p>
+                        <p style="font-size: 16px;">&#8369; {{ cart.total_price_with_tax }}</p>
                     </div>
                 </div>
            </ion-card>
 
             <ion-card>
-                <p>Please Note:</p>
-                <small>AYO Solution Sellers are NOT allowed to ask you to order and transact your payments outside the platform.
-
-When using our COD service, payment is given to our official delivery partner upon receipt on item.</small>
-                </ion-card>
+            <p>Please Note:</p>
+            <small>
+                AYO Solution Sellers are NOT allowed to ask you to order and transact your payments outside the platform.
+                When using our COD service, payment is given to our official delivery partner upon receipt on item.
+            </small>
+            </ion-card>
         </ion-content>
-        
+
         <ion-footer>
             <ion-toolbar>
-                <ion-button @click="() => router.push(`/order-details`)">PROCESS ORDER</ion-button>
+                <ion-button>PROCESS ORDER</ion-button>
             </ion-toolbar>
         </ion-footer>
     </ion-page>
@@ -179,13 +178,16 @@ import axios from "axios";
 
 export default defineComponent({
     name: 'Checkout',
-    components: { IonContent, IonPage, IonCard, CustomHeader, IonTextarea, IonLabel, IonItem, 
-    IonFooter, IonRadioGroup, IonRadio},
+    components: { IonContent, IonPage, IonCard, CustomHeader, IonTextarea, IonLabel, IonItem,
+    IonFooter, IonRadioGroup, IonRadio,
+    },
 
     data() {
         return {
             billing: {},
-            shipping: {}
+            shipping: {},
+            cart: {},
+            items: {}
         }
     },
 
@@ -223,6 +225,28 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err.response.data.message);
             });
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts/items`,
+                headers: {
+                    Authorization: `Bearer ${user.cart_token}`
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    this.cart = data.cart;
+                    this.items = data.items;
+
+                    console.log(this.cart);
+                    console.log(this.items);
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err.response.data.message);
+            });
         });
     },
 
@@ -240,18 +264,18 @@ export default defineComponent({
             return modal.present();
         },
 
-        async onChangeBilling() {
-            const modal = await modalController
-            .create({
-                component: Address,
-                componentProps: {
-                    title: "Billing Address",
-                    address: this.billing
-                },
-            });
+        // async onChangeBilling() {
+        //     const modal = await modalController
+        //     .create({
+        //         component: Address,
+        //         componentProps: {
+        //             title: "Billing Address",
+        //             address: this.billing
+        //         },
+        //     });
 
-            return modal.present();
-        },
+        //     return modal.present();
+        // },
 
         async onChangeShipping() {
             const modal = await modalController
@@ -312,9 +336,9 @@ ion-card {
     box-shadow: 1px 1px 5px rgba(0,0,0,0.2)
 }
 .title-icon {
-    display:flex; 
-    align-items:center; 
-    justify-content:space-around 
+    display:flex;
+    align-items:center;
+    justify-content:space-around
 }
 p.title {
     margin: 10px 100px 10px 0px;
@@ -349,7 +373,7 @@ ion-radio-group  ion-label {
     font-size: 16px !important;
 }
 .display-flex {
-    display:flex; 
+    display:flex;
     justify-content:space-between
 }
 .summary-details {

@@ -2,7 +2,7 @@
     <ion-page>
         <CustomHeader :reset="'/order-details/' + id"/>
         <ion-content :fullscreen="true">
-          <g-map 
+          <g-map
                 mapType="roadmap"
                 :center="{lat: latitude, lng: longitude}"
                 :zoom="14"
