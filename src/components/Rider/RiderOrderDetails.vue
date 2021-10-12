@@ -1,5 +1,4 @@
 <template>
-        
         <ion-content :fullscreen="true">
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
            <g-map
@@ -99,7 +98,6 @@
                     </div>
                 </div>
            </ion-card>
-            
         </ion-content>
         <ion-footer>
             <ion-toolbar>
@@ -116,6 +114,9 @@ import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import GMap from '@/components/GMapTracker.vue';
 import axios from "axios";
+
+// import { Storage } from '@ionic/storage';
+
 export default defineComponent({
     name: 'RiderOrderDetails',
     props: {

@@ -21,18 +21,18 @@
                 <ion-card>
                     <div class="container">
                         <ion-row class="ion-align-items-center">
-                                <ion-col size="6" style="text-align:center;">
-                                    <ion-badge color="warning">New</ion-badge><br>
-                                    <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
-                                        <!-- Product Price -->
-                                        <p class="sale-price">Order #S61910121</p>
-                                        <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>       
-                                        <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p> 
-                                </ion-col>
-                                <ion-col style="display:flex; flex-direction:column;">
-                                    <ion-button size="small" color="success" @click="details">Process</ion-button>
-                                    <ion-button size="small" color="danger">Reject</ion-button>
-                                </ion-col>
+                            <ion-col size="6" style="text-align:center;">
+                                <ion-badge color="warning">New</ion-badge><br>
+                                <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
+                                    <!-- Product Price -->
+                                    <p class="sale-price">Order #S61910121</p>
+                                    <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>
+                                    <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p>
+                            </ion-col>
+                            <ion-col style="display:flex; flex-direction:column;">
+                                <ion-button size="small" color="success" @click="details">Process</ion-button>
+                                <ion-button size="small" color="danger">Reject</ion-button>
+                            </ion-col>
                         </ion-row>
                     </div>
                 </ion-card>
@@ -47,9 +47,42 @@ import RiderHeader from '@/components/Rider/RiderHeader.vue';
 import RiderOrderList from '@/components/Rider/RiderOrderList.vue';
 import RiderOrderDetails from '@/components/Rider/RiderOrderDetails.vue';
 
+import { Storage } from '@ionic/storage';
+import Echo from "laravel-echo";
+
+const echo = new Echo({
+    broadcaster: "pusher",
+    key: process.env.VUE_APP_PUSHER_APP_KEY,
+    cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
+    encrypted: true,
+    authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
+    auth: {
+        headers: {
+           Authorization: "Bearer " + sessionStorage.getItem('auth_token')
+        }
+   }
+});
+
 export default  {
     name: 'Rider Dashboard',
     components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, RiderHeader, IonCard, IonButton , IonRow, IonBadge, IonCol},
+
+    setup() {
+        const storage = new Storage();
+        storage.create();
+
+        storage.get("authUser").then(d => {
+            console.log(d.user);
+            console.log(`pooling-rider.${d.user.rider.id}`);
+
+            echo.private(`pooling-rider.${d.user.rider.id}`)
+            .listen(".queue", (e) => {
+                console.log("bum rider pooling");
+                console.log(e.order);
+            });
+        });
+    },
+
     methods: {
     async orders() {
                 const modal = await modalController

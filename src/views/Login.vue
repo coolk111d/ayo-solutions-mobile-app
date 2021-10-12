@@ -219,6 +219,9 @@ export default  {
                             cart_token: data.cart_token,
                         }
                     );
+
+                    sessionStorage.setItem('auth_token', data.token);
+
                 } else {
                     this.toastMessage = "Invalid email and password."
                 }

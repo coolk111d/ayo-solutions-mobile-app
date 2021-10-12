@@ -9,8 +9,8 @@ import {
     IonIcon, IonBadge,
     modalController
 } from '@ionic/vue';
-import { Storage } from '@ionic/storage';
 
+import { Storage } from '@ionic/storage';
 import CartModal from './../CartModal.vue';
 import { basketOutline } from 'ionicons/icons';
 
@@ -18,7 +18,6 @@ import axios from "axios";
 
 export default {
     name: 'CartIcon',
-
     components: { IonIcon, IonBadge },
 
     setup() {
