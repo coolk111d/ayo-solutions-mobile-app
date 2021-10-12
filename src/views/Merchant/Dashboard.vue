@@ -83,9 +83,6 @@ export default  {
 
     mounted() {
         this.storage.get("authUser").then(d => {
-            console.log(d.user);
-            console.log(`notify-merchant.${d.user.merchant.id}`);
-
             this.echo.private(`notify-merchant.${d.user.merchant.id}`)
             .listen(".place-order", (e) => {
                 this.audio.currentTime = 0;
@@ -95,9 +92,7 @@ export default  {
                 console.log("bum place order");
                 console.log(e.order);
             });
-        });
 
-        this.storage.get("authUser").then(d => {
             axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/new`,

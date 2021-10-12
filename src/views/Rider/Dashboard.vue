@@ -13,21 +13,40 @@
                     <div class="container">
                     <h3>Rider's Dashboard</h3>
 
-                    <ion-button color="tertiary" size="small" @click="orders">Order List</ion-button>
+                    <ion-button color="tertiary" size="small" @click="ordersList">Order List</ion-button>
                     </div>
                 </ion-card>
                 <hr style="border-bottom: 1px solid rgba(0,0,0,0.05); margin: 20px 10px 0px;">
                 <h3 class="divider-title">New Order</h3>
-                <ion-card>
+                <!-- <ion-card>
+                    <div class="container">
+                        <ion-row class="ion-align-items-center">
+                            <ion-col size="6" style="text-align:center;">
+                                <ion-badge color="warning">New</ion-badge><br>
+                                <a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
+                                    <p class="sale-price">Order #S61910121</p>
+                                    <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>
+                                    <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p>
+                            </ion-col>
+                            <ion-col style="display:flex; flex-direction:column;">
+                                <ion-button size="small" color="success" @click="details">Process</ion-button>
+                                <ion-button size="small" color="danger">Reject</ion-button>
+                            </ion-col>
+                        </ion-row>
+                    </div>
+                </ion-card> -->
+
+                <ion-card v-for="order in orders" :key="order.id">
                     <div class="container">
                         <ion-row class="ion-align-items-center">
                             <ion-col size="6" style="text-align:center;">
                                 <ion-badge color="warning">New</ion-badge><br>
                                 <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
                                     <!-- Product Price -->
-                                    <p class="sale-price">Order #S61910121</p>
-                                    <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>
-                                    <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p>
+                                    <p class="sale-price">Order #{{order.tracking_number}}</p>
+                                    <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
+                                    <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
+                                    <ion-button size="small" color="success" @click="details">View Details</ion-button>
                             </ion-col>
                             <ion-col style="display:flex; flex-direction:column;">
                                 <ion-button size="small" color="success" @click="details">Process</ion-button>
@@ -41,7 +60,7 @@
     </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton, modalController, IonRow, IonBadge, IonCol } from '@ionic/vue';
 import RiderHeader from '@/components/Rider/RiderHeader.vue';
 import RiderOrderList from '@/components/Rider/RiderOrderList.vue';
@@ -49,42 +68,78 @@ import RiderOrderDetails from '@/components/Rider/RiderOrderDetails.vue';
 
 import { Storage } from '@ionic/storage';
 import Echo from "laravel-echo";
-
-const echo = new Echo({
-    broadcaster: "pusher",
-    key: process.env.VUE_APP_PUSHER_APP_KEY,
-    cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
-    encrypted: true,
-    authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
-    auth: {
-        headers: {
-           Authorization: "Bearer " + sessionStorage.getItem('auth_token')
-        }
-   }
-});
+import axios from "axios";
 
 export default  {
     name: 'Rider Dashboard',
     components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, RiderHeader, IonCard, IonButton , IonRow, IonBadge, IonCol},
 
+    data() {
+        return {
+            orders: []
+        };
+    },
+
     setup() {
+        const echo = new Echo({
+            broadcaster: "pusher",
+            key: process.env.VUE_APP_PUSHER_APP_KEY,
+            cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
+            encrypted: true,
+            authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
+            auth: {
+                headers: {
+                   Authorization: "Bearer " + sessionStorage.getItem('auth_token')
+                }
+           }
+        });
+
         const storage = new Storage();
         storage.create();
 
-        storage.get("authUser").then(d => {
+        const audio = new Audio(`${process.env.VUE_APP_ROOT_API}/media/rider-notif2.mp3`);
+
+        return { echo, storage, audio };
+    },
+
+    mounted() {
+        this.storage.get("authUser").then(d => {
             console.log(d.user);
             console.log(`pooling-rider.${d.user.rider.id}`);
 
-            echo.private(`pooling-rider.${d.user.rider.id}`)
+            this.echo.private(`pooling-rider.${d.user.rider.id}`)
             .listen(".queue", (e) => {
                 console.log("bum rider pooling");
                 console.log(e.order);
+
+                // this.audio.currentTime = 0;
+                // this.audio.play();
+
+                this.orders.unshift(e.order);
             });
+
+            // axios({
+            //     method: "GET",
+            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/new`,
+            //     headers: {
+            //         Authorization: `Bearer ${d.token}`
+            //     }
+            // }).then(res => {
+            //     const data = res.data;
+
+            //     if (data.success) {
+            //         this.orders = data.data;
+            //     } else {
+            //         console.log(data.message);
+            //     }
+            // }).catch(err => {
+            //     console.log(err);
+            // });
         });
     },
 
     methods: {
-    async orders() {
+    async ordersList() {
                 const modal = await modalController
                 .create({
                 component: RiderOrderList,
