@@ -56,7 +56,7 @@
                         <ion-row class="ion-align-items-center">
                             <ion-col :size="order.status === 'processing' ? 6 : 12" style="text-align:center;">
                                 <ion-badge color="warning">New</ion-badge><br>
-                                <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">{{order.merchant.userObj.name}}</span></a>
+                                <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">{{order.merchant.user.name}}</span></a>
                                     <!-- Product Price -->
                                     <p class="sale-price">Order #{{order.tracking_number}}</p>
                                     <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
@@ -151,23 +151,23 @@ export default  {
                 console.log(e.order);
             });
 
-            // axios({
-            //     method: "GET",
-            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/new`,
-            //     headers: {
-            //         Authorization: `Bearer ${d.token}`
-            //     }
-            // }).then(res => {
-            //     const data = res.data;
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/new`,
+                headers: {
+                    Authorization: `Bearer ${d.token}`
+                }
+            }).then(res => {
+                const data = res.data;
 
-            //     if (data.success) {
-            //         this.orders = data.data;
-            //     } else {
-            //         console.log(data.message);
-            //     }
-            // }).catch(err => {
-            //     console.log(err);
-            // });
+                if (data.success) {
+                    this.orders = data.data;
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
         });
     },
 
