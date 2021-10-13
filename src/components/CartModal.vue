@@ -54,6 +54,22 @@
             </ion-grid>
         </ion-toolbar>
     </ion-footer>
+
+    <ion-loading
+        :is-open="isOpenLoadingRef"
+        message="Please wait..."
+        :duration="0"
+        @didDismiss="setOpenLoading(false)"
+    >
+    </ion-loading>
+
+    <ion-toast
+        :is-open="isOpenToastRef"
+        :message="toastMessage"
+        :duration="3000"
+        @didDismiss="setOpenToast(false)"
+    >
+    </ion-toast>
 </template>
 
 
@@ -67,10 +83,11 @@ ion-card-title {
 import {
     IonHeader, IonFooter, IonContent, IonToolbar, IonTitle,
     IonButtons, IonButton, IonGrid, IonRow, IonCol,
-    modalController
+    modalController,
+    IonLoading
 } from '@ionic/vue';
 import {addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline } from 'ionicons/icons';
-import { defineComponent} from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Storage } from '@ionic/storage';
@@ -105,7 +122,8 @@ export default defineComponent({
 
     components: {
         IonHeader, IonContent, IonToolbar, IonTitle,
-        IonButtons, IonButton, IonFooter, IonGrid, IonRow, IonCol
+        IonButtons, IonButton, IonFooter, IonGrid, IonRow, IonCol,
+        IonLoading
     },
 
     setup() {
@@ -113,9 +131,19 @@ export default defineComponent({
         storage.create();
 
         const router = useRouter();
+
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
+
+        const isOpenToastRef = ref(false);
+        const setOpenToast = (state) => isOpenToastRef.value = state;
+
         return {
             addCircleOutline, removeCircleOutline, pencilOutline, trashOutline, closeCircleOutline, router,
-            storage
+            storage,
+
+            isOpenLoadingRef, setOpenLoading,
+            isOpenToastRef, setOpenToast
         };
     },
 
@@ -169,6 +197,8 @@ export default defineComponent({
         }, 500),
 
         changeQuantity(item, quantity, cb) {
+            this.setOpenLoading(true);
+
             this.storage.get("authUser").then(user => {
                 axios({
                     method: "PUT",
@@ -180,6 +210,8 @@ export default defineComponent({
                         quantity: quantity
                     }
                 }).then(res => {
+                    this.setOpenLoading(false);
+
                     const data = res.data;
 
                     if (data.success) {
@@ -190,6 +222,8 @@ export default defineComponent({
                         console.log(data.message);
                     }
                 }).catch(err => {
+                    this.setOpenLoading(false);
+
                     console.log(err);
                 });
             }, 800);
