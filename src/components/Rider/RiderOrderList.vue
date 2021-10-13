@@ -5,20 +5,19 @@
                 <ion-button @click="dismissModal"><ion-icon :icon="closeCircleOutline" /></ion-button>
             </ion-buttons>
             <ion-title>Orders</ion-title>
-        </ion-toolbar>  
+        </ion-toolbar>
     </ion-header>
 
     <ion-content class="ion-padding  cart-content">
-            <ion-row class="ion-align-items-center" v-for="order of orders" :key="order.id">
-                <ion-col size="12" style="text-align:center;">
-                     <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Order #{{order.tracking_number}}</span></a>
-                        <!-- Product Price -->
-                        <p class="sale-price">Status: {{order.status}}</p>
-                        <p class="sale-price">Delivery Time: <span class="price">{{order.delivery_date}}</span></p>
-                        <p class="sale-price">Total Price: <span class="price">&#8369;{{order.total_price_with_tax}}</span></p>
-                        <ion-button size="small" @click="orderDetails(order.id)">View Details</ion-button>
-                </ion-col>
-            </ion-row>
+        <ion-row class="ion-align-items-center" v-for="order in orders" :key="order.id">
+            <ion-col size="12" style="text-align:center;">
+                <a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Order #{{order.tracking_number}}</span></a>
+                <p class="sale-price">Status: {{order.status}}</p>
+                <p class="sale-price">Delivery Time: <span class="price">{{order.delivery_date}}</span></p>
+                <p class="sale-price">Total Price: <span class="price">&#8369;{{order.total_price_with_tax}}</span></p>
+                <ion-button size="small" @click="orderDetails(order.id)">View Details</ion-button>
+            </ion-col>
+        </ion-row>
     </ion-content>
 </template>
 
@@ -49,11 +48,12 @@ export default defineComponent({
         IonButtons, IonButton
     },
     data() {
-            return {
-                customerId: Number,
-                orders: []
-            }
-        },
+        return {
+            customerId: Number,
+            orders: []
+        }
+    },
+
     setup() {
         const storage = new Storage();
         storage.create();
@@ -65,19 +65,17 @@ export default defineComponent({
         dismissModal() {
             modalController.dismiss();
         },
-        async details() {
-            modalController.dismiss();
-            const modal = await modalController
-                .create({
-                component: RiderOrderDetails,
-                cssClass: 'my-custom-class',
-                })
-            return modal.present();
-        },
+        // async details() {
+        //     modalController.dismiss();
+        //     const modal = await modalController
+        //         .create({
+        //         component: RiderOrderDetails,
+        //         cssClass: 'my-custom-class',
+        //         })
+        //     return modal.present();
+        // },
         async getOrders() {
             const d = await this.storage.get('authUser');
-            // console.log(customer);
-            // this.customerId = customer.id;
 
             axios({
                 method: "GET",
@@ -86,7 +84,6 @@ export default defineComponent({
                     Authorization: `Bearer ${d.token}`
                 }
             }).then(res => {
-
                 const data = res.data;
 
                 if (data.success) {

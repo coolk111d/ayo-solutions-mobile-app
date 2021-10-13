@@ -31,7 +31,7 @@
                                 <p class="sale-price">Order #{{order.tracking_number}}</p>
                                 <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
                                 <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
-                                <ion-button size="small" color="success" @click="details">View Details</ion-button>
+                                <ion-button size="small" color="success" @click="orderDetails(order.id)">View Details</ion-button>
                             </ion-col>
                         </ion-row>
                     </div>
@@ -125,14 +125,17 @@ export default  {
             return modal.present();
         },
 
-        async details() {
+        async orderDetails(id) {
             if (!this.audio.paused) this.audio.pause();
 
-            const modal = await modalController
-            .create({
-            component: MerchantOrderDetails,
-            cssClass: 'my-custom-class',
-            })
+            const modal = await modalController.create({
+                component: MerchantOrderDetails,
+                cssClass: 'my-custom-class',
+                componentProps: {
+                    orderID: id
+                }
+            });
+
             return modal.present();
         },
     }

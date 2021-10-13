@@ -145,7 +145,7 @@ export default defineComponent({
         dismissModal() {
             modalController.dismiss();
         },
-        async getDetails(props) {
+        async getDetail(props) {
             const d = await this.storage.get('authUser');
 
             axios({
@@ -170,7 +170,7 @@ export default defineComponent({
         }
     },
     beforeMount() {
-        this.getDetails(this.$props);
+        this.getDetail(this.$props);
     },
 })
 </script>

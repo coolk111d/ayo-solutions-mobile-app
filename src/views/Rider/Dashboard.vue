@@ -262,9 +262,9 @@ export default  {
                 .create({
                 component: RiderOrderDetails,
                 cssClass: 'my-custom-class',
-                componentProps: {
-                    orderID: id
-                }
+                    componentProps: {
+                        orderID: id
+                    }
                 })
             return modal.present();
         },
