@@ -61,7 +61,7 @@
                                     <p class="sale-price">Order #{{order.tracking_number}}</p>
                                     <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
                                     <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
-                                    <ion-button size="small" color="success" @click="details">View Details</ion-button>
+                                    <ion-button size="small" color="success" @click="orderDetails(order.id)">View Details</ion-button>
                             </ion-col>
                             <ion-col style="display:flex; flex-direction:column;" v-show="order.status === 'processing'">
                                 <ion-button size="small" color="success" @click="accept(order.tracking_number)">Process</ion-button>
@@ -254,7 +254,20 @@ export default  {
                     // this.setOpenToast(true);
                 });
             });
-        }
+        },
+
+        async orderDetails(id) {
+            modalController.dismiss();
+            const modal = await modalController
+                .create({
+                component: RiderOrderDetails,
+                cssClass: 'my-custom-class',
+                componentProps: {
+                    orderID: id
+                }
+                })
+            return modal.present();
+        },
     }
 }
 </script>
