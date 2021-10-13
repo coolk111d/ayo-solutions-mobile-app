@@ -73,113 +73,158 @@
                     </ion-item>
            </ion-card> -->
 
-           <ion-card>
-                <div class="title-icon">
-                    <ion-icon :icon="walletOutline" class="map"></ion-icon>
-                    <p class="title">Payment Method</p>
-                </div>
-                <ion-radio-group>
+           <Form @submit="onSubmit" :validation-schema="schema" :initial-values="formValues">
+               <ion-card>
+                    <div class="title-icon">
+                        <ion-icon :icon="walletOutline" class="map"></ion-icon>
+                        <p class="title">Payment Method</p>
+                    </div>
+                    <ion-radio-group>
+                        <ion-item>
+                            <ion-radio name="payment_method" value="cod"></ion-radio>
+                            <ion-label style="margin-left: 10px">Cash to Cash on Delivery</ion-label>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-radio name="payment_method" value="GCash" disabled></ion-radio>
+                            <ion-label style="margin-left: 10px">GCash upon Rider Delivery</ion-label>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-radio name="payment_method" value="Paymaya" disabled></ion-radio>
+                            <ion-label style="margin-left: 10px">Paymaya upon Rider Delivery</ion-label>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-radio name="payment_method" value="Debit/Credit" disabled></ion-radio>
+                            <ion-label style="margin-left: 10px">Debit/Credit</ion-label>
+                        </ion-item>
+                    </ion-radio-group>
+               </ion-card>
+
+               <ion-card>
+                    <div class="title-icon">
+                        <ion-icon :icon="personOutline" class="map"></ion-icon>
+                        <p class="title">Proof of Identity</p>
+                    </div>
                     <ion-item>
-                        <ion-radio value="Cash"></ion-radio>
-                        <ion-label style="margin-left: 10px">Cash to Cash on Delivery</ion-label>
+                        <!-- <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
+                        <ion-input name="government_id" type="file" accept="image/*" > </ion-input>
+                        <ErrorMessage as="ion-text" name="government_id" color="danger" /> -->
+
+                        <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
+                        <Field as="ion-input" name="gov_id" type="file" accept="image/*" />
+                        <ErrorMessage as="ion-text" name="gov_id" color="danger" />
+                    </ion-item>
+                    <ion-item>
+                        <!-- <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
+                        <ion-input name="selfie" type="file" accept="image/*" > </ion-input>
+                        <ErrorMessage as="ion-text" name="government_id" color="danger" /> -->
+
+                        <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
+                        <Field as="ion-input" name="selfie" type="file" accept="image/*" />
+                        <ErrorMessage as="ion-text" name="selfie" color="danger" />
                     </ion-item>
 
+                    <!-- <ion-item>
+                        <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
+                        <ion-textarea></ion-textarea>
+                    </ion-item> -->
                     <ion-item>
-                        <ion-radio value="GCash"></ion-radio>
-                        <ion-label style="margin-left: 10px">GCash upon Rider Delivery</ion-label>
+                        <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
+                        <Field as="ion-textarea" name="special_instruction" />
+                        <ErrorMessage as="ion-text" name="special_instruction" color="danger" />
                     </ion-item>
+                </ion-card>
 
-                    <ion-item>
-                        <ion-radio value="Paymaya"></ion-radio>
-                        <ion-label style="margin-left: 10px">Paymaya upon Rider Delivery</ion-label>
-                    </ion-item>
-
-                    <ion-item>
-                        <ion-radio value="Debit/Credit" disabled></ion-radio>
-                        <ion-label style="margin-left: 10px">Debit/Credit</ion-label>
-                    </ion-item>
-                </ion-radio-group>
-           </ion-card>
-
-           <ion-card>
-                <div class="title-icon">
-                    <ion-icon :icon="personOutline" class="map"></ion-icon>
-                    <p class="title">Proof of Identity</p>
-                </div>
-                <ion-item>
-                    <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
-                    <ion-input name="government_id" type="file" accept="image/*" > </ion-input>
-                    <ErrorMessage as="ion-text" name="government_id" color="danger" />
-                </ion-item>
-                <ion-item>
-                    <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
-                    <ion-input name="selfie" type="file" accept="image/*" > </ion-input>
-                    <ErrorMessage as="ion-text" name="government_id" color="danger" />
-                </ion-item>
-
-                <ion-item>
-                    <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
-                    <ion-textarea></ion-textarea>
-                </ion-item>
-            </ion-card>
-           <ion-card>
-                <div class="title-icon">
-                    <ion-icon :icon="receiptOutline" class="map"></ion-icon>
-                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
-                </div>
-                <div class="summary-details">
-                    <div class="display-flex" v-for="item in items" :key="item.id">
-                        <p>{{ item.quantity }}x {{ item.name }}</p>
-                        <p>&#8369; {{ item.price }}</p>
+               <ion-card>
+                    <div class="title-icon">
+                        <ion-icon :icon="receiptOutline" class="map"></ion-icon>
+                        <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                     </div>
-                    <hr style="margin: 0px 0 10px">
-                    <div class="display-flex">
-                        <p>Delivery Charge</p>
-                        <p>&#8369; {{ cart.delivery_charge }}</p>
+                    <div class="summary-details">
+                        <div class="display-flex" v-for="item in items" :key="item.id">
+                            <p>{{ item.quantity }}x {{ item.name }}</p>
+                            <p>&#8369; {{ item.price }}</p>
+                        </div>
+                        <hr style="margin: 0px 0 10px">
+                        <div class="display-flex">
+                            <p>Delivery Charge</p>
+                            <p>&#8369; {{ cart.delivery_charge }}</p>
+                        </div>
+                        <div class="display-flex">
+                            <p>Subtotal</p>
+                            <p>&#8369; {{ cart.sub_total_price }}</p>
+                        </div>
+                        <div class="display-flex">
+                            <p style="font-size: 16px;">Total(w/ Tax)</p>
+                            <p style="font-size: 16px;">&#8369; {{ cart.total_price_with_tax }}</p>
+                        </div>
                     </div>
-                    <div class="display-flex">
-                        <p>Subtotal</p>
-                        <p>&#8369; {{ cart.sub_total_price }}</p>
-                    </div>
-                    <div class="display-flex">
-                        <p style="font-size: 16px;">Total(w/ Tax)</p>
-                        <p style="font-size: 16px;">&#8369; {{ cart.total_price_with_tax }}</p>
-                    </div>
-                </div>
-           </ion-card>
+               </ion-card>
 
-            <ion-card>
-            <p>Please Note:</p>
-            <small>
-                AYO Solution Sellers are NOT allowed to ask you to order and transact your payments outside the platform.
-                When using our COD service, payment is given to our official delivery partner upon receipt on item.
-            </small>
-            </ion-card>
+                <ion-card>
+                    <p>Please Note:</p>
+                    <small>
+                        AYO Solution Sellers are NOT allowed to ask you to order and transact your payments outside the platform.
+                        When using our COD service, payment is given to our official delivery partner upon receipt on item.
+                    </small>
+                </ion-card>
+
+                <ion-button class="button" expand="full" type="submit">PROCESS ORDER</ion-button>
+
+            </Form>
         </ion-content>
 
-        <ion-footer>
+        <!-- <ion-footer>
             <ion-toolbar>
-                <ion-button>PROCESS ORDER</ion-button>
+                <ion-button @click="placeOrder">PROCESS ORDER</ion-button>
             </ion-toolbar>
-        </ion-footer>
+        </ion-footer> -->
+
+        <ion-loading
+            :is-open="isOpenLoadingRef"
+            message="Please wait..."
+            :duration="0"
+            @didDismiss="setOpenLoading(false)"
+        >
+        </ion-loading>
+
+        <ion-toast
+            :is-open="isOpenToastRef"
+            :message="toastMessage"
+            :duration="3000"
+            @didDismiss="setOpenToast(false)"
+        >
+        </ion-toast>
     </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonCard, modalController,IonTextarea, IonLabel, IonItem, IonRadioGroup, IonRadio,
-    IonFooter, IonInput} from '@ionic/vue';
+import {
+    IonPage, IonContent, IonCard, modalController, IonLabel, IonItem, IonRadioGroup, IonRadio,
+    IonLoading, IonToast
+} from '@ionic/vue';
 import { arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutline, bicycleOutline, person, call, personOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import Address from '@/components/Address.vue';
+// import OrderList from '@/components/OrderList.vue';
+
 import { Storage } from "@ionic/storage";
+import { Form, Field, ErrorMessage } from "vee-validate";
+import { object, string } from "yup";
 import axios from "axios";
 
 export default defineComponent({
     name: 'Checkout',
-    components: { IonContent, IonPage, IonCard, CustomHeader, IonTextarea, IonLabel, IonItem,
-    IonFooter, IonRadioGroup, IonRadio,
+    components: { IonContent, IonPage, IonCard, CustomHeader, IonLabel, IonItem,
+    IonRadioGroup, IonRadio,
+
+    Form, Field, ErrorMessage,
+
+    IonLoading, IonToast
     },
 
     data() {
@@ -187,7 +232,8 @@ export default defineComponent({
             billing: {},
             shipping: {},
             cart: {},
-            items: {}
+            items: {},
+            toastMessage: ""
         }
     },
 
@@ -196,9 +242,33 @@ export default defineComponent({
         storage.create();
 
         const router = useRouter();
+
+        const schema = object({
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            special_instruction: string().required().min(3).max(50).label("Special Instruction"),
+        });
+
+        const formValues = {
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            special_instruction: "",
+        };
+
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
+
+        const isOpenToastRef = ref(false);
+        const setOpenToast = (state) => isOpenToastRef.value = state;
+
         return {
             router, arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutline, bicycleOutline, person, call, personOutline,
-            storage
+            storage,
+
+            schema,
+
+            formValues,
+
+            isOpenLoadingRef, setOpenLoading,
+            isOpenToastRef, setOpenToast
         }
     },
 
@@ -289,6 +359,54 @@ export default defineComponent({
 
             return modal.present();
         },
+
+        onSubmit(input) {
+            this.setOpenLoading(true);
+
+            this.storage.get("authUser").then(d => {
+                const formData = new FormData();
+                formData.append('gov_id', new Blob([input.gov_id[0]]));
+                delete input.gov_id;
+
+                formData.append('selfie', new Blob([input.selfie[0]]));
+                delete input.selfie;
+
+                formData.append("payment_method", "cod");
+                formData.append("special_instruction", input.special_instruction);
+
+                // for (const field in input) {
+                //     console.log(field, input[field]);
+                //     formData.append(field, input[field]);
+                // }
+
+                axios({
+                    method: "POST",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
+                    data: formData,
+                    headers: {
+                        Authorization: `Bearer ${d.token}`
+                    }
+                }).then(res => {
+                    this.setOpenLoading(false);
+
+                    const data = res.data;
+
+                    if (data.success) {
+                        const order = data.data;
+                        this.router.push(`/order-details/${order.id}`);
+                    } else {
+                        console.log(data.message);
+                    }
+
+                    this.toastMessage = data.message;
+                    this.setOpenToast(true);
+                }).catch(err => {
+                    this.setOpenLoading(false);
+
+                    console.log(err.response.data.message);
+                });
+            });
+        }
     }
 })
 </script>

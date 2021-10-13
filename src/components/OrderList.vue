@@ -76,19 +76,39 @@ export default defineComponent({
             this.router.push(`/order-details/${id}`);
         },
         async getOrders() {
-            
-                    const customer = await this.storage.get('authUser');
-                    console.log(customer);
-                    this.customerId = customer.id;
-                    axios({
-                        method: "GET",
-                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${customer.id}`,
-                    }).then(res => {
-                        console.log(res.data);
-                        this.orders = res.data;
-                    }).catch(err => {
-                        console.log(err);
-                    });
+            const d = await this.storage.get('authUser');
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
+                headers: {
+                    Authorization: `Bearer ${d.token}`
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    console.log(data.data);
+                    this.orders = data.data
+                } else {
+                    console.log(data.message);
+                }
+
+            }).catch(err => {
+                console.log(err);
+            });
+                    // const customer = await this.storage.get('authUser');
+                    // console.log(customer);
+                    // this.customerId = customer.id;
+                    // axios({
+                    //     method: "GET",
+                    //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${customer.id}`,
+                    // }).then(res => {
+                    //     console.log(res.data);
+                    //     this.orders = res.data;
+                    // }).catch(err => {
+                    //     console.log(err);
+                    // });
         },
          
     },

@@ -105,7 +105,8 @@ export default  {
                 const data = res.data;
 
                 if (data.success) {
-                    this.orders = data.data;
+                    this.orders = [];
+                    this.orders.push(data.data);
                 } else {
                     console.log(data.message);
                 }

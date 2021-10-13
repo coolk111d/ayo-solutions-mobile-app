@@ -28,7 +28,7 @@
                     <div class="container">
                     <h3>Rider's Dashboard</h3>
 
-                    <p>Earn today: &#8369;100.00</p>
+                    <!-- <p>Earn today: &#8369;100.00</p> -->
 
                     <ion-button color="tertiary" size="small" @click="ordersList">Order List</ion-button>
                     </div>
@@ -192,6 +192,8 @@ export default  {
         },
 
         accept(trackingNumber) {
+            if (!this.audio.paused) this.audio.pause();
+
             this.setOpenLoading(true);
 
             this.storage.get("authUser").then(d => {
@@ -207,7 +209,10 @@ export default  {
                     const data = res.data;
 
                     if (data.success) {
-                        this.orders = data.data
+                        this.orders = [];
+                        this.orders.push(data.data);
+
+                        this.toastMessage = "Successfully accept Order";
                     } else {
                         this.toastMessage = data.message;
                         console.log(data.message);
@@ -225,6 +230,8 @@ export default  {
         },
 
         reject(trackingNumber) {
+            if (!this.audio.paused) this.audio.pause();
+
             this.setOpenLoading(true);
 
             this.storage.get("authUser").then(d => {
@@ -259,6 +266,8 @@ export default  {
         },
 
         async orderDetails(id) {
+            if (!this.audio.paused) this.audio.pause();
+
             modalController.dismiss();
             const modal = await modalController
                 .create({
