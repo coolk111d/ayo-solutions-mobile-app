@@ -205,13 +205,7 @@ export default  {
                     const data = res.data;
 
                     if (data.success) {
-                        const order = data.data;
-                        order.isProcessing = order.status === "processing";
-                        console.log(order);
-                        // this.toastMessage = `You reject the order #${trackingNumber}`;
-
-                        this.orders = [];
-                        this.orders.push(order)
+                        this.orders = data.data
                     } else {
                         this.toastMessage = data.message;
                         console.log(data.message);
