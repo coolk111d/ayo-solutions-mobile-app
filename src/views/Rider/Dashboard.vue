@@ -54,7 +54,7 @@
                 <ion-card v-for="order in orders" :key="order.id">
                     <div class="container">
                         <ion-row class="ion-align-items-center">
-                            <ion-col size="6" style="text-align:center;">
+                            <ion-col :size="order.status === 'processing' ? 6 : 12" style="text-align:center;">
                                 <ion-badge color="warning">New</ion-badge><br>
                                 <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">{{order.merchant.userObj.name}}</span></a>
                                     <!-- Product Price -->
@@ -63,7 +63,7 @@
                                     <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
                                     <ion-button size="small" color="success" @click="details">View Details</ion-button>
                             </ion-col>
-                            <ion-col style="display:flex; flex-direction:column;">
+                            <ion-col style="display:flex; flex-direction:column;" v-show="order.status === 'processing'">
                                 <ion-button size="small" color="success" @click="accept(order.tracking_number)">Process</ion-button>
                                 <ion-button size="small" color="danger" @click="reject(order.tracking_number)">Reject</ion-button>
                             </ion-col>
@@ -144,11 +144,10 @@ export default  {
 
             this.echo.private(`pooling-rider.${d.user.rider.id}`)
             .listen(".queue", (e) => {
-                // this.audio.currentTime = 0;
-                // this.audio.play();
+                this.audio.currentTime = 0;
+                this.audio.play();
 
                 this.orders.unshift(e.order);
-                console.log("bum rider pooling");
                 console.log(e.order);
             });
 
@@ -191,23 +190,40 @@ export default  {
         },
 
         accept(trackingNumber) {
+            this.setOpenLoading(true);
+
             this.storage.get("authUser").then(d => {
                 axios({
-                    method: "GET",
+                    method: "PATCH",
                     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${trackingNumber}/accept`,
                     headers: {
                         Authorization: `Bearer ${d.token}`
                     }
                 }).then(res => {
+                    this.setOpenLoading(false);
+
                     const data = res.data;
 
                     if (data.success) {
-                        this.orders = data.data;
+                        const order = data.data;
+                        order.isProcessing = order.status === "processing";
+                        console.log(order);
+                        // this.toastMessage = `You reject the order #${trackingNumber}`;
+
+                        this.orders = [];
+                        this.orders.push(order)
                     } else {
+                        this.toastMessage = data.message;
                         console.log(data.message);
                     }
+
+                    this.setOpenToast(true);
                 }).catch(err => {
+                    this.setOpenLoading(false);
+
                     console.log(err);
+                    // this.toastMessage = err.response.data.message;
+                    // this.setOpenToast(true);
                 });
             });
         },
