@@ -230,6 +230,8 @@ export default defineComponent({
         },
 
         deleteItem(item) {
+            this.setOpenLoading(true);
+
             this.storage.get("authUser").then(user => {
                 axios({
                     method: "DELETE",
@@ -238,6 +240,8 @@ export default defineComponent({
                         Authorization: `Bearer ${user.cart_token}`
                     }
                 }).then(res => {
+                    this.setOpenLoading(false);
+
                     const data = res.data;
 
                     if (data.success) {
@@ -248,6 +252,8 @@ export default defineComponent({
                         console.log(data.message);
                     }
                 }).catch(err => {
+                    this.setOpenLoading(false);
+
                     console.log(err);
                 });
             }, 800);
