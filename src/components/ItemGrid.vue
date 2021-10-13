@@ -19,12 +19,28 @@
             <!--<div style="margin: -5px auto 10px; text-align:center">
             <ion-button @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
             </div>-->
+
+    <ion-loading
+        :is-open="isOpenLoadingRef"
+        message="Please wait..."
+        :duration="0"
+        @didDismiss="setOpenLoading(false)"
+    >
+    </ion-loading>
+
+    <ion-toast
+        :is-open="isOpenToastRef"
+        :message="toastMessage"
+        :duration="3000"
+        @didDismiss="setOpenToast(false)"
+    >
+    </ion-toast>
 </template>
 
 <script>
 import { useRouter } from 'vue-router';
-import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController } from '@ionic/vue';
-import { defineComponent} from "vue";
+import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading } from '@ionic/vue';
+import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { Storage } from "@ionic/storage";
 import CartModal from './CartModal.vue';
@@ -50,6 +66,8 @@ export default defineComponent({
       },
 
       addToCart(menuItemKey) {
+        this.setOpenLoading(true);
+
         this.storage.get("authUser").then(user => {
             axios({
                 method: "POST",
@@ -63,6 +81,8 @@ export default defineComponent({
                     menu_item_unique_key: menuItemKey
                 }
             }).then(res => {
+                this.setOpenLoading(false);
+
                 const data = res.data;
 
                 if (data.success) {
@@ -71,6 +91,8 @@ export default defineComponent({
                     console.log(data.message);
                 }
             }).catch(err => {
+                this.setOpenLoading(false);
+
                 console.log(err);
             });
         });
@@ -91,7 +113,7 @@ export default defineComponent({
   beforeMount() {
       this.initialLoad();
   },
-  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow },
+  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, IonLoading },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
@@ -99,7 +121,18 @@ export default defineComponent({
         const storage = new Storage();
         storage.create();
 
-        return { router, env, storage }
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
+
+        const isOpenToastRef = ref(false);
+        const setOpenToast = (state) => isOpenToastRef.value = state;
+
+        return {
+            router, env, storage,
+
+            isOpenLoadingRef, setOpenLoading,
+            isOpenToastRef, setOpenToast
+        }
     },
 
 
