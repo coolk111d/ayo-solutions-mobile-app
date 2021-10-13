@@ -33,7 +33,8 @@
 
 <script lang="ts">
 import { modalController } from '@ionic/vue';
-import PreRegistrationModal from '@/components/PreRegistrationModal.vue'
+// import PreRegistrationModal from '@/components/PreRegistrationModal.vue'
+import RegistrationModal from '@/components/RegistrationModal.vue'
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton } from '@ionic/vue';
 import ServicesSlider from '@/components/ServicesSlider.vue';
 import CategorySlider from '@/components/CategorySlider.vue';
@@ -45,7 +46,7 @@ export default  {
     components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Header, ServicesSlider, CategorySlider, IonCard, IonButton},
     methods: {
       async openModal() {
-          const modal = await modalController.create({component: PreRegistrationModal});
+          const modal = await modalController.create({component: RegistrationModal});
           modal.present();
       }
   }

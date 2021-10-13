@@ -8,7 +8,7 @@
         </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding  cart-content">
+    <ion-content class="ion-padding cart-content" v-if="orders.length !== 0">
         <ion-row class="ion-align-items-center" v-for="order in orders" :key="order.id">
             <ion-col size="12" style="text-align:center;">
                 <a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Order #{{order.tracking_number}}</span></a>
@@ -18,6 +18,9 @@
                 <ion-button size="small" @click="orderDetails(order.id)">View Details</ion-button>
             </ion-col>
         </ion-row>
+    </ion-content>
+    <ion-content class="ion-padding cart-content" v-else>
+        <p>No Order List</p>
     </ion-content>
 </template>
 

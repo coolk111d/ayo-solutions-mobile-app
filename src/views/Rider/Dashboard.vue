@@ -28,6 +28,8 @@
                     <div class="container">
                     <h3>Rider's Dashboard</h3>
 
+                    <p>Earn today: &#8369;100.00</p>
+
                     <ion-button color="tertiary" size="small" @click="ordersList">Order List</ion-button>
                     </div>
                 </ion-card>
