@@ -65,9 +65,18 @@
                                     <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
                                     <ion-button size="small" color="success" @click="orderDetails(order.id)">View Details</ion-button>
                             </ion-col>
-                            <ion-col style="display:flex; flex-direction:column;" v-show="order.status === 'processing'">
+
+                            <ion-col style="display:flex; flex-direction:column;" v-if="order.status === 'processing'">
                                 <ion-button size="small" color="success" @click="accept(order.tracking_number)">Process</ion-button>
                                 <ion-button size="small" color="danger" @click="reject(order.tracking_number)">Reject</ion-button>
+                            </ion-col>
+
+                            <ion-col style="display:flex; flex-direction:column;" v-else-if="order.status === 'assembled'">
+                                <ion-button size="small" color="success" @click="delivering(order)">Mark As Delivering</ion-button>
+                            </ion-col>
+
+                            <ion-col style="display:flex; flex-direction:column;" v-else-if="order.status === 'delivering'">
+                                <ion-button size="small" color="success" @click="delivered(order)">Mark As Delivered</ion-button>
                             </ion-col>
                         </ion-row>
                     </div>
@@ -249,6 +258,78 @@ export default  {
                     if (data.success) {
                         this.toastMessage = `You reject the order #${trackingNumber}`;
                         this.orders = [];
+                    } else {
+                        this.toastMessage = data.message;
+                        console.log(data.message);
+                    }
+
+                    this.setOpenToast(true);
+                }).catch(err => {
+                    this.setOpenLoading(false);
+
+                    console.log(err);
+                    // this.toastMessage = err.response.data.message;
+                    // this.setOpenToast(true);
+                });
+            });
+        },
+
+        delivering(order) {
+            this.setOpenLoading(true);
+
+            this.storage.get("authUser").then(d => {
+                axios({
+                    method: "PATCH",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${order.id}/delivering`,
+                    headers: {
+                        Authorization: `Bearer ${d.token}`
+                    }
+                }).then(res => {
+                    this.setOpenLoading(false);
+
+                    const data = res.data;
+
+                    if (data.success) {
+                        this.toastMessage = `You mark the order #${order.tracking_number} as delivering`;
+                        this.orders = [];
+                        order.status = "delivering";
+                        this.orders.push(order)
+                    } else {
+                        this.toastMessage = data.message;
+                        console.log(data.message);
+                    }
+
+                    this.setOpenToast(true);
+                }).catch(err => {
+                    this.setOpenLoading(false);
+
+                    console.log(err);
+                    // this.toastMessage = err.response.data.message;
+                    // this.setOpenToast(true);
+                });
+            });
+        },
+
+        delivered(order) {
+            this.setOpenLoading(true);
+
+            this.storage.get("authUser").then(d => {
+                axios({
+                    method: "PATCH",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${order.id}/delivered`,
+                    headers: {
+                        Authorization: `Bearer ${d.token}`
+                    }
+                }).then(res => {
+                    this.setOpenLoading(false);
+
+                    const data = res.data;
+
+                    if (data.success) {
+                        this.toastMessage = `You mark the order #${order.tracking_number} as delivered`;
+                        this.orders = [];
+                        order.status = "delivered";
+                        this.orders.push(order)
                     } else {
                         this.toastMessage = data.message;
                         console.log(data.message);
