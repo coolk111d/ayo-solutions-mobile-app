@@ -1,6 +1,21 @@
 <template>
     <ion-page>
         <RiderHeader/>
+        <ion-loading
+            :is-open="isOpenLoadingRef"
+            message="Please wait..."
+            :duration="0"
+            @didDismiss="setOpenLoading(false)"
+        >
+        </ion-loading>
+
+        <ion-toast
+            :is-open="isOpenToastRef"
+            :message="toastMessage"
+            :duration="3000"
+            @didDismiss="setOpenToast(false)"
+        >
+        </ion-toast>
 
         <ion-content :fullscreen="true">
             <div class="content-container">
@@ -41,7 +56,7 @@
                         <ion-row class="ion-align-items-center">
                             <ion-col size="6" style="text-align:center;">
                                 <ion-badge color="warning">New</ion-badge><br>
-                                <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
+                                <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">{{order.merchant.userObj.name}}</span></a>
                                     <!-- Product Price -->
                                     <p class="sale-price">Order #{{order.tracking_number}}</p>
                                     <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
@@ -49,8 +64,8 @@
                                     <ion-button size="small" color="success" @click="details">View Details</ion-button>
                             </ion-col>
                             <ion-col style="display:flex; flex-direction:column;">
-                                <ion-button size="small" color="success" @click="details">Process</ion-button>
-                                <ion-button size="small" color="danger">Reject</ion-button>
+                                <ion-button size="small" color="success" @click="accept(order.tracking_number)">Process</ion-button>
+                                <ion-button size="small" color="danger" @click="reject(order.tracking_number)">Reject</ion-button>
                             </ion-col>
                         </ion-row>
                     </div>
@@ -61,22 +76,31 @@
 </template>
 
 <script>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton, modalController, IonRow, IonBadge, IonCol } from '@ionic/vue';
+import {
+    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton, modalController, IonRow, IonBadge, IonCol,
+    IonLoading, IonToast
+} from '@ionic/vue';
 import RiderHeader from '@/components/Rider/RiderHeader.vue';
 import RiderOrderList from '@/components/Rider/RiderOrderList.vue';
 import RiderOrderDetails from '@/components/Rider/RiderOrderDetails.vue';
 
+import { ref } from 'vue';
 import { Storage } from '@ionic/storage';
 import Echo from "laravel-echo";
 import axios from "axios";
 
 export default  {
     name: 'Rider Dashboard',
-    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, RiderHeader, IonCard, IonButton , IonRow, IonBadge, IonCol},
+    components: {
+        IonHeader, IonToolbar, IonTitle, IonContent, IonPage, RiderHeader, IonCard, IonButton , IonRow, IonBadge, IonCol,
+        IonLoading, IonToast
+    },
 
     data() {
         return {
-            orders: []
+            orders: [],
+
+            toastMessage: ""
         };
     },
 
@@ -99,7 +123,18 @@ export default  {
 
         const audio = new Audio(`${process.env.VUE_APP_ROOT_API}/media/rider-notif2.mp3`);
 
-        return { echo, storage, audio };
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
+
+        const isOpenToastRef = ref(false);
+        const setOpenToast = (state) => isOpenToastRef.value = state;
+
+        return {
+            echo, storage, audio,
+
+            isOpenLoadingRef, setOpenLoading,
+            isOpenToastRef, setOpenToast
+        };
     },
 
     mounted() {
@@ -109,13 +144,12 @@ export default  {
 
             this.echo.private(`pooling-rider.${d.user.rider.id}`)
             .listen(".queue", (e) => {
-                console.log("bum rider pooling");
-                console.log(e.order);
-
                 // this.audio.currentTime = 0;
                 // this.audio.play();
 
                 this.orders.unshift(e.order);
+                console.log("bum rider pooling");
+                console.log(e.order);
             });
 
             // axios({
@@ -139,22 +173,78 @@ export default  {
     },
 
     methods: {
-    async ordersList() {
-                const modal = await modalController
-                .create({
-                component: RiderOrderList,
-                cssClass: 'my-custom-class',
-                })
+        async ordersList() {
+            const modal = await modalController
+            .create({
+            component: RiderOrderList,
+            cssClass: 'my-custom-class',
+            })
             return modal.present();
-            },
-             async details() {
-                const modal = await modalController
-                .create({
-                component: RiderOrderDetails,
-                cssClass: 'my-custom-class',
-                })
+        },
+         async details() {
+            const modal = await modalController
+            .create({
+            component: RiderOrderDetails,
+            cssClass: 'my-custom-class',
+            })
             return modal.present();
-            },
+        },
+
+        accept(trackingNumber) {
+            this.storage.get("authUser").then(d => {
+                axios({
+                    method: "GET",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${trackingNumber}/accept`,
+                    headers: {
+                        Authorization: `Bearer ${d.token}`
+                    }
+                }).then(res => {
+                    const data = res.data;
+
+                    if (data.success) {
+                        this.orders = data.data;
+                    } else {
+                        console.log(data.message);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                });
+            });
+        },
+
+        reject(trackingNumber) {
+            this.setOpenLoading(true);
+
+            this.storage.get("authUser").then(d => {
+                axios({
+                    method: "PATCH",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${trackingNumber}/reject`,
+                    headers: {
+                        Authorization: `Bearer ${d.token}`
+                    }
+                }).then(res => {
+                    this.setOpenLoading(false);
+
+                    const data = res.data;
+
+                    if (data.success) {
+                        this.toastMessage = `You reject the order #${trackingNumber}`;
+                        this.orders = [];
+                    } else {
+                        this.toastMessage = data.message;
+                        console.log(data.message);
+                    }
+
+                    this.setOpenToast(true);
+                }).catch(err => {
+                    this.setOpenLoading(false);
+
+                    console.log(err);
+                    // this.toastMessage = err.response.data.message;
+                    // this.setOpenToast(true);
+                });
+            });
+        }
     }
 }
 </script>

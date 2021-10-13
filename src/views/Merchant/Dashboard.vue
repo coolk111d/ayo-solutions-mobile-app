@@ -24,12 +24,14 @@
                         <ion-row class="ion-align-items-center">
                             <ion-col size="12" style="text-align:center;">
                                 <ion-badge color="warning">New</ion-badge><br>
-                                <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
-                                    <!-- Product Price -->
-                                    <p class="sale-price">Order #{{order.tracking_number}}</p>
-                                    <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
-                                    <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
-                                    <ion-button size="small" color="success" @click="details">View Details</ion-button>
+                                <!-- Product Title -->
+                                <!-- <a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a> -->
+
+                                <!-- Product Price -->
+                                <p class="sale-price">Order #{{order.tracking_number}}</p>
+                                <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
+                                <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
+                                <ion-button size="small" color="success" @click="details">View Details</ion-button>
                             </ion-col>
                         </ion-row>
                     </div>
