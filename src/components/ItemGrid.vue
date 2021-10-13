@@ -39,7 +39,7 @@
 
 <script>
 import { useRouter } from 'vue-router';
-import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading } from '@ionic/vue';
+import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading, IonToast } from '@ionic/vue';
 import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { Storage } from "@ionic/storage";
@@ -50,6 +50,8 @@ export default defineComponent({
   data(){
     return{
       items: [],
+
+      toastMessage: ""
     }
   },
   methods: {
@@ -88,7 +90,9 @@ export default defineComponent({
                 if (data.success) {
                     this.openCartModal();
                 } else {
-                    console.log(data.message);
+                    this.toastMessage = data.message;
+                    this.setOpenToast(true);
+                    // console.log(data.message);
                 }
             }).catch(err => {
                 this.setOpenLoading(false);
@@ -113,7 +117,7 @@ export default defineComponent({
   beforeMount() {
       this.initialLoad();
   },
-  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, IonLoading },
+  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, IonLoading, IonToast },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
