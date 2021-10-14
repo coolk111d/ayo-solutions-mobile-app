@@ -10,44 +10,30 @@
                 <ion-grid>
                     <ion-row>
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
-                        <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectChange($event)">
-                            <ion-select-option>----- Select -----</ion-select-option>
-                            <ion-select-option class="disabled">Batangas</ion-select-option>
-                            <ion-select-option value="Tanauan, Batangas" selected="">City Of Tanauan</ion-select-option>
-                            <ion-select-option value="Santo Tomas, Batangas">City Of Sto. Tomas</ion-select-option>
-                            <ion-select-option value="Malvar, Batangas">Malvar</ion-select-option>
-                            <ion-select-option value="Lipa, Batangas">City Of Lipa</ion-select-option>
+                        <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectChange($event)" placeholder="-- Select Branch Near You --">
+                            <ion-select-option>-- Select Branch Near You --</ion-select-option>
+                            <ion-select-option class="disabled">REGION IV-A (CALABARZON)</ion-select-option>
+                            <ion-select-option value="1">AYO Alaminos, Laguna</ion-select-option>
+                            <ion-select-option value="2">AYO San Pablo City, Laguna</ion-select-option>
+                            <ion-select-option value="3">AYO Sto. Tomas, Batangas</ion-select-option>
+                            <ion-select-option value="4">AYO Dasmariñas, Cavite</ion-select-option>
+                            <ion-select-option value="11">AYO Tanauan City, Batangas</ion-select-option>
+                            <ion-select-option value="12">AYO Malvar, Batangas</ion-select-option>
+                            <ion-select-option value="13">AYO Lipa City, Batangas</ion-select-option>
+                            <ion-select-option value="14">AYO Victoria, Laguna</ion-select-option>
+                            <ion-select-option value="15">AYO Delivery Services Lucban, Quezon</ion-select-option>
+                            <ion-select-option value="16">AYO EXPRESS General Trias, Cavite</ion-select-option>
 
-                            <ion-select-option disabled>Cavite</ion-select-option>
-                            <ion-select-option value="Silang">Silang</ion-select-option>
-                            <ion-select-option value="dasmarinas, cavite">City Of Dasmariñas</ion-select-option>
-                            <ion-select-option value="gen mariano alvarez, cavite">Gen. Mariano Alvarez</ion-select-option>
+                            <ion-select-option disabled>REGION VIII (EASTERN VISAYAS)</ion-select-option>
+                            <ion-select-option value="7">AYO Tacloban City, Leyte</ion-select-option>
 
-                            <ion-select-option disabled>Laguna</ion-select-option>
-                            <ion-select-option value="victoria, laguna">Victoria</ion-select-option>
-                            <ion-select-option value="bay">Bay</ion-select-option>
-                            <ion-select-option value="santa cruz, laguna">Santa Cruz (Capital)</ion-select-option>
-                            <ion-select-option value="pila, laguna">Pila</ion-select-option>
-                            <ion-select-option value="san pablo, laguna">City Of San Pablo</ion-select-option>
-                            <ion-select-option value="alaminos, laguna">Alaminos</ion-select-option>
+                            <ion-select-option disabled>REGION VII (CENTRAL VISAYAS)</ion-select-option>
+                            <ion-select-option value="8">AYO Dumaguete City, Negros Oriental</ion-select-option>
 
-                            <ion-select-option disabled>Zamboanga Del Sur</ion-select-option>
-                            <ion-select-option value="pagadian">City Of Pagadian (Capital)</ion-select-option>
-                            <ion-select-option value="CITY OF ZAMBOANGA">City Of Zamboanga</ion-select-option>
+                            <ion-select-option disabled>REGION VI (WESTERN VISAYAS)</ion-select-option>
+                           <ion-select-option value="9">AYO Kalibo, Aklan</ion-select-option>
 
-                            <ion-select-option disabled>Negros Oriental</ion-select-option>
-                            <ion-select-option value="dumaguete">City Of Dumaguete (Capital)</ion-select-option>
-                            <ion-select-option value="sibulan">Sibulan</ion-select-option>
-
-                            <ion-select-option diabled>Leyte</ion-select-option>
-                            <ion-select-option value="tacloban">City Of Tacloban (Capital)</ion-select-option>
-
-                            <ion-select-option disabled>Aklan</ion-select-option>
-                            <ion-select-option value="kalibo">Kalibo (Capital)</ion-select-option>
-                            <ion-select-option value="altavas">Altavas</ion-select-option>
-
-                            <ion-select-option disabled>Quezon</ion-select-option>
-                            <ion-select-option value="Lucban">Lucban</ion-select-option>
+                           <ion-select-option value="0" style="font-weight: 700;">OTHER AREAS</ion-select-option>
                         </ion-select>
                     </ion-row>
                     <ion-row @click="pickup()">

@@ -10,6 +10,7 @@
         
                
         <ion-content>
+            <ion-searchbar></ion-searchbar>
             <g-map
                 mapType="roadmap"
                 :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
@@ -54,7 +55,8 @@ import {
     modalController,
     IonLabel,
     IonInput,
-    IonItem
+    IonItem,
+    IonSearchbar
  } from '@ionic/vue';
 import GMap from '@/components/GMap.vue';
 import { closeCircleOutline, navigateCircleoutline } from 'ionicons/icons';
@@ -78,7 +80,7 @@ export default defineComponent({
         IonLabel,
         IonInput,
         IonItem,
-
+        IonSearchbar,
         Form, Field, ErrorMessage
     },
 

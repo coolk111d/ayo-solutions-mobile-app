@@ -9,9 +9,9 @@
                 </ion-toolbar>
             </ion-header>
             <div class="video-div">
-            <iframe width="100%" height="170" src="https://www.youtube.com/embed/videoseries?list=PLX6R8Kyg0rnyUOXZ8DJBfmOtPQWRQgtgh?autoplay=1&showinfo=0&mute=1&rel=0" frameborder="0" allowfullscreen></iframe>
+            <iframe width="100%" height="170" src="https://www.youtube.com/embed/videoseries?list=PLX6R8Kyg0rnyUOXZ8DJBfmOtPQWRQgtgh" frameborder="0" allowfullscreen></iframe>
             </div>
-
+            
             <h3 class="registration-link">
             <!-- <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/pre-registration/create">Register now!</a> -->
             <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
@@ -38,7 +38,6 @@ import ServicesSlider from '@/components/ServicesSlider.vue';
 import CategorySlider from '@/components/CategorySlider.vue';
 import Header from '@/components/Header.vue';
 // import axios from "axios";
-
 export default  {
     name: 'Home',
     components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Header, ServicesSlider, CategorySlider, IonCard, IonButton},
@@ -47,23 +46,7 @@ export default  {
           const modal = await modalController.create({component: PreRegistrationModal});
           modal.present();
       },
-    //   sendNotif() {
-    //        axios({
-    //             method: "POST",
-    //             url: "https://onesignal.com/api/v1/notifications",
-    //             data: {
-    //                 "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
-    //                 "included_segments": ["Subscribed Users"],
-    //                 "data": {"foo": "bar"},
-    //                 "contents": {"en": "English Message"}
-    //                 }
-    //         }).then(res => {
-    //             alert(res);
-    //         }).catch(err => {
-    //             console.log(err);
-    //         });
-    //   }
-  }
+  },
 }
 
 </script>
