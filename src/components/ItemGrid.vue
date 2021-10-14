@@ -46,12 +46,13 @@
 
 <script>
 import { useRouter } from 'vue-router';
-import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading, IonToast } from '@ionic/vue';
+import SwiperCore, { Navigation } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading, IonToast, IonicSwiper } from '@ionic/vue';
 import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { Storage } from "@ionic/storage";
 import CartModal from './CartModal.vue';
-import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonicSwiper  } from '@ionic/vue';
 
 import 'swiper/swiper-bundle.min.css';
 import '@ionic/vue/css/ionic-swiper.css';
@@ -63,7 +64,7 @@ export default defineComponent({
   data(){
     return{
       items: [],
-
+      categories: [],
       toastMessage: ""
     }
   },
@@ -139,7 +140,7 @@ export default defineComponent({
   beforeMount() {
       this.initialLoad();
   },
-  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, IonLoading, IonToast },
+  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, Swiper, SwiperSlide,  IonLoading, IonToast },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
@@ -163,7 +164,7 @@ export default defineComponent({
             router, env, storage,
 
             isOpenLoadingRef, setOpenLoading,
-            isOpenToastRef, setOpenToast
+            isOpenToastRef, setOpenToast,  slideOpts
         }
     },
 

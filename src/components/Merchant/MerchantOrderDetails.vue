@@ -74,6 +74,46 @@
                     </ion-grid>
                 </div>
            </ion-card>
+           <ion-card v-if="order.assigned_rider != null">
+                <div class="title-icon">
+                    <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p> 
+                </div>
+                <div class="summary-details">
+                    <ion-grid>
+                    <ion-row>  
+                        <ion-col size="3">
+                            <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                        </ion-col>
+                        <ion-col size="9"> 
+                            <p style="font-size: 15px;">{{riderDetails.name}}</p>
+                        </ion-col>
+                    </ion-row>
+                    <ion-row>
+                        <ion-col  size="3">
+                            <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                        </ion-col>
+                        <ion-col size="9"> 
+                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + riderDetails.mobile_number" color="warning">Call Rider {{riderDetails.mobile_number}}</ion-button>
+                        </ion-col>
+                    </ion-row>
+                    
+                    <ion-row>
+                            
+                    <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
+                    </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Make and Model: {{riderDetails.make_and_model}}</p>
+                            <p style="font-size: 12px;">Plate Number: {{riderDetails.plate_number}}</p>
+                            </ion-row>
+                    <ion-row>
+                            <p style="font-size: 12px;">Company ID:</p>
+                        <ion-col size="12"> 
+                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: 0px">
+                        </ion-col>
+                    </ion-row>
+                    </ion-grid>
+                </div>
+           </ion-card>
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="receiptOutline" class="map"></ion-icon>
@@ -125,7 +165,8 @@ export default defineComponent({
     data() {
         return {
             order : [],
-            shipping: []
+            shipping: [],
+            riderDetails: []
         }
     },
     components: { IonContent, IonCard, IonGrid , GMap,  IonFooter, IonToolbar, IonButton },
@@ -167,6 +208,16 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
+
+            axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
+                    }).then(res => {
+                        console.log(res.data);
+                        this.riderDetails = res.data[0];
+                    }).catch(err => {
+                        console.log(err);
+                    });
         }
     },
     beforeMount() {
