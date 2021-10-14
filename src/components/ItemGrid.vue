@@ -26,13 +26,28 @@
             <!--<div style="margin: -5px auto 10px; text-align:center">
             <ion-button @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
             </div>-->
+
+    <ion-loading
+        :is-open="isOpenLoadingRef"
+        message="Please wait..."
+        :duration="0"
+        @didDismiss="setOpenLoading(false)"
+    >
+    </ion-loading>
+
+    <ion-toast
+        :is-open="isOpenToastRef"
+        :message="toastMessage"
+        :duration="3000"
+        @didDismiss="setOpenToast(false)"
+    >
+    </ion-toast>
 </template>
 
 <script>
 import { useRouter } from 'vue-router';
-import { defineComponent} from "vue";
-import SwiperCore, { Navigation } from 'swiper';
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading, IonToast } from '@ionic/vue';
+import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { Storage } from "@ionic/storage";
 import CartModal from './CartModal.vue';
@@ -48,7 +63,8 @@ export default defineComponent({
   data(){
     return{
       items: [],
-      categories: [],
+
+      toastMessage: ""
     }
   },
   methods: {
@@ -74,6 +90,8 @@ export default defineComponent({
       },
 
       addToCart(menuItemKey) {
+        this.setOpenLoading(true);
+
         this.storage.get("authUser").then(user => {
             axios({
                 method: "POST",
@@ -87,14 +105,20 @@ export default defineComponent({
                     menu_item_unique_key: menuItemKey
                 }
             }).then(res => {
+                this.setOpenLoading(false);
+
                 const data = res.data;
 
                 if (data.success) {
                     this.openCartModal();
                 } else {
-                    console.log(data.message);
+                    this.toastMessage = data.message;
+                    this.setOpenToast(true);
+                    // console.log(data.message);
                 }
             }).catch(err => {
+                this.setOpenLoading(false);
+
                 console.log(err);
             });
         });
@@ -115,7 +139,7 @@ export default defineComponent({
   beforeMount() {
       this.initialLoad();
   },
-  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, Swiper, SwiperSlide },
+  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, IonLoading, IonToast },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
@@ -129,7 +153,18 @@ export default defineComponent({
         const storage = new Storage();
         storage.create();
 
-        return { router, env, storage, slideOpts }
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
+
+        const isOpenToastRef = ref(false);
+        const setOpenToast = (state) => isOpenToastRef.value = state;
+
+        return {
+            router, env, storage,
+
+            isOpenLoadingRef, setOpenLoading,
+            isOpenToastRef, setOpenToast
+        }
     },
 
 

@@ -31,7 +31,7 @@ import {
     // IonButtons, IonMenuButton,
 
     IonGrid, IonRow, IonCol,
-    IonIcon,modalController 
+    IonIcon
 } from '@ionic/vue';
 import { menu, basketOutline } from 'ionicons/icons';
 import { menuController } from '@ionic/vue';

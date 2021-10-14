@@ -44,6 +44,22 @@
             <ion-button type="submit" expand="full" style="color: FFF">Add Address</ion-button>
         </Form>
     </ion-content>
+
+    <ion-loading
+        :is-open="isOpenLoadingRef"
+        message="Please wait..."
+        :duration="0"
+        @didDismiss="setOpenLoading(false)"
+    >
+    </ion-loading>
+
+    <ion-toast
+        :is-open="isOpenToastRef"
+        :message="toastMessage"
+        :duration="3000"
+        @didDismiss="setOpenToast(false)"
+    >
+    </ion-toast>
 </template>
 
 <script>
@@ -57,12 +73,14 @@ import {
     modalController,
     IonLabel,
     IonInput,
-    IonItem
+    IonItem,
+
+    IonLoading, IonToast
  } from '@ionic/vue';
 import GMap from '@/components/GMap.vue';
 import { closeCircleOutline, navigateCircleoutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 import { Storage } from '@ionic/storage';
 import axios from "axios";
@@ -82,7 +100,9 @@ export default defineComponent({
         // IonInput,
         IonItem,
 
-        Form, Field
+        Form, Field,
+
+        IonLoading, IonToast
     },
 
     props: {
@@ -104,10 +124,19 @@ export default defineComponent({
 
         const initialValues = {}
 
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
+
+        const isOpenToastRef = ref(false);
+        const setOpenToast = (state) => isOpenToastRef.value = state;
+
         return {
             closeCircleOutline, router, navigateCircleoutline,
             storage,
-            initialValues
+            initialValues,
+
+            isOpenLoadingRef, setOpenLoading,
+            isOpenToastRef, setOpenToast
         }
     },
 
@@ -125,16 +154,15 @@ export default defineComponent({
             modalController.dismiss();
         },
 
-        onSubmit(input, actions) {
-            console.log(input);
-            console.log(actions);
+        onSubmit(input) {
+            this.setOpenLoading(true);
 
-            this.storage.get("authUser").then(user => {
+            this.storage.get("authUser").then(d => {
                 axios({
                     method: "POST",
                     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/billing`,
                     headers: {
-                        Authorization: `Bearer ${user.token}`
+                        Authorization: `Bearer ${d.token}`
                     },
                     data: {
                         // eslint-disable-next-line @typescript-eslint/camelcase
@@ -147,14 +175,24 @@ export default defineComponent({
                         google_address: input.googleAddress,
                     }
                 }).then(res => {
+                    this.setOpenLoading(false);
+
                     const data = res.data;
 
                     if (data.success) {
-                        this.dismissModal();
+                        location.reload();
+                        // this.router.push('/checkout');
+
+                        // this.dismissModal();
                     } else {
                         console.log(data.message);
                     }
+
+                    this.toastMessage = data.message;
+                    this.setOpenToast(true);
                 }).catch(err => {
+                    this.setOpenLoading(false);
+
                     console.log(err.response.data.message);
                 });
             });

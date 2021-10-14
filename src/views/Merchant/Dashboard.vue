@@ -13,23 +13,26 @@
                     <div class="container">
                     <h3>Merchant's Dashboard</h3>
 
-                    <ion-button color="tertiary" size="small" @click="orders">Order List</ion-button>
+                    <ion-button color="tertiary" size="small" @click="ordersList">Order List</ion-button>
                     </div>
                 </ion-card>
                 <hr style="border-bottom: 1px solid rgba(0,0,0,0.05); margin: 20px 10px 0px;">
                 <h3 class="divider-title">New Order</h3>
-                <ion-card>
+
+                <ion-card v-for="order in orders" :key="order.id">
                     <div class="container">
                         <ion-row class="ion-align-items-center">
-                                <ion-col size="12" style="text-align:center;">
-                                    <ion-badge color="warning">New</ion-badge><br>
-                                    <!-- Product Title --><a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a>
-                                        <!-- Product Price -->
-                                        <p class="sale-price">Order #S61910121</p>
-                                        <p class="sale-price">Ordered: <span class="price">09/17/2021 9:10pm</span></p>       
-                                        <p class="sale-price">Total Price: <span class="price">&#8369;560</span></p> 
-                                        <ion-button size="small" color="success" @click="details">View Details</ion-button>
-                                </ion-col>
+                            <ion-col size="12" style="text-align:center;">
+                                <ion-badge color="warning">New</ion-badge><br>
+                                <!-- Product Title -->
+                                <!-- <a class="product-title"><span style="color:#feb041; font-size: 14px;">MangInasal - Batangas</span></a> -->
+
+                                <!-- Product Price -->
+                                <p class="sale-price">Order #{{order.tracking_number}}</p>
+                                <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
+                                <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
+                                <ion-button size="small" color="success" @click="orderDetails(order.id)">View Details</ion-button>
+                            </ion-col>
                         </ion-row>
                     </div>
                 </ion-card>
@@ -38,32 +41,104 @@
     </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton, modalController, IonRow, IonBadge, IonCol } from '@ionic/vue';
 import MerchantHeader from '@/components/Merchant/MerchantHeader.vue';
 import MerchantOrderList from '@/components/Merchant/MerchantOrderList.vue';
 import MerchantOrderDetails from '@/components/Merchant/MerchantOrderDetails.vue';
 
+import { Storage } from '@ionic/storage';
+import Echo from "laravel-echo";
+import axios from "axios";
+
 export default  {
     name: 'Merchant Dashboard',
-    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, MerchantHeader, IonCard, IonButton , IonRow, IonBadge, IonCol},
+    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, MerchantHeader, IonCard, IonButton , IonRow, IonBadge, IonCol },
+
+    data() {
+        return {
+            orders: []
+        };
+    },
+
+    setup() {
+        const echo = new Echo({
+            broadcaster: "pusher",
+            key: process.env.VUE_APP_PUSHER_APP_KEY,
+            cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
+            encrypted: true,
+            authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
+            auth: {
+                headers: {
+                   Authorization: "Bearer " + sessionStorage.getItem('auth_token')
+                }
+           }
+        });
+
+        const storage = new Storage();
+        storage.create();
+
+        const audio = new Audio(`${process.env.VUE_APP_ROOT_API}/media/rider-notif2.mp3`);
+
+        return { echo, storage, audio };
+    },
+
+    mounted() {
+        this.storage.get("authUser").then(d => {
+            this.echo.private(`notify-merchant.${d.user.merchant.id}`)
+            .listen(".place-order", (e) => {
+                this.audio.currentTime = 0;
+                this.audio.play();
+
+                this.orders.unshift(e.order)
+                console.log("bum place order");
+                console.log(e.order);
+            });
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/new`,
+                headers: {
+                    Authorization: `Bearer ${d.token}`
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    this.orders = [];
+                    this.orders.push(data.data);
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+        });
+    },
+
     methods: {
-    async orders() {
-                const modal = await modalController
-                .create({
-                component: MerchantOrderList,
-                cssClass: 'my-custom-class',
-                })
+        async ordersList() {
+            const modal = await modalController
+            .create({
+            component: MerchantOrderList,
+            cssClass: 'my-custom-class',
+            })
             return modal.present();
-            },
-             async details() {
-                const modal = await modalController
-                .create({
+        },
+
+        async orderDetails(id) {
+            if (!this.audio.paused) this.audio.pause();
+
+            const modal = await modalController.create({
                 component: MerchantOrderDetails,
                 cssClass: 'my-custom-class',
-                })
+                componentProps: {
+                    orderID: id
+                }
+            });
+
             return modal.present();
-            },
+        },
     }
 }
 </script>
