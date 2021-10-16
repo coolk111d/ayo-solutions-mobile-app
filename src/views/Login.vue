@@ -37,7 +37,7 @@
 
                 <div class="login-meta-data text-center">
                     <a class="stretched-link" href="/">Forgot Password?</a>
-                    <p>Didn't have an account? <a class="stretched-link" href="/">Register Now</a></p>
+                    <p>Didn't have an account? <a class="stretched-link" href="javascript:void(0)" @click="openRegistrationModal">Register Now</a></p>
                 </div>
             </div>
             <!--<ion-list>
@@ -81,6 +81,8 @@ import {
     IonLoading, IonToast
 } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
+import { modalController } from '@ionic/vue';
+import RegistrationModal from '@/components/RegistrationModal.vue'
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
@@ -286,6 +288,11 @@ export default  {
             //     this.toastMessage = err.response.data.message;
             //     this.setOpenToast(true);
             // });
+        },
+
+        async openRegistrationModal() {
+            const modal = await modalController.create({component: RegistrationModal});
+            modal.present();
         }
     },
 }
