@@ -44,6 +44,8 @@
     import AddressList from '@/components/AddressList.vue';
     import ChangePassword from '@/components/ChangePassword.vue';
 
+    import axios from "axios";
+
     import { useRouter } from 'vue-router';
     import { defineComponent } from 'vue';
     export default defineComponent({
@@ -66,20 +68,35 @@
         },
         setup() {
             const router = useRouter();
-            
+
             const storage = new Storage();
             storage.create();
 
             return { router, storage, bagOutline, mapOutline, keypadOutline, logOutOutline };
         },
-        
+
         methods: {
-            logOut() {
+            async logOut() {
                 /**
                  * todo:
                  * if current logged in is guest, add confirmation before proceed it on logout
                  * because all items he add on cart will be lost.
                  */
+
+                const storageAuthUser = await this.storage.get('authUser');
+
+                axios({
+                    method: "POST",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/logout`,
+                    headers: {
+                        Authorization: `Bearer ${storageAuthUser.token}`
+                    }
+                }).then(res => {
+                    const data = res.data;
+                    console.log(data.message);
+                }).catch(err => {
+                    console.log(err);
+                });
 
                 this.storage.clear();
                 this.router.push("/login");
