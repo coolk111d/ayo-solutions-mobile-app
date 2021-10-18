@@ -61,7 +61,14 @@ export default  {
         };
     },
 
-    setup() {
+    async setup() {
+        const storageAuthUser = await this.storage.get('authUser');
+
+        console.log("ionic storage");
+        console.log(storageAuthUser);
+        console.log("sessionStorage");
+        console.log(sessionStorage);
+
         const echo = new Echo({
             broadcaster: "pusher",
             key: process.env.VUE_APP_PUSHER_APP_KEY,
@@ -70,7 +77,7 @@ export default  {
             authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
             auth: {
                 headers: {
-                   Authorization: "Bearer " + sessionStorage.getItem('auth_token')
+                   Authorization: `Bearer ${storageAuthUser.token}`
                 }
            }
         });
