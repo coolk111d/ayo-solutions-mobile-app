@@ -40,6 +40,8 @@
     import { bagOutline, mapOutline, keypadOutline, logOutOutline } from 'ionicons/icons';
     import RiderOrderList from '@/components/Rider/RiderOrderList.vue';
 
+    import axios from "axios";
+
     import { useRouter } from 'vue-router';
     import { defineComponent } from 'vue';
     export default defineComponent({
@@ -70,7 +72,22 @@
         },
         
         methods: {
-            logOut() {
+            async logOut() {
+                const storageAuthUser = await this.storage.get('authUser');
+
+                axios({
+                    method: "POST",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/logout`,
+                    headers: {
+                        Authorization: `Bearer ${storageAuthUser.token}`
+                    }
+                }).then(res => {
+                    const data = res.data;
+                    console.log(data.message);
+                }).catch(err => {
+                    console.log(err);
+                });
+
                 this.storage.clear();
                 this.router.push("/login");
             },

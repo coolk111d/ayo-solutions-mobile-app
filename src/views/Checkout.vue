@@ -214,7 +214,7 @@ import Address from '@/components/Address.vue';
 
 import { Storage } from "@ionic/storage";
 import { Form, Field, ErrorMessage } from "vee-validate";
-import { object, string } from "yup";
+import { object, string, mixed } from "yup";
 import axios from "axios";
 
 export default defineComponent({
@@ -244,6 +244,9 @@ export default defineComponent({
         const router = useRouter();
 
         const schema = object({
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            gov_id: mixed().required().label("Government ID"),
+            selfie: mixed().required().label("Selfie Picture"),
             // eslint-disable-next-line @typescript-eslint/camelcase
             special_instruction: string().required().min(3).max(50).label("Special Instruction"),
         });

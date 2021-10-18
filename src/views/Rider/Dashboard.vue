@@ -122,11 +122,6 @@ export default  {
             cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
             encrypted: true,
             authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
-            auth: {
-                headers: {
-                   Authorization: "Bearer " + sessionStorage.getItem('auth_token')
-                }
-           }
         });
 
         const storage = new Storage();
@@ -149,11 +144,31 @@ export default  {
     },
 
     mounted() {
-        this.storage.get("authUser").then(d => {
-            console.log(d.user);
-            console.log(`pooling-rider.${d.user.rider.id}`);
+        this.initEcho();
+        this.initOrdersData();
+    },
 
-            this.echo.private(`pooling-rider.${d.user.rider.id}`)
+    methods: {
+        async initEcho() {
+            const storageAuthUser = await this.storage.get('authUser');
+
+            const echo = new Echo({
+                broadcaster: "pusher",
+                key: process.env.VUE_APP_PUSHER_APP_KEY,
+                cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
+                encrypted: true,
+                authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
+                auth: {
+                    headers: {
+                        Authorization: `Bearer ${storageAuthUser.token}`
+                    }
+                }
+            });
+
+            const channel = `pooling-rider.${storageAuthUser.user.rider.id}`;
+            console.log(channel);
+
+            echo.private(channel)
             .listen(".queue", (e) => {
                 this.audio.currentTime = 0;
                 this.audio.play();
@@ -162,11 +177,22 @@ export default  {
                 console.log(e.order);
             });
 
+            console.log("ionic storage");
+            console.log(storageAuthUser);
+            console.log("sessionStorage");
+            console.log(sessionStorage);
+            console.log("echo");
+            console.log(echo);
+        },
+
+        async initOrdersData() {
+            const storageAuthUser = await this.storage.get('authUser');
+
             axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/new`,
                 headers: {
-                    Authorization: `Bearer ${d.token}`
+                    Authorization: `Bearer ${storageAuthUser.token}`
                 }
             }).then(res => {
                 const data = res.data;
@@ -179,10 +205,8 @@ export default  {
             }).catch(err => {
                 console.log(err);
             });
-        });
-    },
+        },
 
-    methods: {
         async ordersList() {
             const modal = await modalController
             .create({
