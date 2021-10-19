@@ -1,79 +1,67 @@
 <template>
     <ion-page>
-        <CustomHeader link="/food" />
+        <CustomHeader link="/select-vehicle" />
 
         <ion-content :fullscreen="true">
             <div class="header-container">
-                <h5 style="text-align:center">Checkout</h5>
+                <h5 style="text-align:center">Same Day Checkout</h5>
             </div>
 
-            <!-- <ion-card>
-                <div class="title-icon">
-                    <ion-icon :icon="mapOutline" class="map"></ion-icon>
-                    <p class="title">Billing Address</p>
-                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="onChangeBilling"></ion-icon>
-                </div>
-
-                <div v-show="billing.google_address">
-                    <p class="address" @click="onChangeBilling">{{ billing.google_address }}</p>
-                    <hr style="margin-bottom: 30px;">
-                </div>
-                <div v-show="billing.first_name">
-                    <p class="title">Details:</p>
-                    <p class="address" @click="onChangeBilling">
-                        <ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ billing.first_name }} {{ billing.last_name }}
-                    </p>
-                </div>
-                <div v-show="billing.mobile_number">
-                    <p class="address" @click="onChangeBilling">
-                        <ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ billing.mobile_number }}
-                    </p>
-                </div>
-            </ion-card> -->
-
+            <!--Pickup-->
             <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
-                    <p class="title">Shipping Address</p>
-                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="onChangeShipping"></ion-icon>
+                    <p class="title">Pick Up Address</p>
+                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="onChangePickup"></ion-icon>
                 </div>
 
+
                 <div v-show="shipping.google_address">
-                    <p class="address" @click="onChangeShipping">{{ shipping.google_address }}</p>
+                    <p class="address" @click="onChangePickup">{{ shipping.google_address }}</p>
                     <hr style="margin-bottom: 30px;">
                 </div>
                 <div v-show="shipping.first_name">
                     <p class="title">Details:</p>
-                    <p class="address" @click="onChangeShipping">
+                    <p class="address" @click="onChangePickup">
                         <ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ shipping.first_name }} {{ shipping.last_name }}
                     </p>
                 </div>
                 <div v-show="shipping.mobile_number">
-                    <p class="address" @click="onChangeShipping">
+                    <p class="address" @click="onChangePickup">
                         <ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ shipping.mobile_number }}
                     </p>
                 </div>
             </ion-card>
 
-           <!-- <ion-card>
+            <!--Destination-->
+             <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
-                    <p class="title">Delivery Address</p>
-                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="addAddress"></ion-icon>
+                    <p class="title">Destination Address</p>
+                    <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="onChangeDestination"></ion-icon>
                 </div>
-                <p class="address" @click="addAddress">Blk 20 Lot 21 Mara St. Cabuyao Laguna</p>
-                <hr style="margin-bottom: 30px;">
-                <p class="title">Receiver Details:</p>
-                <p class="address" @click="addAddress"><ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> John Smith</p>
-                <p class="address" @click="addAddress"><ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> 095673877711</p>
-                <hr>
-                    <ion-item>
-                        <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
-                        <ion-textarea></ion-textarea>
-                    </ion-item>
-           </ion-card> -->
+
+
+                <div v-show="shipping.google_address">
+                    <p class="address" @click="onChangeDestination">{{ shipping.google_address }}</p>
+                    <hr style="margin-bottom: 30px;">
+                </div>
+                <div v-show="shipping.first_name">
+                    <p class="title">Details:</p>
+                    <p class="address" @click="onChangeDestination">
+                        <ion-icon :icon="person" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ shipping.first_name }} {{ shipping.last_name }}
+                    </p>
+                </div>
+                <div v-show="shipping.mobile_number">
+                    <p class="address" @click="onChangeDestination">
+                        <ion-icon :icon="call" color="dark" style="color: #000; font-size: 18px; margin-right: 20px;"></ion-icon> {{ shipping.mobile_number }}
+                    </p>
+                </div>
+            </ion-card>
+
 
            <Form @submit="onSubmit" :validation-schema="schema" :initial-values="formValues">
+               <!--Payment Method-->
                <ion-card>
                     <div class="title-icon">
                         <ion-icon :icon="walletOutline" class="map"></ion-icon>
@@ -101,35 +89,25 @@
                         </ion-item>
                     </ion-radio-group>
                </ion-card>
-
+                <!--Proof of Identity-->
                <ion-card>
                     <div class="title-icon">
                         <ion-icon :icon="personOutline" class="map"></ion-icon>
                         <p class="title">Proof of Identity</p>
                     </div>
                     <ion-item>
-                        <!-- <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
-                        <ion-input name="government_id" type="file" accept="image/*" > </ion-input>
-                        <ErrorMessage as="ion-text" name="government_id" color="danger" /> -->
-
+                      
                         <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
                         <Field as="ion-input" name="gov_id" type="file" accept="image/*" />
                         <ErrorMessage as="ion-text" name="gov_id" color="danger" />
                     </ion-item>
                     <ion-item>
-                        <!-- <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
-                        <ion-input name="selfie" type="file" accept="image/*" > </ion-input>
-                        <ErrorMessage as="ion-text" name="government_id" color="danger" /> -->
-
+                     
                         <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
                         <Field as="ion-input" name="selfie" type="file" accept="image/*" />
                         <ErrorMessage as="ion-text" name="selfie" color="danger" />
                     </ion-item>
 
-                    <!-- <ion-item>
-                        <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
-                        <ion-textarea></ion-textarea>
-                    </ion-item> -->
                     <ion-item>
                         <ion-label position="floating" style="font-weight: 600">Delivery Instruction  <ion-icon :icon="bicycleOutline" color="dark" class="edit"  @click="addAddress"></ion-icon></ion-label>
                         <Field as="ion-textarea" name="special_instruction" />
@@ -149,16 +127,12 @@
                         </div>
                         <hr style="margin: 0px 0 10px">
                         <div class="display-flex">
-                            <p>Delivery Charge</p>
-                            <p>&#8369; {{ cart.delivery_charge }}</p>
-                        </div>
-                        <div class="display-flex">
-                            <p>Subtotal</p>
-                            <p>&#8369; {{ cart.sub_total_price }}</p>
+                            <p>Distance</p>
+                            <p>12.55 km</p>
                         </div>
                         <div class="display-flex">
                             <p style="font-size: 16px;">Total(w/ Tax)</p>
-                            <p style="font-size: 16px;">&#8369; {{ cart.total_price_with_tax }}</p>
+                            <p style="font-size: 16px;">&#8369; 324.62</p>
                         </div>
                     </div>
                </ion-card>
@@ -171,16 +145,10 @@
                     </small>
                 </ion-card>
 
-                <ion-button class="button" expand="full" type="submit">PROCESS ORDER</ion-button>
+                <ion-button class="button" expand="full" type="submit" @click="() => router.push('/sameday-order-details')">BOOK TRANSACTION</ion-button>
 
             </Form>
         </ion-content>
-
-        <!-- <ion-footer>
-            <ion-toolbar>
-                <ion-button @click="placeOrder">PROCESS ORDER</ion-button>
-            </ion-toolbar>
-        </ion-footer> -->
 
         <ion-loading
             :is-open="isOpenLoadingRef"
@@ -209,7 +177,8 @@ import { arrowBackOutline, mapOutline, pencilOutline, receiptOutline, walletOutl
 import { useRouter } from 'vue-router';
 import { defineComponent, ref } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
-import Address from '@/components/Address.vue';
+import PickUpAddress from '@/components/SameDay/PickUpAddress.vue';
+import DestinationAddress from '@/components/SameDay/DestinationAddress.vue';
 // import OrderList from '@/components/OrderList.vue';
 
 import { Storage } from "@ionic/storage";
@@ -218,7 +187,7 @@ import { object, string, mixed } from "yup";
 import axios from "axios";
 
 export default defineComponent({
-    name: 'Checkout',
+    name: 'Same Day Checkout',
     components: { IonContent, IonPage, IonCard, CustomHeader, IonLabel, IonItem,
     IonRadioGroup, IonRadio,
 
@@ -245,10 +214,10 @@ export default defineComponent({
 
         const schema = object({
             // eslint-disable-next-line @typescript-eslint/camelcase
-            gov_id: mixed().required().label("Government ID"),
-            selfie: mixed().required().label("Selfie Picture"),
+            gov_id: mixed().label("Government ID"),
+            selfie: mixed().label("Selfie Picture"),
             // eslint-disable-next-line @typescript-eslint/camelcase
-            special_instruction: string().required().min(3).max(50).label("Special Instruction"),
+            special_instruction: string().min(3).max(50).label("Special Instruction"),
         });
 
         const formValues = {
@@ -324,38 +293,14 @@ export default defineComponent({
     },
 
     methods: {
-        async addAddress() {
+        
+
+        async onChangePickup() {
             const modal = await modalController
             .create({
-              component: Address,
-              cssClass: 'my-custom-class',
-              componentProps: {
-                title: 'Address'
-              },
-            });
-
-            return modal.present();
-        },
-
-        // async onChangeBilling() {
-        //     const modal = await modalController
-        //     .create({
-        //         component: Address,
-        //         componentProps: {
-        //             title: "Billing Address",
-        //             address: this.billing
-        //         },
-        //     });
-
-        //     return modal.present();
-        // },
-
-        async onChangeShipping() {
-            const modal = await modalController
-            .create({
-                component: Address,
+                component: PickUpAddress,
                 componentProps: {
-                    title: "Shipping Address",
+                    title: "Pick Up Address",
                     address: this.shipping
                 },
             });
@@ -363,70 +308,83 @@ export default defineComponent({
             return modal.present();
         },
 
-        onSubmit(input) {
-            this.setOpenLoading(true);
-
-            this.storage.get("authUser").then(d => {
-                const formData = new FormData();
-                formData.append('gov_id', new Blob([input.gov_id[0]]));
-                delete input.gov_id;
-
-                formData.append('selfie', new Blob([input.selfie[0]]));
-                delete input.selfie;
-
-                formData.append("payment_method", "cod");
-                formData.append("special_instruction", input.special_instruction);
-
-                // for (const field in input) {
-                //     console.log(field, input[field]);
-                //     formData.append(field, input[field]);
-                // }
-
-                axios({
-                    method: "POST",
-                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
-                    data: formData,
-                    headers: {
-                        Authorization: `Bearer ${d.token}`
-                    }
-                }).then(res => {
-                    this.setOpenLoading(false);
-
-                    const data = res.data;
-
-                    if (data.success) {
-                        const order = data.data;
-                        this.router.push(`/order-details/${order.id}`);
-                    } else {
-                        console.log(data.message);
-                    }
-
-                    this.toastMessage = data.message;
-                    this.setOpenToast(true);
-                }).catch(err => {
-                    this.setOpenLoading(false);
-
-                    console.log(err.response.data.message);
-                });
-
-                // axios({
-                //     method: "POST",
-                //     url: `https://onesignal.com/api/v1/notifications`,
-                //     data: {
-                //     "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
-                //     "include_external_user_ids": ["rider90"],
-                //     "channel_for_external_user_ids": "push",
-                //     "data": {"name": "Ayo Food", "subtitle": "You have a new"},
-                //     "contents": {"en": "English Message", "name": "Ayo Food"},
-                //     "name": {"en": "AYO FOOD"},
-                //     "subtitle": {"en": "You have a new order!"}
-                //     },
-                //     headers: {
-                //         Authorization: `Bearer ${d.token}`
-                //     }
-                // });
+        async onChangeDestination() {
+            const modal = await modalController
+            .create({
+                component: DestinationAddress,
+                componentProps: {
+                    title: "Destination Address",
+                    address: this.shipping
+                },
             });
-        }
+
+            return modal.present();
+        },
+
+        // onSubmit(input) {
+        //     this.setOpenLoading(true);
+
+        //     this.storage.get("authUser").then(d => {
+        //         const formData = new FormData();
+        //         formData.append('gov_id', new Blob([input.gov_id[0]]));
+        //         delete input.gov_id;
+
+        //         formData.append('selfie', new Blob([input.selfie[0]]));
+        //         delete input.selfie;
+
+        //         formData.append("payment_method", "cod");
+        //         formData.append("special_instruction", input.special_instruction);
+
+        //         // for (const field in input) {
+        //         //     console.log(field, input[field]);
+        //         //     formData.append(field, input[field]);
+        //         // }
+
+        //         axios({
+        //             method: "POST",
+        //             url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
+        //             data: formData,
+        //             headers: {
+        //                 Authorization: `Bearer ${d.token}`
+        //             }
+        //         }).then(res => {
+        //             this.setOpenLoading(false);
+
+        //             const data = res.data;
+
+        //             if (data.success) {
+        //                 const order = data.data;
+        //                 this.router.push(`/order-details/${order.id}`);
+        //             } else {
+        //                 console.log(data.message);
+        //             }
+
+        //             this.toastMessage = data.message;
+        //             this.setOpenToast(true);
+        //         }).catch(err => {
+        //             this.setOpenLoading(false);
+
+        //             console.log(err.response.data.message);
+        //         });
+
+        //         // axios({
+        //         //     method: "POST",
+        //         //     url: `https://onesignal.com/api/v1/notifications`,
+        //         //     data: {
+        //         //     "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
+        //         //     "include_external_user_ids": ["rider90"],
+        //         //     "channel_for_external_user_ids": "push",
+        //         //     "data": {"name": "Ayo Food", "subtitle": "You have a new"},
+        //         //     "contents": {"en": "English Message", "name": "Ayo Food"},
+        //         //     "name": {"en": "AYO FOOD"},
+        //         //     "subtitle": {"en": "You have a new order!"}
+        //         //     },
+        //         //     headers: {
+        //         //         Authorization: `Bearer ${d.token}`
+        //         //     }
+        //         // });
+        //     });
+        // }
     }
 })
 </script>

@@ -33,6 +33,16 @@
                     <ion-button color="tertiary" size="small" @click="ordersList">Order List</ion-button>
                     </div>
                 </ion-card>
+
+                <ion-card>
+                    <div class="container">
+                    <h3>Same Day Rider's Dashboard</h3>
+
+                    <!-- <p>Earn today: &#8369;100.00</p> -->
+
+                    <ion-button color="tertiary" size="small" @click="sameDaybooking">Same Day Booking</ion-button>
+                    </div>
+                </ion-card>
                 <hr style="border-bottom: 1px solid rgba(0,0,0,0.05); margin: 20px 10px 0px;">
                 <h3 class="divider-title">New Order</h3>
                 <!-- <ion-card>
@@ -93,6 +103,7 @@ import {
 } from '@ionic/vue';
 import RiderHeader from '@/components/Rider/RiderHeader.vue';
 import RiderOrderList from '@/components/Rider/RiderOrderList.vue';
+import RiderSameDayOrderList from '@/components/Rider/RiderSameDayOrderList.vue';
 import RiderOrderDetails from '@/components/Rider/RiderOrderDetails.vue';
 
 import { ref } from 'vue';
@@ -211,6 +222,14 @@ export default  {
             const modal = await modalController
             .create({
             component: RiderOrderList,
+            cssClass: 'my-custom-class',
+            })
+            return modal.present();
+        },
+        async sameDaybooking() {
+            const modal = await modalController
+            .create({
+            component: RiderSameDayOrderList,
             cssClass: 'my-custom-class',
             })
             return modal.present();

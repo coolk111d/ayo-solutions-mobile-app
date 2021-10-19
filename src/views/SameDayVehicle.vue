@@ -102,7 +102,7 @@
                     </ion-col>
                     </ion-row>
                 </ion-grid>
-                <ion-button expand="full">Next</ion-button>
+                <ion-button expand="full" @click="() => router.push('/sameday-checkout')">Next</ion-button>
             </ion-toolbar>
         </ion-footer>
         
@@ -113,11 +113,13 @@
 import { IonPage,  IonContent, IonCard, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButton, modalController } from '@ionic/vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import { mapOutline, chevronForwardOutline} from 'ionicons/icons';
+import { useRouter } from 'vue-router';
 export default {
     name: 'AYO Courier',
     components: {   IonContent, IonPage, CustomHeader , IonCard, IonGrid, IonRow, IonCol, IonFooter, IonToolbar, IonButton},
     setup() {
-        return {mapOutline, chevronForwardOutline}
+        const router = useRouter();
+        return {mapOutline, chevronForwardOutline, router}
     },
 }
 </script>

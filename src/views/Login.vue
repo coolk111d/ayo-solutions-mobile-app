@@ -91,17 +91,7 @@ import { object, string } from "yup";
 import { Storage } from '@ionic/storage';
 import OneSignal from 'onesignal-cordova-plugin';
 import axios from "axios";
-// import OneSignal from 'onesignal-cordova-plugin';
 export default  {
-    /*data: () => ({
-    users: []
-    }),
-    created() {
-      axios.get('http://jsonplaceholder.typicode.com/users')
-      .then(response => {
-        this.users = response.data
-        });
-    },*/
     name: 'Login',
 
     props: {

@@ -15,6 +15,7 @@
             </div>
             <ion-list>
                 <ion-item lines="none" detail button @click="orders"><ion-icon :icon="bagOutline"/> <a>Orders</a></ion-item>
+                <ion-item lines="none" detail button @click="samedayorders"><ion-icon :icon="cubeOutline"/> <a>Same Day Transactions</a></ion-item>
                 <ion-item  lines="none" detail button  @click="address"> <ion-icon :icon="mapOutline"/> <a>Addresses</a></ion-item>
                 <ion-item  lines="none" detail button @click="password"><ion-icon :icon="keypadOutline"/><a> Change Password</a></ion-item>
                 <ion-item  lines="none" detail button @click="logOut"><ion-icon :icon="logOutOutline"/><a> Log Out</a></ion-item>
@@ -39,8 +40,9 @@
     } from '@ionic/vue';
 
     import { Storage } from '@ionic/storage';
-    import { bagOutline, mapOutline, keypadOutline, logOutOutline } from 'ionicons/icons';
+    import { bagOutline, mapOutline, keypadOutline, logOutOutline, cubeOutline } from 'ionicons/icons';
     import OrderList from '@/components/OrderList.vue';
+    import SameDayOrderList from '@/components/SameDay/OrderList.vue';
     import AddressList from '@/components/AddressList.vue';
     import ChangePassword from '@/components/ChangePassword.vue';
 
@@ -72,7 +74,7 @@
             const storage = new Storage();
             storage.create();
 
-            return { router, storage, bagOutline, mapOutline, keypadOutline, logOutOutline };
+            return { router, storage, bagOutline, mapOutline, keypadOutline, logOutOutline, cubeOutline };
         },
 
         methods: {
@@ -123,6 +125,14 @@
                 const modal = await modalController
                 .create({
                 component: OrderList,
+                cssClass: 'my-custom-class',
+                })
+            return modal.present();
+            },
+            async samedayorders() {
+                const modal = await modalController
+                .create({
+                component: SameDayOrderList,
                 cssClass: 'my-custom-class',
                 })
             return modal.present();
@@ -186,11 +196,12 @@ ion-item:hover a, ion-item:hover ion-icon {
     color: #fff;
 }
 ion-item a {
-    font-size: 16px;
+    font-size: 14px;
     color: #000;
-    padding: 20px 0;
+    padding: 10px 0;
 }
 ion-item ion-icon {
     margin-right: 30px;
+    font-size: 25px;
 }
 </style>
