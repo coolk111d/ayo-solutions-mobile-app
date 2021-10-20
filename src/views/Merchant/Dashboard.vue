@@ -100,6 +100,28 @@ export default  {
                 this.audio.currentTime = 0;
                 this.audio.play();
 
+                axios({
+                    method: "POST",
+                    url: `https://onesignal.com/api/v1/notifications`,
+                    headers: {
+                        Authorization: `Basic NDg5YThmMzctYzRhMC00MzYwLTgxYjItYzIwMDBlZTIxZDQ4`
+                    },
+                    data: {
+                          "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
+                            "include_external_user_ids": [`merchant${storageAuthUser.user.id}`],
+                            "channel_for_external_user_ids": "push",
+                            "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                            "headings": {"en": `You have a new order! ${e.order.tracking_number}`},
+                            "contents": {"en": "Please accept the order."},
+                            "buttons": [{"id": "id2", "text": "View", "icon": "ic_menu_share", "url": "/merchant-dashboard"}],
+                            "android_accent_color": "FEB041"
+                    }
+                }).then(res => {
+                        console.log(res);
+                }).catch(err => {
+                    console.log(err.response.data.message);
+                });
+
                 this.orders.unshift(e.order)
                 console.log("bum place order");
                 console.log(e.order);

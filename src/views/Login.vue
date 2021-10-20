@@ -8,7 +8,7 @@
             </ion-header>
 
             <div class="login-container" style="">
-                <a href="javascript:void(0)" class="guest-signin-link" @click="loginAsGuest"><ion-icon :icon="arrowBackOutline" /> Sign in as Guest</a>
+                <a href="javascript:void(0)" style="display:none" class="guest-signin-link" @click="loginAsGuest"><ion-icon :icon="arrowBackOutline" /> Sign in as Guest</a>
 
                 <img src="/assets/images/logo-trans.png" alt="" style="width: 30%; margin: 0 auto;">
 
