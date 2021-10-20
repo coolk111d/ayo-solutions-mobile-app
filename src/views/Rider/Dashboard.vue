@@ -116,14 +116,6 @@ export default  {
     },
 
     setup() {
-        const echo = new Echo({
-            broadcaster: "pusher",
-            key: process.env.VUE_APP_PUSHER_APP_KEY,
-            cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
-            encrypted: true,
-            authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
-        });
-
         const storage = new Storage();
         storage.create();
 
@@ -136,7 +128,7 @@ export default  {
         const setOpenToast = (state) => isOpenToastRef.value = state;
 
         return {
-            echo, storage, audio,
+            storage, audio,
 
             isOpenLoadingRef, setOpenLoading,
             isOpenToastRef, setOpenToast

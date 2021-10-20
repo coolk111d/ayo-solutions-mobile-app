@@ -170,11 +170,13 @@ export default  {
     beforeCreate() {
         this.storage.get("authUser").then(authUser => {
             if (authUser !== null) {
+                const user = authUser.user;
+
                 this.toastMessage = "You are already login";
                 this.setOpenToast(true);
-                if(authUser.role == "rider") {
+                if(user.role == "rider") {
                     this.router.push('/rider-dashboard')
-                } else if(authUser.role == "merchant") {
+                } else if(user.role == "merchant") {
                     this.router.push('/merchant-dashboard')
                 } else {
                     this.router.push('/home')
