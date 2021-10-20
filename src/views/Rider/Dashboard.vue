@@ -33,6 +33,16 @@
                     <ion-button color="tertiary" size="small" @click="ordersList">Order List</ion-button>
                     </div>
                 </ion-card>
+
+                <ion-card>
+                    <div class="container">
+                    <h3>Same Day Rider's Dashboard</h3>
+
+                    <!-- <p>Earn today: &#8369;100.00</p> -->
+
+                    <ion-button color="tertiary" size="small" @click="sameDaybooking">Same Day Booking</ion-button>
+                    </div>
+                </ion-card>
                 <hr style="border-bottom: 1px solid rgba(0,0,0,0.05); margin: 20px 10px 0px;">
                 <h3 class="divider-title">New Order</h3>
                 <!-- <ion-card>
@@ -93,6 +103,7 @@ import {
 } from '@ionic/vue';
 import RiderHeader from '@/components/Rider/RiderHeader.vue';
 import RiderOrderList from '@/components/Rider/RiderOrderList.vue';
+import RiderSameDayOrderList from '@/components/Rider/RiderSameDayOrderList.vue';
 import RiderOrderDetails from '@/components/Rider/RiderOrderDetails.vue';
 
 import { ref } from 'vue';
@@ -165,6 +176,28 @@ export default  {
                 this.audio.currentTime = 0;
                 this.audio.play();
 
+                axios({
+                    method: "POST",
+                    url: `https://onesignal.com/api/v1/notifications`,
+                    headers: {
+                        Authorization: `Basic ${process.env.VUE_ONE_SIGNAL_AUTH}`
+                    },
+                    data: {
+                          "app_id": process.env.VUE_ONE_SIGNAL_ID;
+                            "include_external_user_ids": [`rider${storageAuthUser.user.id}`],
+                            "channel_for_external_user_ids": "push",
+                            "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                            "headings": {"en": `You have a new order! ${e.order.tracking_number}`},
+                            "contents": {"en": "Please accept the order."},
+                            "buttons": [{"id": "id2", "text": "Accept", "icon": "ic_menu_share", "url": "/rider-dashboard"}, {"id": "id1", "text": "Reject", "icon": "ic_menu_send"}],
+                            "android_accent_color": "FEB041"
+                    }
+                }).then(res => {
+                        console.log(res);
+                }).catch(err => {
+                    console.log(err.response.data.message);
+                });
+
                 this.orders.unshift(e.order);
                 console.log(e.order);
             });
@@ -203,6 +236,14 @@ export default  {
             const modal = await modalController
             .create({
             component: RiderOrderList,
+            cssClass: 'my-custom-class',
+            })
+            return modal.present();
+        },
+        async sameDaybooking() {
+            const modal = await modalController
+            .create({
+            component: RiderSameDayOrderList,
             cssClass: 'my-custom-class',
             })
             return modal.present();

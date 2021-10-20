@@ -102,9 +102,9 @@
                         this.email = "Not Available"
                         this.role = "Customer"
                     } else {
-                    this.name = name.name;
-                    this.email = name.email;
-                    this.role = name.role;
+                    this.name = name.user.name;
+                    this.email = name.user.email;
+                    this.role = name.user.role;
                     }
             },
             async orders() {

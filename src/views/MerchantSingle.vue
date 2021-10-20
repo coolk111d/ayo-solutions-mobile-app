@@ -12,7 +12,6 @@
                 <p class="store-hours" v-if="merchant.opening_time != null">Opens at {{merchant.opening_time}} - {{merchant.closing_time}}</p>
             </div>
             
-            <MenuCategorySlider/>
             
             <div class="item-grid">
                 <ItemGrid/>
@@ -39,7 +38,6 @@ import { useRouter } from 'vue-router';
 import { defineComponent, ref } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import ItemGrid from '@/components/ItemGrid.vue';
-import MenuCategorySlider from '@/components/MenuCategorySlider.vue';
 import axios from "axios";
 
 export default defineComponent({
@@ -49,7 +47,7 @@ export default defineComponent({
       merchant: [],
     }
   },
-    components: {IonContent, IonPage, IonCard, IonButton, CustomHeader, ItemGrid, MenuCategorySlider},
+    components: {IonContent, IonPage, IonCard, IonButton, CustomHeader, ItemGrid},
     methods: {
       initialLoad: function() {
       axios({

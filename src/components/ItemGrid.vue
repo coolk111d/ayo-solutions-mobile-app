@@ -1,7 +1,14 @@
 <template>
-            <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
-            <ion-grid>
-                <p style="font-size: 15px; color:#fff; margin-left: 10px; text-shadow: 1px 1px 2px #000">Rice Meal</p>
+    <div class="container-menu">
+        <swiper :slides-per-view="2" :pagination="{ clickable: true }" navigation>
+            <swiper-slide v-for="cat of categories" :key="cat.id">{{cat.name}}</swiper-slide>
+            <swiper-slide></swiper-slide>
+        </swiper>
+        <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
+    </div>
+            
+            <ion-grid >
+                <p style="font-size: 15px; color:#fff; margin-left: 10px; text-shadow: 1px 1px 2px #000" id="rice">Rice Meal</p>
                 <ion-row class="ion-align-items-center" v-for="item of items" :key="item.name" >
                     <ion-col size="4">
                             <!-- Product Thumbnail --><a class="product-thumbnail"  @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)"><img v-bind:src="env + '/storage/' + item.image" alt="" v-if="item.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
@@ -39,18 +46,25 @@
 
 <script>
 import { useRouter } from 'vue-router';
-import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading, IonToast } from '@ionic/vue';
+import SwiperCore, { Navigation } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow, modalController, IonLoading, IonToast, IonicSwiper } from '@ionic/vue';
 import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { Storage } from "@ionic/storage";
 import CartModal from './CartModal.vue';
+
+import 'swiper/swiper-bundle.min.css';
+import '@ionic/vue/css/ionic-swiper.css';
+
+SwiperCore.use([IonicSwiper, Navigation]);
 
 export default defineComponent({
   name: 'ItemGrid',
   data(){
     return{
       items: [],
-
+      categories: [],
       toastMessage: ""
     }
   },
@@ -62,6 +76,15 @@ export default defineComponent({
             }).then(res => {
                 console.log(res.data);
                 this.items = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/menus/` + this.$route.params.id,
+            }).then(res => {
+                console.log(res.data);
+                this.categories = res.data;
             }).catch(err => {
                 console.log(err);
             });
@@ -117,11 +140,17 @@ export default defineComponent({
   beforeMount() {
       this.initialLoad();
   },
-  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, IonLoading, IonToast },
+  components: { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, Swiper, SwiperSlide,  IonLoading, IonToast },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
+        const slideOpts = {
+      initialSlide: 0,
+      slidesPerView: 3,
+      speed: 400,
+      pagination: false,
 
+    };
         const storage = new Storage();
         storage.create();
 
@@ -135,7 +164,7 @@ export default defineComponent({
             router, env, storage,
 
             isOpenLoadingRef, setOpenLoading,
-            isOpenToastRef, setOpenToast
+            isOpenToastRef, setOpenToast,  slideOpts
         }
     },
 
@@ -194,5 +223,20 @@ ion-searchbar {
     margin: 10px auto;
     width: 95vw;
     height: 45px;
+}
+.container-menu {
+    background: #EBEDEF;
+    padding: 15px 0px 10px;
+    box-shadow: 1px 3px 3px rgba(0,0,0,0.05);
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+.container-menu a {
+  font-size: 16px;
+  color:grey; 
+}
+.swiper-slide-active {
+    margin-left: 10px;
+    color: #feb041;
 }
 </style>

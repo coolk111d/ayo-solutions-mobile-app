@@ -15,6 +15,7 @@
             </div>
             <ion-list>
                 <ion-item lines="none" detail button @click="orders"><ion-icon :icon="bagOutline"/> <a>Orders</a></ion-item>
+                <ion-item lines="none" detail button @click="samedayorders"><ion-icon :icon="cubeOutline"/> <a>Same Day Transactions</a></ion-item>
                 <ion-item  lines="none" detail button @click="logOut"><ion-icon :icon="logOutOutline"/><a> Log Out</a></ion-item>
             </ion-list>
         </ion-content>
@@ -37,9 +38,9 @@
     } from '@ionic/vue';
 
     import { Storage } from '@ionic/storage';
-    import { bagOutline, mapOutline, keypadOutline, logOutOutline } from 'ionicons/icons';
+    import { bagOutline, mapOutline, keypadOutline, logOutOutline, cubeOutline } from 'ionicons/icons';
     import RiderOrderList from '@/components/Rider/RiderOrderList.vue';
-
+     import RiderSameDayOrderList from '@/components/Rider/RiderSameDayOrderList.vue';
     import axios from "axios";
 
     import { useRouter } from 'vue-router';
@@ -68,7 +69,7 @@
             
             const storage = new Storage();
             storage.create();
-            return { router, storage, bagOutline, mapOutline, keypadOutline, logOutOutline };
+            return { router, storage, bagOutline, mapOutline, keypadOutline, logOutOutline, cubeOutline };
         },
         
         methods: {
@@ -102,15 +103,23 @@
                         this.email = "Not Available"
                         this.role = "Customer"
                     } else {
-                    this.name = name.name;
-                    this.email = name.email;
-                    this.role = name.role;
+                    this.name = name.user.name;
+                    this.email = name.user.email;
+                    this.role = name.user.role;
                     }
             },
             async orders() {
                 const modal = await modalController
                 .create({
                 component: RiderOrderList,
+                cssClass: 'my-custom-class',
+                })
+            return modal.present();
+            },
+            async samedayorders() {
+                const modal = await modalController
+                .create({
+                component: RiderSameDayOrderList,
                 cssClass: 'my-custom-class',
                 })
             return modal.present();
