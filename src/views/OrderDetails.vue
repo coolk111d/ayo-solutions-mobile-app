@@ -88,9 +88,9 @@
                     <p class="title" style="text-align:left; margin-right: 150px;">Summary</p> 
                 </div>
                 <div class="summary-details">
-                    <div class="display-flex">
-                        <p>1x Burger(not dynamic)</p>
-                        <p>&#8369; {{order.sub_total_price}}</p>
+                    <div class="display-flex" v-for="item in items" :key="item.id">
+                        <p>{{ item.quantity }}x {{ item.name }}</p>
+                        <p>&#8369; {{ item.price }}</p>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
@@ -132,6 +132,7 @@ export default defineComponent({
     data() {
             return {
                 order: [],
+                items: [],
                 shippingAddress: {},
                 riderDetails: [],
             }
@@ -143,25 +144,28 @@ export default defineComponent({
     },
     methods: {
         async getOrders() {
-                    axios({
-                        method: "GET",
-                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.$route.params.id}`,
-                    }).then(res => {
-                        console.log(res.data);
-                        this.order = res.data[0];
-                        this.shippingAddress = JSON.parse(res.data[0].shipping_address);
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                    axios({
-                        method: "GET",
-                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
-                    }).then(res => {
-                        console.log(res.data);
-                        this.riderDetails = res.data[0];
-                    }).catch(err => {
-                        console.log(err);
-                    });
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.$route.params.id}`,
+            }).then(res => {
+                const data = res.data;
+
+                this.order = data.order;
+                this.items = data.items;
+                this.shippingAddress = data.order.shipping_address;
+            }).catch(err => {
+                console.log(err);
+            });
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
+            }).then(res => {
+                console.log(res.data);
+                this.riderDetails = res.data[0];
+            }).catch(err => {
+                console.log(err);
+            });
         },
     },
     beforeMount() {
