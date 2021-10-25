@@ -232,7 +232,7 @@ export default defineComponent({
             billing: {},
             shipping: {},
             cart: {},
-            items: {},
+            items: [],
             toastMessage: ""
         }
     },
