@@ -104,10 +104,10 @@ export default  {
                     method: "POST",
                     url: `https://onesignal.com/api/v1/notifications`,
                     headers: {
-                        Authorization: `Basic NDg5YThmMzctYzRhMC00MzYwLTgxYjItYzIwMDBlZTIxZDQ4`
+                        Authorization: `Basic ${process.env.VUE_ONE_SIGNAL_AUTH}`
                     },
                     data: {
-                          "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
+                          "app_id": process.env.VUE_ONE_SIGNAL_ID,
                             "include_external_user_ids": [`merchant${storageAuthUser.user.id}`],
                             "channel_for_external_user_ids": "push",
                             "template_id": "31880987-1115-4f63-92d2-52afb395c799",

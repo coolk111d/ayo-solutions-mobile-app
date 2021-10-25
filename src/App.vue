@@ -32,7 +32,7 @@ export default defineComponent({
   OneSignal.setLogLevel(6, 0);
 
   // NOTE: Update the setAppId value below with your OneSignal AppId.
-  OneSignal.setAppId('643e1055-dcf7-4525-880a-89e3ba955d68');
+  OneSignal.setAppId(process.env.VUE_ONE_SIGNAL_ID);
   OneSignal.setNotificationOpenedHandler(function(jsonData) {
       console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
   });

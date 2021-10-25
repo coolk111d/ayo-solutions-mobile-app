@@ -191,7 +191,7 @@ export default  {
                         Authorization: `Basic ${process.env.VUE_ONE_SIGNAL_AUTH}`
                     },
                     data: {
-                          "app_id": process.env.VUE_ONE_SIGNAL_ID;
+                          "app_id": process.env.VUE_ONE_SIGNAL_ID,
                             "include_external_user_ids": [`rider${storageAuthUser.user.id}`],
                             "channel_for_external_user_ids": "push",
                             "template_id": "31880987-1115-4f63-92d2-52afb395c799",
