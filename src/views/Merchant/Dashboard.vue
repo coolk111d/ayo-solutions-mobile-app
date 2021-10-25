@@ -96,7 +96,7 @@ export default  {
             console.log(channel);
 
             echo.private(channel)
-            .listen(".place-order", (e) => {
+            .listen(".rider-accepted-order", (e) => {
                 this.audio.currentTime = 0;
                 this.audio.play();
 
