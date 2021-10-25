@@ -8,17 +8,17 @@
 }
 
 .ayo-food-slider {
-    background: url('/assets/images/slider/AyoFoodSlider.jpg');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/slider/AyoFoodSlider.jpg');
 }
 
 .ayo-logistic-slider {
-    background: url('/assets/images/slider/AyoBox.jpg');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/slider/AyoBox.jpg');
 } 
 .ayo-handyman-slider {
-    background: url('/assets/images/slider/AyoHandyman.jpg');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/slider/AyoHandyman.jpg');
 } 
 .ayo-store-slider {
-    background: url('/assets/images/slider/AyoStore2.jpg');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/slider/AyoStore2.jpg');
 } 
 .ayo-slider {
     height: 35vh;
@@ -58,7 +58,7 @@ h5.title {
 }
 
 ion-card.footer {
-    background-image: url('/assets/images/bg-img/3.jpg');
+    background-image: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/bg-img/3.jpg');
     border: 0;
     border-radius: 0px;
     background-size: cover;

@@ -77,7 +77,7 @@
                             </ion-col>
 
                             <ion-col style="display:flex; flex-direction:column;" v-if="order.status === 'processing'">
-                                <ion-button size="small" color="success" @click="accept(order.tracking_number)">Process</ion-button>
+                                <ion-button size="small" color="success" @click="accept(order.tracking_number)" style="margin-bottom: 15px;">Process</ion-button>
                                 <ion-button size="small" color="danger" @click="reject(order.tracking_number)">Reject</ion-button>
                             </ion-col>
 
@@ -178,20 +178,18 @@ export default  {
 
             const channel = `pooling-rider.${storageAuthUser.user.rider.id}`;
             console.log(channel);
-
+            console.log(process.env.VUE_APP_ONE_SIGNAL_ID);
             echo.private(channel)
             .listen(".queue", (e) => {
-                this.audio.currentTime = 0;
-                this.audio.play();
 
                 axios({
                     method: "POST",
                     url: `https://onesignal.com/api/v1/notifications`,
                     headers: {
-                        Authorization: `Basic ${process.env.VUE_ONE_SIGNAL_AUTH}`
+                        Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
                     },
                     data: {
-                          "app_id": process.env.VUE_ONE_SIGNAL_ID,
+                            "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
                             "include_external_user_ids": [`rider${storageAuthUser.user.id}`],
                             "channel_for_external_user_ids": "push",
                             "template_id": "31880987-1115-4f63-92d2-52afb395c799",
@@ -206,6 +204,8 @@ export default  {
                     console.log(err.response.data.message);
                 });
 
+                this.audio.currentTime = 0;
+                this.audio.play();
                 this.orders.unshift(e.order);
                 console.log(e.order);
             });
@@ -432,7 +432,7 @@ export default  {
 <style scoped>
     .content-container {
         height: 88vh;
-        background: url('/assets/images/bg-img/13.jpg');
+        background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/bg-img/13.jpg');
         background-size: cover;
         background-position: left;
         background-repeat: no-repeat;

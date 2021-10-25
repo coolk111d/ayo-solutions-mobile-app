@@ -138,7 +138,7 @@
 .name {
     margin-top: -10px;
     padding: 20px;
-    background: url('/assets/images/bg-img/1.jpg');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/bg-img/1.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

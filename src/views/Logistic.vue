@@ -31,7 +31,7 @@ export default {
 <style scoped>
 .container {
     height: 81vh;
-    background: url('/assets/images/bg-img/51.jpg') rgba(0,0,0,0.3);
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/bg-img/51.jpg') rgba(0,0,0,0.3);
     background-blend-mode: darken;
     background-size: cover;
     background-position: center;

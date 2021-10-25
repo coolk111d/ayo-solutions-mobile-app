@@ -221,7 +221,7 @@ export default defineComponent({
     margin-top: -70px;
     padding-top: 80px;
     padding-bottom: 20px;
-    background: url('/assets/images/bg-img/52.jpg') rgba(0,0,0,0.3);
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/bg-img/52.jpg') rgba(0,0,0,0.3);
     background-blend-mode: darken;
     background-repeat: no-repeat;
     background-size: cover;
