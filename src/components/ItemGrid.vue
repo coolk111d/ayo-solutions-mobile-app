@@ -11,7 +11,11 @@
                 <p style="font-size: 15px; color:#fff; margin-left: 10px; text-shadow: 1px 1px 2px #000" id="rice">Rice Meal</p>
                 <ion-row class="ion-align-items-center" v-for="item of items" :key="item.name" >
                     <ion-col size="4">
-                            <!-- Product Thumbnail --><a class="product-thumbnail"  @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)"><img v-bind:src="env + '/storage/' + item.image" alt="" v-if="item.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
+                            <!-- Product Thumbnail -->
+                            <a class="product-thumbnail"  @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)">
+                                <img :src="item.image" alt="" v-if="item.image != null">
+                                <img src="assets/images/ayo-placeholder.png" alt="" v-else>
+                            </a>
                     </ion-col>
                     <ion-col size="8">
                          <!-- Product Title --><a class="product-title">{{item.name}}</a>
