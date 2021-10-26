@@ -48,7 +48,7 @@
                                 <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                             </ion-col>
                             <ion-col size="9">
-                                <p style="font-size: 15px;">{{rider.name}}</p>
+                                <p style="font-size: 15px;">{{rider.user.name}}</p>
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -241,33 +241,25 @@ export default defineComponent({
                     this.shipping = this.order.shipping_address;
                     this.items = this.order.cart.items;
 
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.order.assigned_rider}`,
+                    }).then(res => {
+                        const riderResponseData = res.data;
+
+                        if (riderResponseData.success) {
+                            this.rider = riderResponseData.data;
+                        } else {
+                            console.log(riderResponseData.message);
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    });
+
                     console.log(this.shipping);
                 } else {
                     console.log(data.message);
                 }
-            }).catch(err => {
-                console.log(err);
-            });
-
-            // axios({
-            //     method: "GET",
-            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.id}`,
-            // }).then(res => {
-            //     console.log(res.data[0])
-            //    this.shipping = JSON.parse(res.data[0].shipping_address);
-            //     this.order = res.data[0];
-            //     this.latitude = parseFloat(this.shipping['latitude']);
-            //     this.longitude = parseFloat(this.shipping['longitude']);
-            // }).catch(err => {
-            //     console.log(err);
-            // });
-
-            axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.id}`,
-            }).then(res => {
-                console.log(res.data[0]);
-                this.rider = res.data[0];
             }).catch(err => {
                 console.log(err);
             });
