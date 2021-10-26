@@ -22,13 +22,17 @@
 </template>
 
 <script>
-import { IonApp, IonRouterOutlet, toastController } from '@ionic/vue';
+import {
+    IonApp, IonRouterOutlet,
+    toastController, alertController
+} from '@ionic/vue';
 import { defineComponent, ref } from 'vue';
 import GMap from '@/components/GMapTracker.vue';
 import OneSignal from 'onesignal-cordova-plugin';
 
 import { Storage } from '@ionic/storage';
 import Echo from "laravel-echo";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
     name: 'App',
@@ -63,11 +67,15 @@ export default defineComponent({
         const setOpenToast = (state) => isOpenToastRef.value = state;
         const toastMessage = "";
 
+        const router = useRouter();
+
         return {
             storage,
 
             isOpenToastRef, setOpenToast,
-            toastMessage
+            toastMessage,
+
+            router
         };
     },
 
@@ -121,7 +129,34 @@ export default defineComponent({
                             simpleNotif.currentTime = 0;
                             simpleNotif.play();
 
-                            this.openToast("All riders are currently engaged. Please try again later.", 10);
+                            this.openAlert("All riders are currently engaged. Please try again later.");
+                        })
+                        .listen(".rider-accepted-order", (e) => {
+                            const order = e.order;
+
+                            simpleNotif.currentTime = 0;
+                            simpleNotif.play();
+
+                            this.openAlertOptions({
+                                header: order.tracking_number,
+                                message: "Your order is now in processing.",
+                                buttons: [
+                                    {
+                                        text: "Track Order",
+                                        role: "track-order",
+                                        handler: blah => {
+                                            this.router.push(`/order-details/${order.id}`);
+                                            console.log("blah", blah);
+                                        }
+                                    },
+                                    {
+                                        text: "Close",
+                                        handler() {
+                                            console.log("close");
+                                        }
+                                    }
+                                ]
+                            });
                         });
 
                         break;
@@ -136,12 +171,27 @@ export default defineComponent({
         },
 
         async openToast(message, durationSeconds=2) {
-            const toast = await toastController
-                .create({
-                  message: message,
-                  duration: durationSeconds * 1000
-                });
+            const duration = durationSeconds * 1000;
+            const toast = await toastController.create({message, duration});
+
             return toast.present();
+        },
+
+        async openAlert(message, buttons=["OK"]) {
+            this.openAlertOptions({message, buttons});
+        },
+
+        async openAlertOptions(options={}) {
+            const defaultOptions = Object.assign({
+                message: "Alert message",
+                buttons: ["OK"]
+            }, options)
+
+            const alert = await alertController.create(defaultOptions);
+            await alert.present();
+
+            const { role } = await alert.onDidDismiss();
+            return new Promise(resolve => resolve(role));
         }
     },
     mounted() {
