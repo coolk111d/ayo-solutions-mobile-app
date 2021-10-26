@@ -1,90 +1,96 @@
 <template>
     <ion-page>
         <CustomHeader :reset="'/order-details/' + id"/>
+
         <ion-content :fullscreen="true">
-          <g-map
+            <g-map
                 mapType="roadmap"
-                :center="{lat: latitude, lng: longitude}"
+                :center="{lat: mapLat, lng: mapLong}"
                 :zoom="14"
                 :disableUI="true"
-             style="height: 200px;"></g-map>
+                style="height: 200px;">
+            </g-map>
+
            <ion-card class="status">
                 <h4>Your Order</h4>
-                <h5>Order #{{orderDetails.tracking_number}}</h5>   
-                <h6>Estimated Delivery Time: {{orderDetails.delivery_date}}</h6>
+                <h5>Order #{{order.tracking_number}}</h5>
+                <h6>Estimated Delivery Time: {{order.delivery_date}}</h6>
                 <ion-grid>
                     <ion-row>
-                        <ion-col size="6" v-if="orderDetails.status != 'processing'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status ">Processing</p></ion-col>
+                        <ion-col size="6" v-if="order.status != 'processing'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status ">Processing</p></ion-col>
                         <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></ion-col>
 
-                        <ion-col size="6" v-if="orderDetails.status != 'assembled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
+                        <ion-col size="6" v-if="order.status != 'assembled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
                         <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Assembled</p></ion-col>
                     </ion-row>
                     <ion-row>
-                        <ion-col size="6" v-if="orderDetails.status != 'delivering'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
+                        <ion-col size="6" v-if="order.status != 'delivering'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
                         <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivering</p></ion-col>
 
-                        <ion-col size="6" v-if="orderDetails.status != 'delivered'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
+                        <ion-col size="6" v-if="order.status != 'delivered'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
                         <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivered</p></ion-col>
                     </ion-row>
                     <ion-row style="display:flex; justify-content:center">
-                        <ion-col size="6" v-if="orderDetails.status != 'canceled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Cancelled</p></ion-col>
+                        <ion-col size="6" v-if="order.status != 'canceled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Cancelled</p></ion-col>
                         <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Cancelled</p></ion-col>
                     </ion-row>
                 </ion-grid>
            </ion-card>
+
            <ion-card>
                 <div class="title-icon">
-                    <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p> 
+                    <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p>
                 </div>
                 <div class="summary-details">
                     <ion-grid>
-                    <ion-row>  
-                        <ion-col size="3">
-                            <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
-                        </ion-col>
-                        <ion-col size="9"> 
-                            <p style="font-size: 15px;">{{riderDetails.name}}</p>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col  size="3">
-                            <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
-                        </ion-col>
-                        <ion-col size="9"> 
-                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + riderDetails.mobile_number" color="warning">Call Rider {{riderDetails.mobile_number}}</ion-button>
-                        </ion-col>
-                    </ion-row>
-                    
-                    <ion-row>
-                            
-                    <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
-                    </ion-row>
-                    <ion-row>
-                            <p style="font-size: 12px;">Make and Model: {{riderDetails.make_and_model}}</p>
-                            <p style="font-size: 12px;">Plate Number: {{riderDetails.plate_number}}</p>
-                            </ion-row>
-                    <ion-row>
+                        <ion-row>
+                            <ion-col size="3">
+                                <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                            </ion-col>
+                            <ion-col size="9">
+                                <p style="font-size: 15px;">{{rider.name}}</p>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col  size="3">
+                                <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                            </ion-col>
+                            <ion-col size="9">
+                                <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + rider.mobile_number" color="warning">Call Rider {{rider.mobile_number}}</ion-button>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
+                        </ion-row>
+
+                        <ion-row>
+                            <p style="font-size: 12px;">Make and Model: {{rider.make_and_model}}</p>
+                            <p style="font-size: 12px;">Plate Number: {{rider.plate_number}}</p>
+                        </ion-row>
+
+                        <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
-                        <ion-col size="12"> 
-                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: 0px">
-                        </ion-col>
-                    </ion-row>
+                            <ion-col size="12">
+                                <img :src=" env + '/storage/' + rider.company_id " style="margin-top: 0px">
+                            </ion-col>
+                        </ion-row>
                     </ion-grid>
                 </div>
            </ion-card>
+
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="receiptOutline" class="map"></ion-icon>
-                    <p class="title" style="text-align:left; margin-right: 100px;">Receiver Details</p> 
+                    <p class="title" style="text-align:left; margin-right: 100px;">Receiver Details</p>
                 </div>
                 <div class="summary-details">
                     <ion-grid>
-                    <ion-row>  
+                    <ion-row>
                         <ion-col size="3">
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
-                        <ion-col size="9"> 
+                        <ion-col size="9">
                             <p style="font-size: 15px;">{{shipping.name}}</p>
                         </ion-col>
                     </ion-row>
@@ -92,7 +98,7 @@
                         <ion-col  size="3">
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
-                        <ion-col size="9"> 
+                        <ion-col size="9">
                             {{shipping.mobile_number}}
                         </ion-col>
                     </ion-row>
@@ -100,54 +106,53 @@
                         <ion-col size="3">
                             <ion-icon :icon="navigate" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
-                        <ion-col size="9"> 
+                        <ion-col size="9">
                             <p style="font-size: 15px;">{{shipping.address}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Customer's ID:</p>
-                        <ion-col size="12"> 
-                            <img :src="env + '/storage/' + orderDetails.gov_id" style="margin-top: -10px">
+                        <ion-col size="12">
+                            <img :src="env + '/storage/' + order.gov_id" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Customer's Selfie:</p>
-                        <ion-col size="12"> 
-                            <img :src="env + '/storage/' + orderDetails.selfie" style="margin-top: -10px">
+                        <ion-col size="12">
+                            <img :src="env + '/storage/' + order.selfie" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
                 </div>
            </ion-card>
+
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="receiptOutline" class="map"></ion-icon>
-                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p> 
+                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                 </div>
                 <div class="summary-details">
-                    <div class="display-flex">
-                        <p>1x Burger(not dynamic)</p>
-                        <p>&#8369; {{orderDetails.sub_total_price}}</p>
+                    <div class="display-flex" v-for="item in items" :key="item.id">
+                        <p> {{ item.menu_item.name }}</p>
+                        <p>{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; {{orderDetails.total_price - orderDetails.sub_total_price}}</p>
+                        <p>&#8369; {{order.total_price - order.sub_total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; {{orderDetails.total_price}}</p>
+                        <p>&#8369; {{order.total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
-                        <p style="font-size: 16px;">&#8369; {{orderDetails.total_price_with_tax}}</p>
+                        <p style="font-size: 16px;">&#8369; {{order.total_price_with_tax}}</p>
                     </div>
                 </div>
            </ion-card>
-            
-          
         </ion-content>
-        
+
         <ion-footer>
             <ion-toolbar>
                 <ion-button @click="() => router.push(`/food`)">Continue Shopping</ion-button>
@@ -156,7 +161,7 @@
     </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { IonPage, IonContent, IonCard, IonGrid, IonButton } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
@@ -164,56 +169,110 @@ import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import GMap from '@/components/GMapTracker.vue';
 import axios from "axios";
+import { Storage } from '@ionic/storage';
+
 export default defineComponent({
     name: 'OrderDetails',
+
     data() {
         return {
             id: null,
-            orderDetails : [],
-            shipping: [],
-            latitude: null,
-            longitude: null,
-            riderDetails: []
+            order : {},
+            items: [],
+            rider: {},
+
+            mapLat: 14.124561213272877,
+            mapLong: 121.164106030269481,
+
+            shipping: {}
         }
     },
-    components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton , GMap },
+
+    components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton, GMap },
+
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
-        return { env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline}
+
+        const storage = new Storage();
+        storage.create();
+
+        return {
+            env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline,
+            storage
+        };
     },
+
+    mounted() {
+        this.getID();
+        this.getDetails();
+    },
+
     methods: {
         getID() {
             this.id = this.$route.params.id;
         },
-        getDetails() {
-                    axios({
-                        method: "GET",
-                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.id}`,
-                    }).then(res => {
-                        console.log(res.data[0])
-                       this.shipping = JSON.parse(res.data[0].shipping_address);
-                        this.orderDetails = res.data[0];
-                        this.latitude = parseFloat(this.shipping['latitude']);
-                        this.longitude = parseFloat(this.shipping['longitude']);
-                    }).catch(err => {
-                        console.log(err);
-                    });
-                    axios({
-                        method: "GET",
-                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.id}`,
-                    }).then(res => {
-                        console.log(res.data[0]);
-                        this.riderDetails = res.data[0];
-                    }).catch(err => {
-                        console.log(err);
-                    });
+
+        async getDetails() {
+            const d = await this.storage.get('authUser');
+            console.log("fdasfdas");
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${this.id}`,
+                headers: {
+                    Authorization: `Bearer ${d.token}`
+                }
+            }).then(res => {
+                const data = res.data;
+                console.log(data);
+
+                if (data.success) {
+                    this.order = data.data
+
+                    if (this.order.shipping_address.latitude !== null) {
+                        this.mapLat = this.order.shipping_address.latitude;
+                    }
+
+                    if (this.order.shipping_address.longitude !== null) {
+                        this.mapLong = this.order.shipping_address.longitude;
+                    }
+
+                    this.shipping = this.order.shipping_address;
+                    this.items = this.order.cart.items;
+
+                    console.log(this.shipping);
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err);
+            });
+
+            // axios({
+            //     method: "GET",
+            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.id}`,
+            // }).then(res => {
+            //     console.log(res.data[0])
+            //    this.shipping = JSON.parse(res.data[0].shipping_address);
+            //     this.order = res.data[0];
+            //     this.latitude = parseFloat(this.shipping['latitude']);
+            //     this.longitude = parseFloat(this.shipping['longitude']);
+            // }).catch(err => {
+            //     console.log(err);
+            // });
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.id}`,
+            }).then(res => {
+                console.log(res.data[0]);
+                this.rider = res.data[0];
+            }).catch(err => {
+                console.log(err);
+            });
         }
-    },
-    beforeMount() {
-        this.getID();
-        this.getDetails();
-    },
+    }
 })
 </script>
 
@@ -281,9 +340,9 @@ ion-card {
     box-shadow: 1px 1px 5px rgba(0,0,0,0.2)
 }
 .title-icon {
-    display:flex; 
-    align-items:center; 
-    justify-content:space-around 
+    display:flex;
+    align-items:center;
+    justify-content:space-around
 }
 p.title {
     margin: 10px 100px 10px 0px;
@@ -318,7 +377,7 @@ ion-radio-group  ion-label {
     font-size: 16px !important;
 }
 .display-flex {
-    display:flex; 
+    display:flex;
     justify-content:space-between
 }
 .summary-details {

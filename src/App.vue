@@ -124,8 +124,6 @@ export default defineComponent({
                     case this.ROLE_CUSTOMER:
                         echo.private(`ping-customer.${user.customer.id}`)
                         .listen(".all-riders-are-engage", () => {
-                            // console.log(e);
-
                             simpleNotif.currentTime = 0;
                             simpleNotif.play();
 
@@ -145,7 +143,7 @@ export default defineComponent({
                                         text: "Track Order",
                                         role: "track-order",
                                         handler: blah => {
-                                            this.router.push(`/order-details/${order.id}`);
+                                            this.router.push(`/order-tracker/${order.id}`);
                                             console.log("blah", blah);
                                         }
                                     },

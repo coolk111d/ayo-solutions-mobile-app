@@ -210,14 +210,14 @@ export default defineComponent({
             });
 
             axios({
-                        method: "GET",
-                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
-                    }).then(res => {
-                        console.log(res.data);
-                        this.riderDetails = res.data[0];
-                    }).catch(err => {
-                        console.log(err);
-                    });
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
+            }).then(res => {
+                console.log(res.data);
+                this.riderDetails = res.data[0];
+            }).catch(err => {
+                console.log(err);
+            });
         }
     },
     beforeMount() {
