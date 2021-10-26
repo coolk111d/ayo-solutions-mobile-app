@@ -141,15 +141,10 @@
            </ion-card>
             
         </ion-content>
-        <ion-footer>
-            <ion-toolbar>
-                <ion-button color="tertiary" target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/private-login">Assign Rider on Web App</ion-button>
-            </ion-toolbar>
-        </ion-footer>
 </template>
 
 <script lang="ts">
-import { IonContent, IonCard, IonGrid, modalController, IonFooter, IonToolbar, IonButton } from '@ionic/vue';
+import { IonContent, IonCard, IonGrid, modalController, IonButton } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
@@ -169,7 +164,7 @@ export default defineComponent({
             riderDetails: []
         }
     },
-    components: { IonContent, IonCard, IonGrid , GMap,  IonFooter, IonToolbar, IonButton },
+    components: { IonContent, IonCard, IonGrid , GMap, IonButton },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();

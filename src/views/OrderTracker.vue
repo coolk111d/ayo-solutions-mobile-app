@@ -13,23 +13,21 @@
                 <h5>Order #{{orderDetails.tracking_number}}</h5>   
                 <h6>Estimated Delivery Time: {{orderDetails.delivery_date}}</h6>
                 <ion-grid>
-                    <ion-row>
-                        <ion-col size="6" v-if="orderDetails.status != 'processing'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status ">Processing</p></ion-col>
-                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></ion-col>
+                    <ion-row style="display:flex; align-items:center; justify-content: center;">
+                        <ion-col style="width: 20%" v-if="orderDetails.status == 'processing'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></div></ion-col>
+                        <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Processing</p></ion-col>
 
-                        <ion-col size="6" v-if="orderDetails.status != 'assembled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
-                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Assembled</p></ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col size="6" v-if="orderDetails.status != 'delivering'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
-                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivering</p></ion-col>
+                        <ion-col style="width: 20%" v-if="orderDetails.status == 'assembled'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Assembled</p></div></ion-col>
+                        <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
 
-                        <ion-col size="6" v-if="orderDetails.status != 'delivered'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
-                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivered</p></ion-col>
-                    </ion-row>
-                    <ion-row style="display:flex; justify-content:center">
-                        <ion-col size="6" v-if="orderDetails.status != 'canceled'"><ion-icon :icon="checkmarkCircleOutline"></ion-icon><p class="text-status">Cancelled</p></ion-col>
-                        <ion-col size="6" v-else><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Cancelled</p></ion-col>
+                        <ion-col style="width: 20%" v-if="orderDetails.status == 'delivering'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivering</p></div></ion-col>
+                        <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
+
+                        <ion-col style="width: 20%" v-if="orderDetails.status == 'delivered'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivered</p></div></ion-col>
+                        <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
+
+                        <ion-col style="width: 20%" v-if="orderDetails.status == 'canceled'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Cancelled</p></div></ion-col>
+                        <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Cancelled</p></ion-col>
                     </ion-row>
                 </ion-grid>
            </ion-card>
@@ -158,7 +156,7 @@
 
 <script lang="ts">
 import { IonPage, IonContent, IonCard, IonGrid, IonButton } from '@ionic/vue';
-import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
+import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, ellipseOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
@@ -180,7 +178,7 @@ export default defineComponent({
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
-        return { env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline}
+        return { env, router, arrowBackOutline, receiptOutline, person, call, personOutline, ellipseOutline, navigate, bicycleOutline, checkmarkCircleOutline}
     },
     methods: {
         getID() {
@@ -191,9 +189,9 @@ export default defineComponent({
                         method: "GET",
                         url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.id}`,
                     }).then(res => {
-                        console.log(res.data[0])
-                       this.shipping = JSON.parse(res.data[0].shipping_address);
-                        this.orderDetails = res.data[0];
+                        console.log(res.data.order)
+                       this.shipping = res.data.order.shipping_address;
+                        this.orderDetails = res.data.order;
                         this.latitude = parseFloat(this.shipping['latitude']);
                         this.longitude = parseFloat(this.shipping['longitude']);
                     }).catch(err => {
@@ -233,7 +231,7 @@ export default defineComponent({
     box-shadow: 1px 1px 6px rgba(0,0,0,0.2)
 }
 .status {
-    background: #a36100;
+    background: #1f1e51;
 }
 .status h5 {
     text-align:center;
@@ -329,7 +327,7 @@ ion-radio-group  ion-label {
 }
 .text-status {
     text-align:center;
-    font-size: 12px;
+    font-size: 10px;
     margin: 0;
     padding: 0;
     color:#fff;
@@ -346,4 +344,14 @@ ion-radio-group  ion-label {
 .active {
     color: #feb041 !important;
 }
+.active-div {
+    background: #5f4b00;
+    width: 110%;
+    margin-bottom: 10px;
+    padding: 3px;
+    border-radius: 10px;
+    border: 2px solid #feb041;
+    box-shadow: 1px 1px 6px rgba(0,0,0,0.5)
+}
+
 </style>

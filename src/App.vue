@@ -44,7 +44,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    if (process.env.VUE_ENABLE_ONE_SIGNAL) {
+    if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
         this.OneSignalInit();
     }
   },
