@@ -382,7 +382,6 @@ export default  {
                         this.toastMessage = `You mark the order #${order.tracking_number} as delivered`;
                         this.orders = [];
                         order.status = "delivered";
-                        this.orders.push(order)
                     } else {
                         this.toastMessage = data.message;
                         console.log(data.message);
