@@ -366,7 +366,7 @@ export default defineComponent({
         onSubmit(input) {
             this.setOpenLoading(true);
 
-            this.storage.get("authUser").then(d => {
+            this.storage.get("authUser").then(authUser => {
                 const formData = new FormData();
                 formData.append('gov_id', new Blob([input.gov_id[0]]));
                 delete input.gov_id;
@@ -387,7 +387,7 @@ export default defineComponent({
                     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
                     data: formData,
                     headers: {
-                        Authorization: `Bearer ${d.token}`
+                        Authorization: `Bearer ${authUser.token}`
                     }
                 }).then(res => {
                     this.setOpenLoading(false);
@@ -395,7 +395,13 @@ export default defineComponent({
                     const data = res.data;
 
                     if (data.success) {
-                        const order = data.data;
+                        const order = data.data.order;
+                        const cart = data.data.cart;
+
+                        // update new cart token
+                        // eslint-disable-next-line @typescript-eslint/camelcase
+                        authUser.cart_token = cart.session_token;
+                        this.storage.set('authUser', authUser);
                         this.router.push(`/order-details/${order.id}`);
                     } else {
                         console.log(data.message);
