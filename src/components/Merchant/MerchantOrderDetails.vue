@@ -1,5 +1,5 @@
 <template>
-        
+
         <ion-content :fullscreen="true">
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
            <g-map
@@ -31,15 +31,15 @@
            </ion-card>
            <ion-card>
                 <div class="title-icon">
-                    <p style="text-align:center; font-size: 18px">Customer's Details</p> 
+                    <p style="text-align:center; font-size: 18px">Customer's Details</p>
                 </div>
                 <div class="summary-details">
                     <ion-grid>
-                    <ion-row>  
+                    <ion-row>
                         <ion-col size="3">
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
-                        <ion-col size="9"> 
+                        <ion-col size="9">
                             <p style="font-size: 15px;">{{order.shipping_address.name}}</p>
                         </ion-col>
                     </ion-row>
@@ -47,7 +47,7 @@
                         <ion-col  size="3">
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
-                        <ion-col size="9"> 
+                        <ion-col size="9">
                             <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + order.shipping_address.mobile_number" color="tertiary">Call: {{order.shipping_address.mobile_number}}</ion-button>
                         </ion-col>
                     </ion-row>
@@ -55,69 +55,70 @@
                         <ion-col size="3">
                             <ion-icon :icon="navigate" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
-                        <ion-col size="9"> 
+                        <ion-col size="9">
                             <p style="font-size: 15px;">{{order.shipping_address.address}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Customer's ID:</p>
-                        <ion-col size="12"> 
+                        <ion-col size="12">
                             <img :src="env + '/storage/' + order.gov_id" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Customer's Selfie:</p>
-                        <ion-col size="12"> 
+                        <ion-col size="12">
                             <img :src="env + '/storage/' + order.selfie" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
                 </div>
            </ion-card>
-           <ion-card v-if="order.assigned_rider != null">
+           <ion-card v-if="rider">
                 <div class="title-icon">
-                    <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p> 
+                    <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p>
                 </div>
                 <div class="summary-details">
                     <ion-grid>
-                    <ion-row>  
-                        <ion-col size="3">
-                            <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
-                        </ion-col>
-                        <ion-col size="9"> 
-                            <p style="font-size: 15px;">{{riderDetails.name}}</p>
-                        </ion-col>
-                    </ion-row>
-                    <ion-row>
-                        <ion-col  size="3">
-                            <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
-                        </ion-col>
-                        <ion-col size="9"> 
-                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + riderDetails.mobile_number" color="warning">Call Rider {{riderDetails.mobile_number}}</ion-button>
-                        </ion-col>
-                    </ion-row>
-                    
-                    <ion-row>
-                            
-                    <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
-                    </ion-row>
-                    <ion-row>
-                            <p style="font-size: 12px;">Make and Model: {{riderDetails.make_and_model}}</p>
-                            <p style="font-size: 12px;">Plate Number: {{riderDetails.plate_number}}</p>
-                            </ion-row>
-                    <ion-row>
+                        <ion-row>
+                            <ion-col size="3">
+                                <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                            </ion-col>
+                            <ion-col size="9">
+                                <p style="font-size: 15px;">{{rider.user.name}}</p>
+                            </ion-col>
+                        </ion-row>
+                        <ion-row>
+                            <ion-col  size="3">
+                                <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
+                            </ion-col>
+                            <ion-col size="9">
+                                <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + rider.mobile_number" color="warning">Call Rider {{rider.mobile_number}}</ion-button>
+                            </ion-col>
+                        </ion-row>
+
+                        <ion-row>
+                            <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
+                        </ion-row>
+
+                        <ion-row>
+                            <p style="font-size: 12px;">Make and Model: {{rider.make_and_model}}</p>
+                            <p style="font-size: 12px;">Plate Number: {{rider.plate_number}}</p>
+                        </ion-row>
+
+                        <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
-                        <ion-col size="12"> 
-                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: 0px">
-                        </ion-col>
-                    </ion-row>
+                            <ion-col size="12">
+                                <img :src="rider.company_id" style="margin-top: 0px">
+                            </ion-col>
+                        </ion-row>
                     </ion-grid>
                 </div>
            </ion-card>
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="receiptOutline" class="map"></ion-icon>
-                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p> 
+                    <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                 </div>
                 <div class="summary-details">
                     <div class="display-flex" v-for="item in order.cart.items" :key="item.id">
@@ -139,7 +140,7 @@
                     </div>
                 </div>
            </ion-card>
-            
+
         </ion-content>
         <ion-footer>
             <ion-toolbar>
@@ -160,13 +161,14 @@ import { Storage } from '@ionic/storage';
 export default defineComponent({
     name: 'MerchantOrderDetails',
     props: {
-        orderID: Number
+        orderID: Number,
+        riderId: Number
     },
     data() {
         return {
-            order : [],
-            shipping: [],
-            riderDetails: []
+            order : {},
+            shipping: {},
+            rider: {},
         }
     },
     components: { IonContent, IonCard, IonGrid , GMap,  IonFooter, IonToolbar, IonButton },
@@ -196,12 +198,10 @@ export default defineComponent({
                     Authorization: `Bearer ${d.token}`
                 }
             }).then(res => {
-
                 const data = res.data;
 
                 if (data.success) {
-                    console.log(data.data);
-                    this.order = data.data
+                    this.order = data.data;
                 } else {
                     console.log(data.message);
                 }
@@ -211,10 +211,20 @@ export default defineComponent({
 
             axios({
                 method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${props.riderId}`,
             }).then(res => {
-                console.log(res.data);
-                this.riderDetails = res.data[0];
+                const data = res.data;
+
+                if (data.success) {
+                    this.rider = data.data;
+                    // this.rider = res.data.user;
+
+                    // console.log(this.rider);
+                    // console.log(res.data.user);
+                } else {
+                    console.log(data.message);
+                }
+                console.log(this.rider);
             }).catch(err => {
                 console.log(err);
             });
@@ -290,9 +300,9 @@ ion-card {
     box-shadow: 1px 1px 5px rgba(0,0,0,0.2)
 }
 .title-icon {
-    display:flex; 
-    align-items:center; 
-    justify-content:space-around 
+    display:flex;
+    align-items:center;
+    justify-content:space-around
 }
 p.title {
     margin: 10px 100px 10px 0px;
@@ -327,7 +337,7 @@ ion-radio-group  ion-label {
     font-size: 16px !important;
 }
 .display-flex {
-    display:flex; 
+    display:flex;
     justify-content:space-between
 }
 .summary-details {

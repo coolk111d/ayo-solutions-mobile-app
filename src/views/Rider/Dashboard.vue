@@ -291,8 +291,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },
@@ -327,8 +325,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },
@@ -363,8 +359,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },
@@ -399,8 +393,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },
