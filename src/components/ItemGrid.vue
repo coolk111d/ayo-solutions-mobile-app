@@ -63,7 +63,6 @@ export default defineComponent({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/items/` + this.$route.params.id,
             }).then(res => {
-                console.log(res.data);
                 this.items = res.data;
             }).catch(err => {
                 console.log(err);

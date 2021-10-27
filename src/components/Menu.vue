@@ -95,7 +95,6 @@
                     }
                 }).then(res => {
                     const data = res.data;
-                    console.log(data.message);
                 }).catch(err => {
                     console.log(err);
                 });

@@ -174,10 +174,11 @@ export default  {
             echo.private(channel)
             .listen(".queue", (e) => {
 
-                axios({
-                    method: "POST",
-                    url: `https://onesignal.com/api/v1/notifications`,
-                    headers: {
+                if (process.env.VUE_ENABLE_ONE_SIGNAL) {
+                    axios({
+                        method: "POST",
+                        url: `https://onesignal.com/api/v1/notifications`,
+                        headers: {
                         Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
                     },
                     data: {
@@ -190,11 +191,12 @@ export default  {
                             "buttons": [{"id": "id2", "text": "Accept", "icon": "ic_menu_share", "url": "/rider-dashboard"}, {"id": "id1", "text": "Reject", "icon": "ic_menu_send"}],
                             "android_accent_color": "FEB041"
                     }
-                }).then(res => {
-                        console.log(res);
-                }).catch(err => {
-                    console.log(err.response.data.message);
-                });
+                    }).then(res => {
+                            console.log(res);
+                    }).catch(err => {
+                        console.log(err.response.data.message);
+                    });
+                }
 
                 this.audio.currentTime = 0;
                 this.audio.play();
@@ -289,8 +291,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },
@@ -325,8 +325,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },
@@ -361,8 +359,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },
@@ -386,7 +382,6 @@ export default  {
                         this.toastMessage = `You mark the order #${order.tracking_number} as delivered`;
                         this.orders = [];
                         order.status = "delivered";
-                        this.orders.push(order)
                     } else {
                         this.toastMessage = data.message;
                         console.log(data.message);
@@ -397,8 +392,6 @@ export default  {
                     this.setOpenLoading(false);
 
                     console.log(err);
-                    // this.toastMessage = err.response.data.message;
-                    // this.setOpenToast(true);
                 });
             });
         },

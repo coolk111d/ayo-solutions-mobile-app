@@ -31,7 +31,7 @@
                                 <p class="sale-price">Order #{{order.tracking_number}}</p>
                                 <p class="sale-price">Ordered: <span class="price">{{ order.created_at }}</span></p>
                                 <p class="sale-price">Total Price: <span class="price">&#8369;{{ order.total_price }}</span></p>
-                                <ion-button size="small" color="success" @click="orderDetails(order.id)">View Details</ion-button>
+                                <ion-button size="small" color="success" @click="orderDetails(order.id, order.assigned_rider)">View Details</ion-button>
                             </ion-col>
                         </ion-row>
                     </div>
@@ -93,7 +93,6 @@ export default  {
             });
 
             const channel = `notify-merchant.${storageAuthUser.user.merchant.id}`;
-            console.log(channel);
 
             echo.private(channel)
             .listen(".rider-accepted-order", (e) => {
@@ -125,16 +124,7 @@ export default  {
                 this.audio.currentTime = 0;
                 this.audio.play();
                 this.orders.unshift(e.order)
-                console.log("bum place order");
-                console.log(e.order);
             });
-
-            console.log("ionic storage");
-            console.log(storageAuthUser);
-            console.log("sessionStorage");
-            console.log(sessionStorage);
-            console.log("echo");
-            console.log(echo);
         },
 
         async initOrdersData() {
@@ -150,8 +140,7 @@ export default  {
                 const data = res.data;
 
                 if (data.success) {
-                    this.orders = [];
-                    this.orders.push(data.data);
+                    this.orders = data.data;
                 } else {
                     console.log(data.message);
                 }
@@ -169,14 +158,15 @@ export default  {
             return modal.present();
         },
 
-        async orderDetails(id) {
+        async orderDetails(id, riderId) {
             if (!this.audio.paused) this.audio.pause();
 
             const modal = await modalController.create({
                 component: MerchantOrderDetails,
                 cssClass: 'my-custom-class',
                 componentProps: {
-                    orderID: id
+                    orderID: id,
+                    riderId: riderId
                 }
             });
 
