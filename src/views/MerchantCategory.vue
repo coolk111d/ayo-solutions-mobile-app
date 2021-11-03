@@ -61,7 +61,7 @@
                 <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
                     <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
                     <ion-col size="4">
-                            <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="env + '/storage/' + merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
+                            <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
                     </ion-col>
                     <ion-col size="8">
                          <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.name}}</a>

@@ -50,7 +50,8 @@
                     <h5 style="color:black;  text-align: center;  font-weight: 600">&#8369;{{total}}</h5>
                     </ion-col>
                 </ion-row>
-                <ion-button size="fill" color="primary" @click="checkout()" style="width: 100%; color: #fff;">Review Payment</ion-button>
+                <ion-button color="success" @click="dismissModal()" style="width: 100%; color: #fff;">Add More Items</ion-button>
+                <ion-button color="primary" @click="checkout()" style="width: 100%; color: #fff;">Review Payment</ion-button>
             </ion-grid>
         </ion-toolbar>
     </ion-footer>

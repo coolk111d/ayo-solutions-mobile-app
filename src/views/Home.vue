@@ -12,10 +12,7 @@
             <iframe width="100%" height="170" src="https://www.youtube.com/embed/videoseries?list=PLX6R8Kyg0rnyUOXZ8DJBfmOtPQWRQgtgh" frameborder="0" allowfullscreen></iframe>
             </div>
             
-            <h3 class="registration-link">
-            <!-- <a target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/pre-registration/create">Register now!</a> -->
-            <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
-            </h3>
+          
             <!-- <a @click="sendNotif">Send Notif</a>-->
            <ServicesSlider slide1="Food" slide2="Express" slide3="Same Day" slide4="Handyman" slide5="Store" />
 
