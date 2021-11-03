@@ -148,11 +148,6 @@
            </ion-card>
 
         </ion-content>
-        <!-- <ion-footer>
-            <ion-toolbar>
-                <ion-button color="tertiary" target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/private-login">Assign Rider on Web App</ion-button>
-            </ion-toolbar>
-        </ion-footer> -->
 </template>
 
 <script lang="ts">

@@ -103,10 +103,10 @@ export default  {
                     method: "POST",
                     url: `https://onesignal.com/api/v1/notifications`,
                     headers: {
-                        Authorization: `Basic NDg5YThmMzctYzRhMC00MzYwLTgxYjItYzIwMDBlZTIxZDQ4`
+                        Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
                     },
                     data: {
-                          "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
+                          "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
                             "include_external_user_ids": [`merchant${storageAuthUser.user.id}`],
                             "channel_for_external_user_ids": "push",
                             "template_id": "31880987-1115-4f63-92d2-52afb395c799",
@@ -121,6 +121,8 @@ export default  {
                     console.log(err.response.data.message);
                 });
 
+                this.audio.currentTime = 0;
+                this.audio.play();
                 this.orders.unshift(e.order)
             });
         },
@@ -177,7 +179,7 @@ export default  {
 <style scoped>
     .content-container {
         height: 88vh;
-        background: url('/assets/images/bg-img/13.jpg');
+        background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/bg-img/13.jpg');
         background-size: cover;
         background-position: left;
         background-repeat: no-repeat;

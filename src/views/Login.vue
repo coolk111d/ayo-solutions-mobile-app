@@ -193,7 +193,7 @@ export default  {
 
                 this.setOpenLoading(false);
                 if (data.success) {
-                    if (process.env.VUE_ENABLE_ONE_SIGNAL) {
+                    if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
                         const externalUserId = data.data.user.role + data.data.user.id // You will supply the external user id to the OneSignal SDK
 
                         // Setting External User Id with Callback Available in SDK Version 2.11.2+

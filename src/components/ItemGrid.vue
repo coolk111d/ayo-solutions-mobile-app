@@ -1,7 +1,6 @@
 <template>
             <ion-searchbar placeholder="What are you craving?" color="transparent"></ion-searchbar>
             <ion-grid>
-                <p style="font-size: 15px; color:#fff; margin-left: 10px; text-shadow: 1px 1px 2px #000">Rice Meal</p>
                 <ion-row class="ion-align-items-center" v-for="item of items" :key="item.name" >
                     <ion-col size="4">
                             <!-- Product Thumbnail -->

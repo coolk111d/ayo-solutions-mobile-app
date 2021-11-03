@@ -9,9 +9,6 @@
                 </ion-toolbar>
             </ion-header>
             <div class="container">
-                <h3 class="registration-link" >
-                    <a rel="noopener noreferrer" href="javascript:void(0)" @click="openModal">Register now!</a>
-                </h3>
                 
                 <ion-card class="food-card-head">
                     <div class="card-body pt-4">

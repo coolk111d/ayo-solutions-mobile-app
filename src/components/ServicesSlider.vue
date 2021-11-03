@@ -86,21 +86,21 @@ h5.service-title {
 }
 
 .ayo-service-food {
-    background: url('/assets/images/icons/food.png');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/icons/food.png');
 }
 .ayo-service-express {
-    background: url('/assets/images/icons/express.png');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/icons/express.png');
     background-size: 65px !important;
 }
 .ayo-service-sameday {
-    background: url('/assets/images/icons/same-day.png');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/icons/same-day.png');
     background-size: 75px !important;
 }
 .ayo-service-handyman {
-    background: url('/assets/images/icons/handyman.png');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/icons/handyman.png');
 }
 .ayo-service-store {
-    background: url('/assets/images/icons/store.png');
+    background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/icons/store.png');
     background-size: 80px !important;
 }
 ion-slide:first-child {

@@ -81,7 +81,7 @@ ion-content {
     --background: #eceff1;
 }
 .container {
-     background: url('/assets/images/bg-img/24.jpg') rgba(0,0,0,0.3);
+     background: url('https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/mobile-app/bg-img/24.jpg') rgba(0,0,0,0.3);
      background-blend-mode:darken; 
      min-height: 200px; 
      background-size:cover; 
