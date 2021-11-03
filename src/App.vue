@@ -137,7 +137,7 @@ export default defineComponent({
 
                             this.openAlertOptions({
                                 header: order.tracking_number,
-                                message: "Your order is now in processing.",
+                                message: "Your order is now in progress.",
                                 buttons: [
                                     {
                                         text: "Track Order",

@@ -48,7 +48,7 @@
                                 <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                             </ion-col>
                             <ion-col size="9">
-                                <p style="font-size: 15px;">{{rider.user.name}}</p>
+                                <p style="font-size: 15px;">{{riderUser.name}}</p>
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -132,18 +132,24 @@
                     <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                 </div>
                 <div class="summary-details">
-                    <div class="display-flex" v-for="item in items" :key="item.id">
-                        <p> {{ item.menu_item.name }}</p>
-                        <p>{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+                    <div class="display-flex" v-for="item in order.cart.items" :key="item.id">
+                        <p>{{ item.menu_item.name }}</p>
+                        <div>
+                            <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+
+                            <p v-if="item.menu_item.discount_price !== null">
+                                - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
+                            </p>
+                        </div>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; {{order.total_price - order.sub_total_price}}</p>
+                        <p>&#8369; {{order.delivery_charge}}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; {{order.total_price}}</p>
+                        <p>&#8369; {{order.sub_total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
@@ -180,6 +186,7 @@ export default defineComponent({
             order : {},
             items: [],
             rider: {},
+            riderUser: {},
 
             mapLat: 14.124561213272877,
             mapLong: 121.164106030269481,
@@ -249,6 +256,7 @@ export default defineComponent({
 
                         if (riderResponseData.success) {
                             this.rider = riderResponseData.data;
+                            this.riderUser = this.rider.user;
                         } else {
                             console.log(riderResponseData.message);
                         }

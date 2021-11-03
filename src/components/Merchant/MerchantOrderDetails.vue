@@ -122,17 +122,23 @@
                 </div>
                 <div class="summary-details">
                     <div class="display-flex" v-for="item in order.cart.items" :key="item.id">
-                        <p> {{ item.menu_item.name }}</p>
-                        <p>{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+                        <p>{{ item.menu_item.name }}</p>
+                        <div>
+                            <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+
+                            <p v-if="item.menu_item.discount_price !== null">
+                                - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
+                            </p>
+                        </div>
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
                         <p>Delivery Charge</p>
-                        <p>&#8369; {{order.total_price - order.sub_total_price}}</p>
+                        <p>&#8369; {{order.delivery_charge}}</p>
                     </div>
                     <div class="display-flex">
                         <p>Subtotal</p>
-                        <p>&#8369; {{order.total_price}}</p>
+                        <p>&#8369; {{order.sub_total_price}}</p>
                     </div>
                     <div class="display-flex">
                         <p style="font-size: 16px;">Total(w/ Tax)</p>
@@ -142,15 +148,15 @@
            </ion-card>
 
         </ion-content>
-        <ion-footer>
+        <!-- <ion-footer>
             <ion-toolbar>
                 <ion-button color="tertiary" target="_blank" rel="noopener noreferrer" href="https://ayosolution.com/private-login">Assign Rider on Web App</ion-button>
             </ion-toolbar>
-        </ion-footer>
+        </ion-footer> -->
 </template>
 
 <script lang="ts">
-import { IonContent, IonCard, IonGrid, modalController, IonFooter, IonToolbar, IonButton } from '@ionic/vue';
+import { IonContent, IonCard, IonGrid, modalController, IonButton } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
@@ -171,7 +177,7 @@ export default defineComponent({
             rider: {},
         }
     },
-    components: { IonContent, IonCard, IonGrid , GMap,  IonFooter, IonToolbar, IonButton },
+    components: { IonContent, IonCard, IonGrid , GMap, IonButton },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
