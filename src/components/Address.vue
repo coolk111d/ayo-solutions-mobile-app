@@ -15,7 +15,7 @@
             :disableUI="true"
             v-on:clicked="onClickChild"
         ></g-map>
-
+        <small style="font-size: 14px;">Distance from Merchant: {{distance}}</small>
         <Form @submit="onSubmit" :initial-values="initialValues" id="addresssForm">
             <ion-item>
                 <ion-label position="stacked" style="font-weight: 600">First Name <ion-icon :icon="navigateCircleoutline" color="dark" class="edit"></ion-icon></ion-label>
@@ -105,6 +105,11 @@ export default defineComponent({
 
         IonLoading, IonToast
     },
+    data() {
+        return {
+            distance: ''
+        }
+    },
 
     props: {
         title: {
@@ -154,17 +159,14 @@ export default defineComponent({
 
     methods : {
         onClickChild(value) {
-            this.initialValues.lat = value.lat;
-            this.initialValues.lng = value.lng;
-            console.log(value);
-
-            // axios({
-            //         method: "GET",
-            //         url: `https://maps.googleapis.com/maps/api/distancematrix/json?origins=40.6655101%2C-73.89188969999998&destinations=50.2131%2C-73.212411&key=${process.env.VUE_APP_GOOGLEMAPS_KEY}`,
-            //         headers: {}
-            // }).then(res => {
-            //     console.log(res.data);
-            // });
+            this.initialValues.lat = value[0].lat;
+            this.initialValues.lng = value[0].lng;
+            console.log(value[1].rows[0].elements[0].distance.text);
+            if(value[1] == undefined) {
+                this.distance = 'Please pin again your location';
+            } else {
+            this.distance = value[1].rows[0].elements[0].distance.text;
+            }
         },
         async dismissModal() {
             modalController.dismiss();

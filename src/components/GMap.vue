@@ -1,5 +1,5 @@
 <template>
-    <div class="map" ref="mapDivRef" v-on:click="$emit('clicked', coords)">
+    <div class="map" ref="mapDivRef" v-on:click="$emit('clicked', [coords, dist])">
     </div>
 </template>
 
@@ -21,6 +21,7 @@ export default {
         const mapDivRef = ref(null);
         const currentMarkers = [];
         const coords = ref(null);
+        const dist = ref(null);
         onMounted(() => {
             const key = process.env.VUE_APP_GOOGLEMAPS_KEY;
 
@@ -69,12 +70,21 @@ export default {
                 });
                 currentMarkers.push(newMarker);
                 coords.value = mapEvent.latLng.toJSON();
+
+                const service = new window.google.maps.DistanceMatrixService;
+                service.getDistanceMatrix({
+                    origins: [{lat: 14.124561213272877, lng: 121.164106030269481}],
+                    destinations: [mapEvent.latLng.toJSON()],
+                    travelMode: 'DRIVING',
+                }).then(res => {
+                    dist.value = res;
+                });
             });
         };
 
         
         return {
-            mapDivRef, coords
+            mapDivRef, coords, dist
         };
     },
 
