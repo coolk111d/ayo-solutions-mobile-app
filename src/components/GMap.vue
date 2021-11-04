@@ -1,5 +1,5 @@
 <template>
-    <div class="map" ref="mapDivRef">
+    <div class="map" ref="mapDivRef" v-on:click="$emit('clicked', coords)">
     </div>
 </template>
 
@@ -13,13 +13,14 @@ export default {
         zoom: Number,
         mapType: String,
         disableUI: Boolean,
-        mapDidLoad: Function
+        mapDidLoad: Function,
     },
     setup(props) {
 
         const map = ref(null);
         const mapDivRef = ref(null);
         const currentMarkers = [];
+        const coords = ref(null);
         onMounted(() => {
             const key = process.env.VUE_APP_GOOGLEMAPS_KEY;
 
@@ -59,8 +60,7 @@ export default {
             origin: new window.google.maps.Point(0,0), // origin
             anchor: new window.google.maps.Point(15, 50) // anchor
             };
-
-         map.value.addListener('click', mapEvent =>  {
+            map.value.addListener('click', mapEvent =>  {
                 clearMarkers();
                 const newMarker = new window.google.maps.Marker({
                     position: mapEvent.latLng.toJSON(),
@@ -68,14 +68,13 @@ export default {
                     icon: image
                 });
                 currentMarkers.push(newMarker);
-
-                console.log(mapEvent.latLng.toJSON());
+                coords.value = mapEvent.latLng.toJSON();
             });
         };
 
-
+        
         return {
-            mapDivRef
+            mapDivRef, coords
         };
     },
 
