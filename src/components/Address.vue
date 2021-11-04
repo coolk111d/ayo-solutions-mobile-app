@@ -13,6 +13,7 @@
             :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
             :zoom="10"
             :disableUI="true"
+            v-on:clicked="onClickChild"
         ></g-map>
 
         <Form @submit="onSubmit" :initial-values="initialValues" id="addresssForm">
@@ -146,10 +147,25 @@ export default defineComponent({
             lastName: this.address.last_name,
             googleAddress: this.address.google_address,
             mobileNumber: this.address.mobile_number,
+            lat: this.address.lat,
+            lng: this.address.lng
         }
     },
 
     methods : {
+        onClickChild(value) {
+            this.initialValues.lat = value.lat;
+            this.initialValues.lng = value.lng;
+            console.log(value);
+
+            // axios({
+            //         method: "GET",
+            //         url: `https://maps.googleapis.com/maps/api/distancematrix/json?origins=40.6655101%2C-73.89188969999998&destinations=50.2131%2C-73.212411&key=${process.env.VUE_APP_GOOGLEMAPS_KEY}`,
+            //         headers: {}
+            // }).then(res => {
+            //     console.log(res.data);
+            // });
+        },
         async dismissModal() {
             modalController.dismiss();
         },
@@ -173,6 +189,10 @@ export default defineComponent({
                         mobile_number: input.mobileNumber,
                         // eslint-disable-next-line @typescript-eslint/camelcase
                         google_address: input.googleAddress,
+
+                        lat: this.initialValues.lat,
+
+                        lng: this.initialValues.lng
                     }
                 }).then(res => {
                     this.setOpenLoading(false);

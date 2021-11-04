@@ -17,19 +17,19 @@
                 <h6>Estimated Delivery Time: {{order.delivery_date}}</h6>
                 <ion-grid>
                     <ion-row style="display:flex; align-items:center; justify-content: center;">
-                        <ion-col style="width: 20%" v-if="orderDetails.status == 'processing'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></div></ion-col>
+                        <ion-col style="width: 20%" v-if="order.status == 'processing'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Processing</p></div></ion-col>
                         <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Processing</p></ion-col>
 
-                        <ion-col style="width: 20%" v-if="orderDetails.status == 'assembled'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Assembled</p></div></ion-col>
+                        <ion-col style="width: 20%" v-if="order.status == 'assembled'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Assembled</p></div></ion-col>
                         <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Assembled</p></ion-col>
 
-                        <ion-col style="width: 20%" v-if="orderDetails.status == 'delivering'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivering</p></div></ion-col>
+                        <ion-col style="width: 20%" v-if="order.status == 'delivering'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivering</p></div></ion-col>
                         <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Delivering</p></ion-col>
 
-                        <ion-col style="width: 20%" v-if="orderDetails.status == 'delivered'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivered</p></div></ion-col>
+                        <ion-col style="width: 20%" v-if="order.status == 'delivered'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Delivered</p></div></ion-col>
                         <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Delivered</p></ion-col>
 
-                        <ion-col style="width: 20%" v-if="orderDetails.status == 'canceled'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Cancelled</p></div></ion-col>
+                        <ion-col style="width: 20%" v-if="order.status == 'canceled'"><div class="active-div"><ion-icon :icon="checkmarkCircleOutline" color="warning"></ion-icon><p class="text-status active">Cancelled</p></div></ion-col>
                         <ion-col style="width: 20%" v-else><ion-icon :icon="ellipseOutline"></ion-icon><p class="text-status">Cancelled</p></ion-col>
                     </ion-row>
                 </ion-grid>
