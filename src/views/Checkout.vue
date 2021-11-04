@@ -234,7 +234,6 @@ export default defineComponent({
             cart: {},
             items: [],
             toastMessage: "",
-            isMapChanged: false
         }
     },
 
@@ -334,7 +333,6 @@ export default defineComponent({
                 title: 'Address'
               },
             });
-            this.isMapChanged = true;
             return modal.present();
         },
 
@@ -360,12 +358,10 @@ export default defineComponent({
                     address: this.shipping
                 },
             });
-            this.isMapChanged = true;
             return modal.present();
         },
 
         onSubmit(input) {
-            if(this.isMapChanged == true) {
             this.setOpenLoading(true);
 
             this.storage.get("authUser").then(authUser => {
@@ -434,10 +430,6 @@ export default defineComponent({
                 //     }
                 // });
             });
-            } else {
-                this.toastMessage = "Please set the address details";
-                    this.setOpenToast(true);
-            }
         }
     }
 })
