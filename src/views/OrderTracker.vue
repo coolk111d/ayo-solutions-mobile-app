@@ -35,7 +35,7 @@
                 </ion-grid>
            </ion-card>
 
-           <ion-card>
+           <ion-card v-if="rider">
                 <div class="title-icon">
                     <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p>
                 </div>
@@ -70,7 +70,7 @@
                         <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
                             <ion-col size="12">
-                                <img :src=" env + '/storage/' + rider.company_id " style="margin-top: 0px">
+                                <img :src="rider.company_id " style="margin-top: 0px">
                             </ion-col>
                         </ion-row>
                     </ion-grid>
@@ -108,10 +108,11 @@
                             <p style="font-size: 15px;">{{shipping.address}}</p>
                         </ion-col>
                     </ion-row>
-                    <ion-row>
+
+                    <ion-row v-if="customer">
                             <p style="font-size: 12px;">Customer's ID:</p>
                         <ion-col size="12">
-                            <img :src="env + '/storage/' + order.gov_id" style="margin-top: -10px">
+                            <img :src="customer.gov_id" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -171,7 +172,7 @@ import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
-import GMap from '@/components/GMapTracker.vue';
+import GMap from '@/components/GMap.vue';
 import axios from "axios";
 import { Storage } from '@ionic/storage';
 
@@ -183,8 +184,9 @@ export default defineComponent({
             id: null,
             order : {},
             items: [],
-            rider: {},
+            rider: null,
             riderUser: {},
+            customer: {},
 
             mapLat: 14.124561213272877,
             mapLong: 121.164106030269481,
@@ -241,6 +243,10 @@ export default defineComponent({
 
                     if (this.order.shipping_address.longitude !== null) {
                         this.mapLong = this.order.shipping_address.longitude;
+                    }
+
+                    if (this.order.cart.customer !== null) {
+                        this.customer = this.order.cart.customer;
                     }
 
                     this.shipping = this.order.shipping_address;
