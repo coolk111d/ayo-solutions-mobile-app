@@ -11,20 +11,20 @@
     <ion-content>
         <div class="container">
             <ion-card v-for="vp in variationPivots" :key="vp.id">
-                <h5 class="title" v-text="vp.variation.is_addon ? 'Add Ons (Optional)' : vp.variation.name"></h5>
+                <h5 class="title">{{ vp.variation.name }}{{ vp.variation.is_addon ? " - Add Ons (Optional)" : "" }}</h5>
                 <ion-list>
                     <ion-radio-group v-if="vp.variation.is_addon">
                         <ion-item v-for="option in vp.options" :key="option.id">
                             <ion-label v-text="option.name"></ion-label>
                             <h6 class="price">(+{{ option.price }})</h6>
-                            <ion-checkbox slot="start" value="Extra Rice"></ion-checkbox>
+                            <ion-checkbox slot="start" :value="option.id" :checked="menuVariationOptionIds.includes(option.id)"></ion-checkbox>
                         </ion-item>
                     </ion-radio-group>
-                    <ion-radio-group v-else>
-                        <ion-item v-for="option in vp.options" :key="option.id">
+                    <ion-radio-group :value="vp.options[0].id" v-else>
+                        <ion-item v-for="(option, i) in vp.options" :key="option.id">
                             <ion-label v-text="option.name"></ion-label>
-                            <h6 class="price">(+{{ option.price }})</h6>
-                            <ion-radio slot="start" value="Regular"></ion-radio>
+                            <h6 class="price">(+{{ option.price }}) {{ i }}</h6>
+                            <ion-radio slot="start" :value="option.id" :checked="i == 0 || menuVariationOptionIds.includes(option.id)"></ion-radio>
                         </ion-item>
                     </ion-radio-group>
                 </ion-list>
@@ -92,10 +92,16 @@ export default defineComponent({
             default: "Variations"
         },
 
-        variationPivots: {
-            type: Array,
+        cartItem: {
+            type: Object,
             // eslint-disable-next-line vue/require-valid-default-prop
-            default: []
+            default: {}
+        },
+
+        menuItem: {
+            type: Object,
+            // eslint-disable-next-line vue/require-valid-default-prop
+            default: {}
         }
     },
 
@@ -112,11 +118,12 @@ export default defineComponent({
     IonToolbar,
     IonTitle,
   },
-    // data() {
-    //     return {
-    //         variationName: "Variation"
-    //     }
-    // },
+    data() {
+        return {
+            variationPivots: [],
+            menuVariationOptionIds: []
+        }
+    },
 
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
@@ -126,8 +133,9 @@ export default defineComponent({
     },
 
     mounted() {
-        // this.variationName = this.variationPivots[0].variation.name;
-        // this.variationName = "Flavors";
+        this.variationPivots = this.menuItem.variationPivots;
+        console.log(this.cartItem);
+        this.menuVariationOptionIds = this.cartItem.variations.map(v => v.menu_variation_option_id);
     },
 
     methods: {

@@ -70,7 +70,7 @@ export default defineComponent({
             });
       },
 
-      addToCart(item) {
+      addToCart(menuItem) {
         this.setOpenLoading(true);
 
         this.storage.get("authUser").then(user => {
@@ -83,7 +83,7 @@ export default defineComponent({
                 data: {
                     quantity: 1,
                     // eslint-disable-next-line @typescript-eslint/camelcase
-                    menu_item_unique_key: item.menu_item_unique_key
+                    menu_item_unique_key: menuItem.menu_item_unique_key
                 }
             }).then(res => {
                 this.setOpenLoading(false);
@@ -93,8 +93,8 @@ export default defineComponent({
                 if (data.success) {
                     this.openCartModal();
 
-                    if (item.variationPivots.length > 0) {
-                        this.openVariationModal(item.variationPivots);
+                    if (menuItem.variationPivots.length > 0) {
+                        this.openVariationModal(data.data.item, menuItem);
                     }
                 } else {
                     this.toastMessage = data.message;
@@ -109,11 +109,11 @@ export default defineComponent({
         });
       },
 
-      async openVariationModal(variationPivots) {
+      async openVariationModal(cartItem, menuItem) {
         const modal = await modalController.create({
             component: MenuVariation,
             cssClass: 'my-custom-class',
-            componentProps: { variationPivots },
+            componentProps: { cartItem, menuItem },
         });
 
         return modal.present();
