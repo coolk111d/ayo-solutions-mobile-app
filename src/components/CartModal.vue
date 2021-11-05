@@ -11,7 +11,7 @@
     <ion-content class="ion-padding cart-content">
         <ion-row class="ion-align-items-center" v-for="item in items" :key="item.id" v-show="item.id !== null">
             <ion-col size="3">
-                <a class="product-thumbnail" href=""><img :src="item.image" alt=""></a>
+                <a class="product-thumbnail" href=""><img :src="item.menu_item.image" alt=""></a>
             </ion-col>
             <ion-col size="6">
                 <!-- Product Title --><a class="product-title" href="" v-text="item.name"></a>
@@ -25,7 +25,9 @@
                     <ion-icon :icon="addCircleOutline"  @click="increaseQuantity(item)"></ion-icon>
                 </div>
 
-                <!-- <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a> -->
+                <a class="edit-link" v-if="item.menu_item.variationPivots.length > 0">
+                    <ion-icon :icon="pencilOutline"  @click="openVariationModal(item.menu_item.variationPivots)"></ion-icon>
+                </a>
                 <a class="delete-link"><ion-icon :icon="trashOutline"  @click="deleteItem(item)"></ion-icon></a>
             </ion-col>
         </ion-row>
@@ -94,6 +96,7 @@ import { useRouter } from 'vue-router';
 import { Storage } from '@ionic/storage';
 import axios from "axios";
 import { throttle, isFunction } from "lodash";
+import MenuVariation from './MenuVariation.vue';
 
 export default defineComponent({
     name: "Cart",
@@ -228,6 +231,16 @@ export default defineComponent({
                     console.log(err);
                 });
             }, 800);
+        },
+
+        async openVariationModal(variationPivots) {
+          const modal = await modalController.create({
+              component: MenuVariation,
+              cssClass: 'my-custom-class',
+              componentProps: { variationPivots },
+          });
+
+          return modal.present();
         },
 
         deleteItem(item) {

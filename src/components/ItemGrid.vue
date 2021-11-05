@@ -15,7 +15,7 @@
                             <p class="sale-price" style="margin-bottom:0px">{{item.description}} </p>
                             <span class="store-hours open" v-if="item.price != null">&#8369; {{item.price}}</span>
                             <!-- <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${this.$route.params.id}/menu`)">Add to Basket</ion-button> -->
-                            <ion-button color="warning" expand="full" shape="round" size="small" @click="addToCart(item.menu_item_unique_key)">Add to Basket</ion-button>
+                            <ion-button color="warning" expand="full" shape="round" size="small" @click="addToCart(item)">Add to Basket</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -47,6 +47,7 @@ import { defineComponent, ref } from "vue";
 import axios from "axios";
 import { Storage } from "@ionic/storage";
 import CartModal from './CartModal.vue';
+import MenuVariation from './MenuVariation.vue';
 
 export default defineComponent({
   name: 'ItemGrid',
@@ -69,7 +70,7 @@ export default defineComponent({
             });
       },
 
-      addToCart(menuItemKey) {
+      addToCart(item) {
         this.setOpenLoading(true);
 
         this.storage.get("authUser").then(user => {
@@ -82,7 +83,7 @@ export default defineComponent({
                 data: {
                     quantity: 1,
                     // eslint-disable-next-line @typescript-eslint/camelcase
-                    menu_item_unique_key: menuItemKey
+                    menu_item_unique_key: item.menu_item_unique_key
                 }
             }).then(res => {
                 this.setOpenLoading(false);
@@ -91,6 +92,10 @@ export default defineComponent({
 
                 if (data.success) {
                     this.openCartModal();
+
+                    if (item.variationPivots.length > 0) {
+                        this.openVariationModal(item.variationPivots);
+                    }
                 } else {
                     this.toastMessage = data.message;
                     this.setOpenToast(true);
@@ -102,6 +107,16 @@ export default defineComponent({
                 console.log(err);
             });
         });
+      },
+
+      async openVariationModal(variationPivots) {
+        const modal = await modalController.create({
+            component: MenuVariation,
+            cssClass: 'my-custom-class',
+            componentProps: { variationPivots },
+        });
+
+        return modal.present();
       },
 
       async openCartModal() {

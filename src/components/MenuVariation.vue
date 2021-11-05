@@ -1,33 +1,36 @@
 <template>
+    <ion-header>
+        <ion-toolbar>
+             <ion-buttons slot="end">
+                <ion-button @click="dismissModal"><ion-icon :icon="closeCircleOutline" /></ion-button>
+            </ion-buttons>
+            <ion-title>{{ title }}</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
         <div class="container">
-            <ion-card>
-                <h5  class="title">Drinks (Select 1)</h5>
+            <ion-card v-for="vp in variationPivots" :key="vp.id">
+                <h5 class="title" v-text="vp.variation.is_addon ? 'Add Ons (Optional)' : vp.variation.name"></h5>
                 <ion-list>
-                    <ion-radio-group value="Regular">
-
-                    <ion-item>
-                        <ion-label>Regular</ion-label>
-                        <h6 class="price">(+0)</h6>
-                        <ion-radio slot="start" value="Regular"></ion-radio>
-                    </ion-item>
-
-                    <ion-item>
-                        <ion-label>Medium</ion-label>
-                        <h6 class="price">(+10)</h6>
-                        <ion-radio slot="start" value="Medium"></ion-radio>
-                        
-                    </ion-item>
-
-                    <ion-item>
-                        <ion-label>Large</ion-label>
-                        <h6 class="price">(+20)</h6>
-                        <ion-radio slot="start" value="Large"></ion-radio>
-                    </ion-item>
+                    <ion-radio-group v-if="vp.variation.is_addon">
+                        <ion-item v-for="option in vp.options" :key="option.id">
+                            <ion-label v-text="option.name"></ion-label>
+                            <h6 class="price">(+{{ option.price }})</h6>
+                            <ion-checkbox slot="start" value="Extra Rice"></ion-checkbox>
+                        </ion-item>
+                    </ion-radio-group>
+                    <ion-radio-group v-else>
+                        <ion-item v-for="option in vp.options" :key="option.id">
+                            <ion-label v-text="option.name"></ion-label>
+                            <h6 class="price">(+{{ option.price }})</h6>
+                            <ion-radio slot="start" value="Regular"></ion-radio>
+                        </ion-item>
                     </ion-radio-group>
                 </ion-list>
            </ion-card>
-           
-           <ion-card>
+
+           <!-- <ion-card>
                 <h5 class="title">Add Ons (Optional)</h5>
                 <ion-list>
                     <ion-radio-group value="Extra Rice">
@@ -42,7 +45,7 @@
                         <ion-label>Extra Mustard</ion-label>
                         <h6 class="price">(+10)</h6>
                         <ion-checkbox slot="start" value="Extra Mustard"></ion-checkbox>
-                        
+
                     </ion-item>
 
                     <ion-item>
@@ -52,9 +55,9 @@
                     </ion-item>
                     </ion-radio-group>
                 </ion-list>
-           </ion-card>
-
-           </div>
+           </ion-card> -->
+       </div>
+    </ion-content>
             <!--<div style="margin: -5px auto 10px; text-align:center">
             <ion-button @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
             </div>-->
@@ -69,14 +72,33 @@ import {
   IonList, 
   IonRadio, 
   IonCheckbox,
-  IonRadioGroup 
+  IonRadioGroup,
+
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  modalController,
   } from '@ionic/vue';
 import { defineComponent} from "vue";
 
-import { arrowBackOutline } from 'ionicons/icons';
+import { arrowBackOutline, closeCircleOutline } from 'ionicons/icons';
 
 export default defineComponent({
-  name: 'Menu Variation',
+    name: 'Menu Variation',
+
+    props: {
+        title: {
+            type: String,
+            default: "Variations"
+        },
+
+        variationPivots: {
+            type: Array,
+            // eslint-disable-next-line vue/require-valid-default-prop
+            default: []
+        }
+    },
+
   components: { 
     IonCard, 
     IonItem, 
@@ -84,15 +106,35 @@ export default defineComponent({
     IonList, 
     IonRadio,
     IonCheckbox, 
-    IonRadioGroup  
-  },
-  setup() {
-    const env = process.env.VUE_APP_ROOT_API;
-    
-    const router = useRouter();
+    IonRadioGroup,
 
-    return { router, env, arrowBackOutline }
-}
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+  },
+    // data() {
+    //     return {
+    //         variationName: "Variation"
+    //     }
+    // },
+
+    setup() {
+        const env = process.env.VUE_APP_ROOT_API;
+        const router = useRouter();
+
+        return { router, env, arrowBackOutline, closeCircleOutline }
+    },
+
+    mounted() {
+        // this.variationName = this.variationPivots[0].variation.name;
+        // this.variationName = "Flavors";
+    },
+
+    methods: {
+        dismissModal() {
+            modalController.dismiss();
+        }
+    }
 })
 </script>
 
