@@ -144,8 +144,16 @@
                     </div>
                     <div class="summary-details">
                         <div class="display-flex" v-for="item in items" :key="item.id">
-                            <p>{{ item.quantity }}x {{ item.name }}</p>
-                            <p>&#8369; {{ item.price }}</p>
+                            <!-- <p>{{ item.quantity }}x {{ item.name }}</p>
+                            <p>&#8369; {{ item.price }}</p> -->
+                            <p>{{ item.menu_item.name }}</p>
+                            <div>
+                                <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+
+                                <p v-if="item.menu_item.discount_price !== null">
+                                    - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
+                                </p>
+                            </div>
                         </div>
                         <hr style="margin: 0px 0 10px">
                         <div class="display-flex">
@@ -312,9 +320,6 @@ export default defineComponent({
                 if (data.success) {
                     this.cart = data.cart;
                     this.items = data.items;
-
-                    console.log(this.cart);
-                    console.log(this.items);
                 } else {
                     console.log(data.message);
                 }

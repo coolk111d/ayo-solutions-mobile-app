@@ -130,7 +130,7 @@
                     <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                 </div>
                 <div class="summary-details">
-                    <div class="display-flex" v-for="item in order.cart.items" :key="item.id">
+                    <div class="display-flex" v-for="item in items" :key="item.id">
                         <p>{{ item.menu_item.name }}</p>
                         <div>
                             <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
