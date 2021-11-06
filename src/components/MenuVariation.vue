@@ -35,7 +35,12 @@
         </ion-row>
 
     </ion-content>
-
+    <ion-footer>
+        <ion-toolbar>
+        <ion-button color="success" @click="dismissModal()" style="width: 100%; color: #fff;">Add More Items</ion-button>
+                <ion-button color="primary" @click="checkout()" style="width: 100%; color: #fff;">Go to Cart</ion-button>
+        </ion-toolbar>
+    </ion-footer>
             <!--<div style="margin: -5px auto 10px; text-align:center">
             <ion-button @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
             </div>-->
@@ -143,7 +148,10 @@ export default defineComponent({
             location.reload(); // reload the page to display the data automatic. (no solution yet)
             // modalController.dismiss();
         },
-
+        checkout() {
+            modalController.dismiss();
+            this.router.push('/cart');
+        },
         onVariationChange(e) {
             this.variationId = +e.target.value;
             this.onUpdateVariationAddons();
