@@ -202,10 +202,9 @@ export default defineComponent({
                     const data = res.data;
 
                     if (data.success) {
-                        // location.reload();
+                        location.reload();
                         // this.router.push('/checkout');
-                        const status = "Hey";
-                        this.dismissModal(status);
+                        // this.dismissModal(status);
                     } else {
                         console.log(data.message);
                     }
