@@ -204,7 +204,7 @@ export default defineComponent({
                     if (data.success) {
                         location.reload();
                         // this.router.push('/checkout');
-                        // this.dismissModal(status);
+                        // this.dismissModal();
                     } else {
                         console.log(data.message);
                     }
