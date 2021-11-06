@@ -127,7 +127,7 @@
                             <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
 
                             <p v-if="item.menu_item.discount_price !== null">
-                                - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
+                                - <i>&#8369;{{ (item.quantity * item.menu_item.price).toFixed(2) - (item.quantity * item.menu_item.discount_price).toFixed(2) }} = &#8369; {{(item.quantity * item.menu_item.discount_price).toFixed(2)}}</i>
                             </p>
                         </div>
                     </div>
