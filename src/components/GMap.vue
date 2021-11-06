@@ -1,4 +1,5 @@
 <template>
+    <input ref="input" style="width:100%; background:white; padding: 10px;" placeholder="Type your address..">
     <div class="map" ref="mapDivRef" v-on:click="$emit('clicked', [coords, dist])">
     </div>
 </template>
@@ -21,8 +22,7 @@ export default {
         const currentMarkers = [];
         const coords = ref(null);
         const dist = ref(null);
-       
-
+        const input = ref(null);
         onMounted(() => {
             const key = process.env.VUE_APP_GOOGLEMAPS_KEY;
 
@@ -31,17 +31,15 @@ export default {
                 const googleMapScript = document.createElement("SCRIPT");
                 googleMapScript.setAttribute(
                     "src",
-                    `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap`
+                    `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap&libraries=places`
                 );
                 googleMapScript.setAttribute("defer", "");
                 googleMapScript.setAttribute("async", "");
                 document.head.appendChild(googleMapScript);
             }
-            
-            
         });
 
-
+        
         const clearMarkers = () => {
             currentMarkers.forEach(marker => {
                 marker.setMap(null);
@@ -55,6 +53,7 @@ export default {
                 disableDefaultUI: props.disableUI,
                 center: props.center
             });
+
             
             props.mapDidLoad && props.mapDidLoad(map, window.google.maps);
 
@@ -77,7 +76,8 @@ export default {
                     map: map.value,
                     icon: image1
                 });
-
+            
+            
             map.value.addListener('click', mapEvent =>  {
                 clearMarkers();
                 const newMarker = new window.google.maps.Marker({
@@ -104,13 +104,45 @@ export default {
                     dist.value = res;
                 });
             });
-        };
 
-        
-        return {
-            mapDivRef, coords, dist
+            console.log(input.value);
+            const autocomplete = new window.google.maps.places.Autocomplete(input.value);
+
+            autocomplete.bindTo("bounds", map.value);
+
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                console.log(place.geometry.location);
+                
+                clearMarkers();
+                const newMarker = new window.google.maps.Marker({
+                    position: place.geometry.location,
+                    map: map.value,
+                    icon: image
+                });
+                currentMarkers.push(newMarker);
+                map.value.setCenter(place.geometry.location);
+                map.value.setZoom(16);
+                 const service = new window.google.maps.DistanceMatrixService;
+
+                service.getDistanceMatrix({
+                    origins: [props.merchantlatlng],
+                    destinations: [place.geometry.location],
+                    travelMode: 'DRIVING',
+                }).then(res => {
+                    dist.value = res;
+                }).catch(err => {
+                dist.value = err;
+                });
+            });
+
+            console.log(autocomplete);
+
         };
-    },
+        return {
+            mapDivRef, coords, dist, input
+        };
+    }
 
 }
 </script>

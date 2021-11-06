@@ -8,6 +8,10 @@
         </ion-toolbar>
     </ion-header>
     <ion-content>
+    <div style="padding: 10px">
+        <small style="text-align:center;">Note: Please search your address and pin on the map. If your address is not right in the searchbox, pin your exact location on the map and fill in additional details for rider's reference.
+</small>
+</div>
         <g-map
             mapType="roadmap"
             :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
