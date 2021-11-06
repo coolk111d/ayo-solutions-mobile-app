@@ -35,7 +35,7 @@
                 </ion-grid>
            </ion-card>
 
-           <ion-card>
+           <ion-card v-if="rider">
                 <div class="title-icon">
                     <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p>
                 </div>
@@ -70,7 +70,7 @@
                         <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
                             <ion-col size="12">
-                                <img :src=" env + '/storage/' + rider.company_id " style="margin-top: 0px">
+                                <img :src="rider.company_id " style="margin-top: 0px">
                             </ion-col>
                         </ion-row>
                     </ion-grid>
@@ -108,10 +108,11 @@
                             <p style="font-size: 15px;">{{shipping.address}}</p>
                         </ion-col>
                     </ion-row>
-                    <ion-row>
+
+                    <ion-row v-if="customer">
                             <p style="font-size: 12px;">Customer's ID:</p>
                         <ion-col size="12">
-                            <img :src="env + '/storage/' + order.gov_id" style="margin-top: -10px">
+                            <img :src="customer.gov_id" style="margin-top: -10px">
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -130,10 +131,24 @@
                     <p class="title" style="text-align:left; margin-right: 150px;">Summary</p>
                 </div>
                 <div class="summary-details">
-                    <div class="display-flex" v-for="item in order.cart.items" :key="item.id">
+                    <div class="display-flex" v-for="item in items" :key="item.id">
                         <p>{{ item.menu_item.name }}</p>
                         <div>
                             <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+
+                            <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                                <div v-if="!itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
+                                    <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
+                                    <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
+                                </div>
+                            </div>
+
+                            <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                                <div v-if="itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
+                                    <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
+                                    <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
+                                </div>
+                            </div>
 
                             <p v-if="item.menu_item.discount_price !== null">
                                 - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
@@ -171,7 +186,7 @@ import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
-import GMap from '@/components/GMapTracker.vue';
+import GMap from '@/components/GMap.vue';
 import axios from "axios";
 import { Storage } from '@ionic/storage';
 
@@ -183,8 +198,9 @@ export default defineComponent({
             id: null,
             order : {},
             items: [],
-            rider: {},
+            rider: null,
             riderUser: {},
+            customer: {},
 
             mapLat: 14.124561213272877,
             mapLong: 121.164106030269481,
@@ -241,6 +257,10 @@ export default defineComponent({
 
                     if (this.order.shipping_address.longitude !== null) {
                         this.mapLong = this.order.shipping_address.longitude;
+                    }
+
+                    if (this.order.cart.customer !== null) {
+                        this.customer = this.order.cart.customer;
                     }
 
                     this.shipping = this.order.shipping_address;

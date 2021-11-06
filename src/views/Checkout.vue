@@ -144,8 +144,30 @@
                     </div>
                     <div class="summary-details">
                         <div class="display-flex" v-for="item in items" :key="item.id">
-                            <p>{{ item.quantity }}x {{ item.name }}</p>
-                            <p>&#8369; {{ item.price }}</p>
+                            <!-- <p>{{ item.quantity }}x {{ item.name }}</p>
+                            <p>&#8369; {{ item.price }}</p> -->
+                            <p>{{ item.menu_item.name }}</p>
+                            <div>
+                                <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+
+                                <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                                    <div v-if="!itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
+                                        <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
+                                        <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
+                                    </div>
+                                </div>
+
+                                <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                                    <div v-if="itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
+                                        <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
+                                        <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
+                                    </div>
+                                </div>
+
+                                <p v-if="item.menu_item.discount_price !== null">
+                                    - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
+                                </p>
+                            </div>
                         </div>
                         <hr style="margin: 0px 0 10px">
                         <div class="display-flex">
@@ -311,9 +333,6 @@ export default defineComponent({
                 if (data.success) {
                     this.cart = data.cart;
                     this.items = data.items;
-
-                    console.log(this.cart);
-                    console.log(this.items);
                 } else {
                     console.log(data.message);
                 }
@@ -362,74 +381,79 @@ export default defineComponent({
         },
 
         onSubmit(input) {
-            this.setOpenLoading(true);
+            // if(this.isMapChanged == true) {
+                this.setOpenLoading(true);
 
-            this.storage.get("authUser").then(authUser => {
-                const formData = new FormData();
-                formData.append('gov_id', new Blob([input.gov_id[0]]));
-                delete input.gov_id;
+                this.storage.get("authUser").then(authUser => {
+                    const formData = new FormData();
+                    formData.append('gov_id', new Blob([input.gov_id[0]]));
+                    delete input.gov_id;
 
-                formData.append('selfie', new Blob([input.selfie[0]]));
-                delete input.selfie;
+                    formData.append('selfie', new Blob([input.selfie[0]]));
+                    delete input.selfie;
 
-                formData.append("payment_method", "cod");
-                formData.append("special_instruction", input.special_instruction);
+                    formData.append("payment_method", "cod");
+                    formData.append("special_instruction", input.special_instruction);
 
-                // for (const field in input) {
-                //     console.log(field, input[field]);
-                //     formData.append(field, input[field]);
-                // }
+                    // for (const field in input) {
+                    //     console.log(field, input[field]);
+                    //     formData.append(field, input[field]);
+                    // }
 
-                axios({
-                    method: "POST",
-                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
-                    data: formData,
-                    headers: {
-                        Authorization: `Bearer ${authUser.token}`
-                    }
-                }).then(res => {
-                    this.setOpenLoading(false);
+                    axios({
+                        method: "POST",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
+                        data: formData,
+                        headers: {
+                            Authorization: `Bearer ${authUser.token}`
+                        }
+                    }).then(res => {
+                        this.setOpenLoading(false);
 
-                    const data = res.data;
+                        const data = res.data;
 
-                    if (data.success) {
-                        const order = data.data.order;
-                        const cart = data.data.cart;
+                        if (data.success) {
+                            const order = data.data.order;
+                            const cart = data.data.cart;
 
-                        // update new cart token
-                        // eslint-disable-next-line @typescript-eslint/camelcase
-                        authUser.cart_token = cart.session_token;
-                        this.storage.set('authUser', authUser);
-                        this.router.push(`/order-details/${order.id}`);
-                    } else {
-                        console.log(data.message);
-                    }
+                            // update new cart token
+                            // eslint-disable-next-line @typescript-eslint/camelcase
+                            authUser.cart_token = cart.session_token;
+                            this.storage.set('authUser', authUser);
+                            this.router.push(`/order-details/${order.id}`);
+                        } else {
+                            console.log(data.message);
+                        }
 
-                    this.toastMessage = data.message;
-                    this.setOpenToast(true);
-                }).catch(err => {
-                    this.setOpenLoading(false);
+                        this.toastMessage = data.message;
+                        this.setOpenToast(true);
+                    }).catch(err => {
+                        this.setOpenLoading(false);
 
-                    console.log(err.response.data.message);
+                        console.log(err.response.data.message);
+                    });
+
+                    // axios({
+                    //     method: "POST",
+                    //     url: `https://onesignal.com/api/v1/notifications`,
+                    //     data: {
+                    //     "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
+                    //     "include_external_user_ids": ["rider90"],
+                    //     "channel_for_external_user_ids": "push",
+                    //     "data": {"name": "Ayo Food", "subtitle": "You have a new"},
+                    //     "contents": {"en": "English Message", "name": "Ayo Food"},
+                    //     "name": {"en": "AYO FOOD"},
+                    //     "subtitle": {"en": "You have a new order!"}
+                    //     },
+                    //     headers: {
+                    //         Authorization: `Bearer ${d.token}`
+                    //     }
+                    // });
                 });
-
-                // axios({
-                //     method: "POST",
-                //     url: `https://onesignal.com/api/v1/notifications`,
-                //     data: {
-                //     "app_id": "643e1055-dcf7-4525-880a-89e3ba955d68",
-                //     "include_external_user_ids": ["rider90"],
-                //     "channel_for_external_user_ids": "push",
-                //     "data": {"name": "Ayo Food", "subtitle": "You have a new"},
-                //     "contents": {"en": "English Message", "name": "Ayo Food"},
-                //     "name": {"en": "AYO FOOD"},
-                //     "subtitle": {"en": "You have a new order!"}
-                //     },
-                //     headers: {
-                //         Authorization: `Bearer ${d.token}`
-                //     }
-                // });
-            });
+            // } else {
+            //     this.toastMessage = "Please set the address details";
+            //         this.setOpenToast(true);
+            // }
         }
     }
 })

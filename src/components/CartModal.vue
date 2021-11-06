@@ -11,12 +11,27 @@
     <ion-content class="ion-padding cart-content">
         <ion-row class="ion-align-items-center" v-for="item in items" :key="item.id" v-show="item.id !== null">
             <ion-col size="3">
-                <a class="product-thumbnail" href=""><img :src="item.image" alt=""></a>
+                <a class="product-thumbnail" href=""><img :src="item.menu_item.image" alt=""></a>
             </ion-col>
             <ion-col size="6">
-                <!-- Product Title --><a class="product-title" href="" v-text="item.name"></a>
+                <!-- Product Title --><a class="product-title" href="" v-text="item.menu_item.name"></a>
                 <!-- Product Price -->
-                <p class="sale-price">{{item.quantity}} x <span class="price">&#8369;{{item.price}}</span></p>
+                <p class="sale-price">{{item.quantity}} x <span class="price">&#8369;{{item.menu_item.price}}</span></p>
+
+                <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                    <div v-if="!itemVariation.variation_option.variation.is_addon" class="sale-price">
+                        <h6>{{itemVariation.variation_option.variation.name}}</h6>
+                        {{ itemVariation.variation_option.name }} (+ <span class="price">&#8369;{{itemVariation.variation_option.price}}</span>)
+                    </div>
+                </div>
+
+                <!-- <h6>Addons:</h6> -->
+                <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                    <div v-if="itemVariation.variation_option.variation.is_addon" class="sale-price">
+                        <h6>{{itemVariation.variation_option.variation.name}}</h6>
+                        {{ itemVariation.variation_option.name }} (+ <span class="price">&#8369;{{itemVariation.variation_option.price}}</span>)
+                    </div>
+                </div>
             </ion-col>
             <ion-col size="3">
                 <div class="quantity">
@@ -25,7 +40,9 @@
                     <ion-icon :icon="addCircleOutline"  @click="increaseQuantity(item)"></ion-icon>
                 </div>
 
-                <!-- <a class="edit-link"><ion-icon :icon="pencilOutline"  @click="dismissModal()"></ion-icon></a> -->
+                <a class="edit-link" v-if="item.menu_item.variationPivots.length > 0">
+                    <ion-icon :icon="pencilOutline"  @click="openVariationModal(item, item.menu_item)"></ion-icon>
+                </a>
                 <a class="delete-link"><ion-icon :icon="trashOutline"  @click="deleteItem(item)"></ion-icon></a>
             </ion-col>
         </ion-row>
@@ -94,6 +111,7 @@ import { useRouter } from 'vue-router';
 import { Storage } from '@ionic/storage';
 import axios from "axios";
 import { throttle, isFunction } from "lodash";
+import MenuVariation from './MenuVariation.vue';
 
 export default defineComponent({
     name: "Cart",
@@ -228,6 +246,16 @@ export default defineComponent({
                     console.log(err);
                 });
             }, 800);
+        },
+
+        async openVariationModal(cartItem, menuItem) {
+          const modal = await modalController.create({
+              component: MenuVariation,
+              cssClass: 'my-custom-class',
+              componentProps: { cartItem, menuItem },
+          });
+
+          return modal.present();
         },
 
         deleteItem(item) {
