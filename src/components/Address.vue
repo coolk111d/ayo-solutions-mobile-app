@@ -110,6 +110,7 @@ export default defineComponent({
         return {
             distance: '',
             destination: '',
+            geoaddress: ''
         }
     },
 
@@ -188,7 +189,6 @@ export default defineComponent({
         async dismissModal() {
             modalController.dismiss();
         },
-
         onSubmit(input) {
             this.setOpenLoading(true);
 
