@@ -1,6 +1,6 @@
 <template>
     <input ref="input" style="width:100%; background:white; padding: 10px;" placeholder="Type your address..">
-    <div class="map" ref="mapDivRef" v-on:click="$emit('clicked', [coords, dist])">
+    <div class="map" ref="mapDivRef" v-on:click="$emit('clicked', [coords, dist])" v-on:placechanged="$emit('clicked', [coords, dist])">
     </div>
 </template>
 
@@ -16,7 +16,7 @@ export default {
         mapDidLoad: Function,
         merchantlatlng: {lat: Number, lng: Number }
     },
-    setup(props) {
+    setup(props, context) {
         const map = ref(null);
         const mapDivRef = ref(null);
         const currentMarkers = [];
@@ -79,6 +79,16 @@ export default {
             
             
             map.value.addListener('click', mapEvent =>  {
+                const service = new window.google.maps.DistanceMatrixService;
+            
+                service.getDistanceMatrix({
+                    origins: [props.merchantlatlng],
+                    destinations: [mapEvent.latLng.toJSON()],
+                    travelMode: 'DRIVING',
+                }).then(res => {
+                    dist.value = res;
+                });
+
                 clearMarkers();
                 const newMarker = new window.google.maps.Marker({
                     position: mapEvent.latLng.toJSON(),
@@ -93,16 +103,6 @@ export default {
                 });
                 currentMarkers.push(newMarker);
                 coords.value = mapEvent.latLng.toJSON();
-
-                const service = new window.google.maps.DistanceMatrixService;
-
-                service.getDistanceMatrix({
-                    origins: [props.merchantlatlng],
-                    destinations: [mapEvent.latLng.toJSON()],
-                    travelMode: 'DRIVING',
-                }).then(res => {
-                    dist.value = res;
-                });
             });
 
             console.log(input.value);
@@ -131,6 +131,15 @@ export default {
                     travelMode: 'DRIVING',
                 }).then(res => {
                     dist.value = res;
+                    coords.value = place.geometry.location;
+
+                    const newMarker1 = new window.google.maps.Marker({
+                    position: props.merchantlatlng,
+                    map: map.value,
+                    icon: image1
+                    });
+
+                    context.emit('addresschanged', [coords.value, dist.value]);
                 }).catch(err => {
                 dist.value = err;
                 });

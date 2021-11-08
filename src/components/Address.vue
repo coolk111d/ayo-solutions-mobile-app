@@ -19,6 +19,7 @@
             :merchantlatlng="merchantlatlng"
             :disableUI="true"
             v-on:clicked="onClickChild"
+            v-on:addresschanged="onAddressChanged"
         ></g-map>
         <small style="font-size: 14px;">Distance from Merchant: {{distance}}</small>
         <Form @submit="onSubmit" :initial-values="initialValues" id="addresssForm">
@@ -182,6 +183,19 @@ export default defineComponent({
         onClickChild(value) {
             this.initialValues.lat = value[0].lat;
             this.initialValues.lng = value[0].lng;
+            console.log(value[1]);
+            if(value[1] === null) {
+                this.distance = 'Please pin again your location';
+            } else {
+            this.distance = value[1].rows[0].elements[0].distance.text;
+            }
+            this.destination = value[1].destinationAddresses[0];
+            console.log(value[1].destinationAddresses[0]);
+        },
+        onAddressChanged(value) {
+            this.initialValues.lat = value[0].lat;
+            this.initialValues.lng = value[0].lng;
+            console.log(value[1]);
             if(value[1] === null) {
                 this.distance = 'Please pin again your location';
             } else {
