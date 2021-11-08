@@ -118,7 +118,7 @@ import { IonContent, IonCard, IonGrid, modalController, IonButton } from '@ionic
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
-import GMap from '@/components/GMapTracker.vue';
+import GMap from '@/components/MapTracker.vue';
 import axios from "axios";
 
 import { Storage } from '@ionic/storage';

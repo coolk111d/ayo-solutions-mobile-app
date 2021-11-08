@@ -193,8 +193,9 @@ export default defineComponent({
             console.log(value[1].destinationAddresses[0]);
         },
         onAddressChanged(value) {
-            this.initialValues.lat = value[0].lat;
-            this.initialValues.lng = value[0].lng;
+            console.log(value[0].toJSON().lat);
+            this.initialValues.lat = value[0].toJSON().lat;
+            this.initialValues.lng = value[0].toJSON().lng;
             console.log(value[1]);
             if(value[1] === null) {
                 this.distance = 'Please pin again your location';

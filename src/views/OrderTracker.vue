@@ -6,7 +6,7 @@
             <g-map
                 mapType="roadmap"
                 :center="{lat: mapLat, lng: mapLong}"
-                :zoom="14"
+                :zoom="12"
                 :disableUI="true"
                 style="height: 200px;">
             </g-map>
@@ -185,7 +185,7 @@ import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
-import GMap from '@/components/GMapTracker.vue';
+import GMap from '@/components/MapTracker.vue';
 import axios from "axios";
 import { Storage } from '@ionic/storage';
 
