@@ -29,7 +29,7 @@ import {
 import { defineComponent, ref } from 'vue';
 import GMap from '@/components/GMapTracker.vue';
 import OneSignal from 'onesignal-cordova-plugin';
-
+import axios from "axios";
 import { Storage } from '@ionic/storage';
 import Echo from "laravel-echo";
 import { useRouter } from "vue-router";
