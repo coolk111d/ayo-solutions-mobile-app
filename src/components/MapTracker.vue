@@ -9,7 +9,8 @@ import { ref, onMounted } from 'vue';
 export default {
     name: "GMap",
     props: {
-        center: { lat: Number, lng: Number},
+        lat: Number,
+        lng: Number,
         zoom: Number,
         mapType: String,
         disableUI: Boolean,
@@ -17,6 +18,7 @@ export default {
         merchantlatlng: {lat: Number, lng: Number }
     },
     setup(props, context) {
+        console.log(props.lat + ', ' + props.lng);
         const map = ref(null);
         const mapDivRef = ref(null);
         const currentMarkers = [];
@@ -51,7 +53,7 @@ export default {
                 mapTypeId: props.mapType,
                 zoom: props.zoom,
                 disableDefaultUI: props.disableUI,
-                center: props.center
+                center: {lat: props.lat, lng: props.lng}
             });
 
             
@@ -71,7 +73,7 @@ export default {
             anchor: new window.google.maps.Point(15, 50) // anchor
             };
             const newMarker = new window.google.maps.Marker({
-                    position: props.center,
+                    position: {lat: props.lat, lng: props.lng},
                     map: map.value,
                     icon: image
                 });

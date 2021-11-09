@@ -5,7 +5,8 @@
         <ion-content :fullscreen="true">
             <g-map
                 mapType="roadmap"
-                :center="{lat: mapLat, lng: mapLong}"
+                :lat="coordslat"
+                :lng="coordslng"
                 :zoom="12"
                 :disableUI="true"
                 style="height: 200px;">
@@ -200,11 +201,9 @@ export default defineComponent({
             rider: null,
             riderUser: {},
             customer: {},
-
-            mapLat: 14.124561213272877,
-            mapLong: 121.164106030269481,
-
-            shipping: {}
+            shipping: {},
+            coordslat: 14.090128,
+            coordslng: 121.173882
         }
     },
 
@@ -216,7 +215,7 @@ export default defineComponent({
 
         const storage = new Storage();
         storage.create();
-
+        
         return {
             env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline,
             storage, ellipseOutline
@@ -248,15 +247,7 @@ export default defineComponent({
                 console.log(data);
 
                 if (data.success) {
-                    this.order = data.data
-
-                    if (this.order.shipping_address.latitude !== null) {
-                        this.mapLat = this.order.shipping_address.latitude;
-                    }
-
-                    if (this.order.shipping_address.longitude !== null) {
-                        this.mapLong = this.order.shipping_address.longitude;
-                    }
+                    this.order = data.data;
 
                     if (this.order.cart.customer !== null) {
                         this.customer = this.order.cart.customer;
@@ -288,6 +279,10 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
+            
+                    
+                        this.coordslat = 21;
+                        this.coordslng = 22;
         }
     }
 })

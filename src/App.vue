@@ -133,7 +133,7 @@ export default defineComponent({
                                 },
                                 data: {
                                     "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
-                                        "include_external_user_ids": [`merchant${storageAuthUser.user.id}`],
+                                        "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
                                         "channel_for_external_user_ids": "push",
                                         "template_id": "31880987-1115-4f63-92d2-52afb395c799",
                                         "headings": {"en": `All riders are currently engaged.`},
@@ -162,7 +162,7 @@ export default defineComponent({
                                 },
                                 data: {
                                     "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
-                                        "include_external_user_ids": [`merchant${storageAuthUser.user.id}`],
+                                        "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
                                         "channel_for_external_user_ids": "push",
                                         "template_id": "31880987-1115-4f63-92d2-52afb395c799",
                                         "headings": {"en": `Your order is now in progress! ${e.order.tracking_number}`},
@@ -237,9 +237,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        if (process.env.VUE_ENABLE_ONE_SIGNAL) {
-            this.OneSignalInit();
-        }
+        this.OneSignalInit();
 
         this.initEcho();
     }

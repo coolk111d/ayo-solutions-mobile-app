@@ -207,6 +207,8 @@ export default  {
                             if (results.push && results.push.success) {
                                 console.log('Results of setting external user id push status:');
                                 console.log(results.push.success);
+                            } else {
+                                console.log('Not successful');
                             }
                         });
                     }
