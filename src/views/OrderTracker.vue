@@ -5,8 +5,9 @@
         <ion-content :fullscreen="true">
             <g-map
                 mapType="roadmap"
-                :center="{lat: mapLat, lng: mapLong}"
-                :zoom="14"
+                :lat="coordslat"
+                :lng="coordslng"
+                :zoom="12"
                 :disableUI="true"
                 style="height: 200px;">
             </g-map>
@@ -135,25 +136,24 @@
                         <p>{{ item.menu_item.name }}</p>
                         <div>
                             <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
-
+                            <p v-if="item.menu_item.discount_price !== null">
+                                - <i>&#8369;{{ (item.quantity * item.menu_item.price).toFixed(2) - (item.quantity * item.menu_item.discount_price).toFixed(2) }} = &#8369; {{(item.quantity * item.menu_item.discount_price).toFixed(2)}}</i>
+                            </p>
                             <div v-for="itemVariation in item.variations" :key="itemVariation.id">
                                 <div v-if="!itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
                                     <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
-                                    <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
+                                    <p class="price" style="margin-bottom: 2px;">+ {{ itemVariation.variation_option.name }} (&#8369;{{itemVariation.variation_option.price}})</p>
                                 </div>
                             </div>
 
                             <div v-for="itemVariation in item.variations" :key="itemVariation.id">
                                 <div v-if="itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
                                     <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
-                                    <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
+                                    <p class="price" style="margin-bottom: 2px;">+ {{ itemVariation.variation_option.name }} (&#8369;{{itemVariation.variation_option.price}})</p>
                                 </div>
                             </div>
-
-                            <p v-if="item.menu_item.discount_price !== null">
-                                - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
-                            </p>
                         </div>
+                       
                     </div>
                     <hr style="margin: 0px 0 10px">
                     <div class="display-flex">
@@ -186,7 +186,7 @@ import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
-import GMap from '@/components/GMap.vue';
+import GMap from '@/components/MapTracker.vue';
 import axios from "axios";
 import { Storage } from '@ionic/storage';
 
@@ -201,11 +201,9 @@ export default defineComponent({
             rider: null,
             riderUser: {},
             customer: {},
-
-            mapLat: 14.124561213272877,
-            mapLong: 121.164106030269481,
-
-            shipping: {}
+            shipping: {},
+            coordslat: 14.090128,
+            coordslng: 121.173882
         }
     },
 
@@ -217,7 +215,7 @@ export default defineComponent({
 
         const storage = new Storage();
         storage.create();
-
+        
         return {
             env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline,
             storage, ellipseOutline
@@ -249,15 +247,7 @@ export default defineComponent({
                 console.log(data);
 
                 if (data.success) {
-                    this.order = data.data
-
-                    if (this.order.shipping_address.latitude !== null) {
-                        this.mapLat = this.order.shipping_address.latitude;
-                    }
-
-                    if (this.order.shipping_address.longitude !== null) {
-                        this.mapLong = this.order.shipping_address.longitude;
-                    }
+                    this.order = data.data;
 
                     if (this.order.cart.customer !== null) {
                         this.customer = this.order.cart.customer;
@@ -289,6 +279,10 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
+            
+                    
+                        this.coordslat = 21;
+                        this.coordslng = 22;
         }
     }
 })

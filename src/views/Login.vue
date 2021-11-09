@@ -193,23 +193,25 @@ export default  {
 
                 this.setOpenLoading(false);
                 if (data.success) {
-                    // if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
-                    //     const externalUserId = data.data.user.role + data.data.user.id // You will supply the external user id to the OneSignal SDK
+                    if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
+                        const externalUserId = data.data.user.role + data.data.user.id // You will supply the external user id to the OneSignal SDK
 
-                    //     // Setting External User Id with Callback Available in SDK Version 2.11.2+
-                    //     OneSignal.setExternalUserId(externalUserId, (results) => {
-                    //         // The results will contain push and email success statuses
-                    //         console.log('Results of setting external user id');
-                    //         console.log(results);
+                        // Setting External User Id with Callback Available in SDK Version 2.11.2+
+                        OneSignal.setExternalUserId(externalUserId, (results) => {
+                            // The results will contain push and email success statuses
+                            console.log('Results of setting external user id');
+                            console.log(results);
 
-                    //         // Push can be expected in almost every situation with a success status, but
-                    //         // as a pre-caution its good to verify it exists
-                    //         if (results.push && results.push.success) {
-                    //             console.log('Results of setting external user id push status:');
-                    //             console.log(results.push.success);
-                    //         }
-                    //     });
-                    // }
+                            // Push can be expected in almost every situation with a success status, but
+                            // as a pre-caution its good to verify it exists
+                            if (results.push && results.push.success) {
+                                console.log('Results of setting external user id push status:');
+                                console.log(results.push.success);
+                            } else {
+                                console.log('Not successful');
+                            }
+                        });
+                    }
 
                     if(data.data.user.role == "rider") {
                         this.router.push('/rider-dashboard')

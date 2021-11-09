@@ -29,7 +29,7 @@ import {
 import { defineComponent, ref } from 'vue';
 import GMap from '@/components/GMapTracker.vue';
 import OneSignal from 'onesignal-cordova-plugin';
-
+import axios from "axios";
 import { Storage } from '@ionic/storage';
 import Echo from "laravel-echo";
 import { useRouter } from "vue-router";
@@ -68,7 +68,7 @@ export default defineComponent({
         const toastMessage = "";
 
         const router = useRouter();
-
+        
         return {
             storage,
 
@@ -81,22 +81,22 @@ export default defineComponent({
 
     methods: {
         // Call this function when your app starts
-    //    OneSignalInit() {
-    //       // Uncomment to set OneSignal device logging to VERBOSE
-    //       OneSignal.setLogLevel(6, 0);
+       OneSignalInit() {
+          // Uncomment to set OneSignal device logging to VERBOSE
+          OneSignal.setLogLevel(6, 0);
 
-    //       // NOTE: Update the setAppId value below with your OneSignal AppId.
-    //       OneSignal.setAppId(process.env.VUE_APP_ONE_SIGNAL_ID);
-    //       OneSignal.setNotificationOpenedHandler(function(jsonData) {
-    //           console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-    //       });
+          // NOTE: Update the setAppId value below with your OneSignal AppId.
+          OneSignal.setAppId(process.env.VUE_APP_ONE_SIGNAL_ID);
+          OneSignal.setNotificationOpenedHandler(function(jsonData) {
+              console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+          });
 
-    //       // iOS - Prompts the user for notification permissions.
-    //       //    * Since this shows a generic native prompt, we recommend instead using an In-App Message to prompt for notification permission (See step 6) to better communicate to your users what notifications they will get.
-    //       OneSignal.promptForPushNotificationsWithUserResponse(function(accepted) {
-    //           console.log("User accepted notifications: " + accepted);
-    //       });
-    //     },
+          // iOS - Prompts the user for notification permissions.
+          //    * Since this shows a generic native prompt, we recommend instead using an In-App Message to prompt for notification permission (See step 6) to better communicate to your users what notifications they will get.
+          OneSignal.promptForPushNotificationsWithUserResponse(function(accepted) {
+              console.log("User accepted notifications: " + accepted);
+          });
+        },
 
         async initEcho() {
             const storageAuthUser = await this.storage.get('authUser');
@@ -124,6 +124,28 @@ export default defineComponent({
                     case this.ROLE_CUSTOMER:
                         echo.private(`ping-customer.${user.customer.id}`)
                         .listen(".all-riders-are-engage", () => {
+
+                             axios({
+                                method: "POST",
+                                url: `https://onesignal.com/api/v1/notifications`,
+                                headers: {
+                                    Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
+                                },
+                                data: {
+                                    "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
+                                        "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
+                                        "channel_for_external_user_ids": "push",
+                                        "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                                        "headings": {"en": `All riders are currently engaged.`},
+                                        "contents": {"en": "Please try again later."},
+                                        "android_accent_color": "FEB041"
+                                }
+                            }).then(res => {
+                                    console.log(res);
+                            }).catch(err => {
+                                console.log(err.response.data.message);
+                            });
+
                             simpleNotif.currentTime = 0;
                             simpleNotif.play();
 
@@ -131,6 +153,28 @@ export default defineComponent({
                         })
                         .listen(".rider-accepted-order", (e) => {
                             const order = e.order;
+
+                             axios({
+                                method: "POST",
+                                url: `https://onesignal.com/api/v1/notifications`,
+                                headers: {
+                                    Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
+                                },
+                                data: {
+                                    "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
+                                        "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
+                                        "channel_for_external_user_ids": "push",
+                                        "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                                        "headings": {"en": `Your order is now in progress! ${e.order.tracking_number}`},
+                                        "contents": {"en": "Please accept the order."},
+                                        "buttons": [{"id": "id2", "text": "View", "icon": "ic_menu_share", "url": "/merchant-dashboard"}],
+                                        "android_accent_color": "FEB041"
+                                }
+                            }).then(res => {
+                                    console.log(res);
+                            }).catch(err => {
+                                console.log(err.response.data.message);
+                            });
 
                             simpleNotif.currentTime = 0;
                             simpleNotif.play();
@@ -193,9 +237,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        if (process.env.VUE_ENABLE_ONE_SIGNAL) {
-            this.OneSignalInit();
-        }
+        this.OneSignalInit();
 
         this.initEcho();
     }

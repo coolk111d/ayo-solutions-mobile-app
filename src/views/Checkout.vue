@@ -148,26 +148,24 @@
                             <p>&#8369; {{ item.price }}</p> -->
                             <p>{{ item.menu_item.name }}</p>
                             <div>
-                                <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
-
-                                <div v-for="itemVariation in item.variations" :key="itemVariation.id">
-                                    <div v-if="!itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
-                                        <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
-                                        <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
-                                    </div>
+                            <p style="margin-bottom: 3px;">{{ item.quantity }} x &#8369; {{item.menu_item.price}}</p>
+                            <p v-if="item.menu_item.discount_price !== null">
+                                - <i>&#8369;{{ (item.quantity * item.menu_item.price).toFixed(2) - (item.quantity * item.menu_item.discount_price).toFixed(2) }} = &#8369; {{(item.quantity * item.menu_item.discount_price).toFixed(2)}}</i>
+                            </p>
+                            <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                                <div v-if="!itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
+                                    <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
+                                    <p class="price" style="margin-bottom: 2px;">+ {{ itemVariation.variation_option.name }} (&#8369;{{itemVariation.variation_option.price}})</p>
                                 </div>
-
-                                <div v-for="itemVariation in item.variations" :key="itemVariation.id">
-                                    <div v-if="itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
-                                        <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
-                                        <p class="price" style="margin-bottom: 2px;">{{ itemVariation.variation_option.name }} (+ &#8369;{{itemVariation.variation_option.price}})</p>
-                                    </div>
-                                </div>
-
-                                <p v-if="item.menu_item.discount_price !== null">
-                                    - <i>&#8369;{{ (item.quantity * item.menu_item.discount_price).toFixed(2) }}</i>
-                                </p>
                             </div>
+
+                            <div v-for="itemVariation in item.variations" :key="itemVariation.id">
+                                <div v-if="itemVariation.variation_option.variation.is_addon" class="sale-price" style="padding-bottom: 3px">
+                                    <!-- <h5 style="margin-bottom: 2px;">{{itemVariation.variation_option.variation.name}}</h5> -->
+                                    <p class="price" style="margin-bottom: 2px;">+ {{ itemVariation.variation_option.name }} (&#8369;{{itemVariation.variation_option.price}})</p>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                         <hr style="margin: 0px 0 10px">
                         <div class="display-flex">
@@ -256,7 +254,6 @@ export default defineComponent({
             cart: {},
             items: [],
             toastMessage: "",
-            isMapChanged: false
         }
     },
 
@@ -353,7 +350,6 @@ export default defineComponent({
                 title: 'Address'
               },
             });
-            this.isMapChanged = true;
             return modal.present();
         },
 
@@ -379,7 +375,6 @@ export default defineComponent({
                     address: this.shipping
                 },
             });
-            this.isMapChanged = true;
             return modal.present();
         },
 

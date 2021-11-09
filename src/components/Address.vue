@@ -8,12 +8,18 @@
         </ion-toolbar>
     </ion-header>
     <ion-content>
+    <div style="padding: 10px">
+        <small style="text-align:center;">Note: Please search your address and pin on the map. If your address is not right in the searchbox, pin your exact location on the map and fill in additional details for rider's reference.
+</small>
+</div>
         <g-map
             mapType="roadmap"
             :center="{lat: 14.124561213272877, lng: 121.164106030269481}"
             :zoom="10"
+            :merchantlatlng="merchantlatlng"
             :disableUI="true"
             v-on:clicked="onClickChild"
+            v-on:addresschanged="onAddressChanged"
         ></g-map>
         <small style="font-size: 14px;">Distance from Merchant: {{distance}}</small>
         <Form @submit="onSubmit" :initial-values="initialValues" id="addresssForm">
@@ -31,7 +37,7 @@
             </ion-item>
             <ion-item>
                 <ion-label position="stacked" style="font-weight: 600">Apt/Blk/Lot/Landmark  <ion-icon :icon="navigateCircleoutline" color="dark" class="edit"></ion-icon></ion-label>
-                <Field as="ion-input" name="googleAddress" placeholder="" />
+                <Field as="ion-input" name="googleAddress" placeholder="" v-model="destination"/>
                 <ErrorMessage as="ion-text" name="googleAddress" color="danger" />
                 <!-- <ion-input :value="address.google_address"></ion-input> -->
             </ion-item>
@@ -107,7 +113,9 @@ export default defineComponent({
     },
     data() {
         return {
-            distance: ''
+            distance: '',
+            destination: '',
+            geoaddress: ''
         }
     },
 
@@ -132,15 +140,29 @@ export default defineComponent({
 
         const isOpenLoadingRef = ref(false);
         const setOpenLoading = (state) => isOpenLoadingRef.value = state;
-
+        const merchantlatlng = ref(null);
         const isOpenToastRef = ref(false);
         const setOpenToast = (state) => isOpenToastRef.value = state;
+
+        const merch = storage.get("authUser").then(d => {
+                axios({
+                    method: 'GET',
+                     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantbycarttoken/${d.cart_token}`,
+                     headers: {
+                        Authorization: `Bearer ${d.token}`
+                    }
+                }).then(res => {
+                    console.log(res);
+                   merchantlatlng.value = {lat: res.data.latitude, lng: res.data.longitude};  
+                   console.log(merchantlatlng.value);
+                });
+            });
 
         return {
             closeCircleOutline, router, navigateCircleoutline,
             storage,
             initialValues,
-
+            merchantlatlng,
             isOpenLoadingRef, setOpenLoading,
             isOpenToastRef, setOpenToast
         }
@@ -161,17 +183,31 @@ export default defineComponent({
         onClickChild(value) {
             this.initialValues.lat = value[0].lat;
             this.initialValues.lng = value[0].lng;
-            console.log(value[1].rows[0].elements[0].distance.text);
-            if(value[1] == undefined) {
+            console.log(value[1]);
+            if(value[1] === null) {
                 this.distance = 'Please pin again your location';
             } else {
             this.distance = value[1].rows[0].elements[0].distance.text;
             }
+            this.destination = value[1].destinationAddresses[0];
+            console.log(value[1].destinationAddresses[0]);
+        },
+        onAddressChanged(value) {
+            console.log(value[0].toJSON().lat);
+            this.initialValues.lat = value[0].toJSON().lat;
+            this.initialValues.lng = value[0].toJSON().lng;
+            console.log(value[1]);
+            if(value[1] === null) {
+                this.distance = 'Please pin again your location';
+            } else {
+            this.distance = value[1].rows[0].elements[0].distance.text;
+            }
+            this.destination = value[1].destinationAddresses[0];
+            console.log(value[1].destinationAddresses[0]);
         },
         async dismissModal() {
             modalController.dismiss();
         },
-
         onSubmit(input) {
             this.setOpenLoading(true);
 
