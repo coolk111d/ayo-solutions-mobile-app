@@ -36,7 +36,7 @@
                 </Form>
 
                 <div class="login-meta-data text-center">
-                    <a class="stretched-link" href="/">Forgot Password?</a>
+                    <a class="stretched-link" @click="forgotPasswordModal">Forgot Password?</a>
                     <p>Didn't have an account? <a class="stretched-link" href="javascript:void(0)" @click="openRegistrationModal">Register Now</a></p>
                 </div>
             </div>
@@ -82,7 +82,8 @@ import {
 } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { modalController } from '@ionic/vue';
-import RegistrationModal from '@/components/RegistrationModal.vue'
+import RegistrationModal from '@/components/RegistrationModal.vue';
+import ForgotPasswordModal from '@/components/ForgotPassword.vue'
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
@@ -193,7 +194,6 @@ export default  {
 
                 this.setOpenLoading(false);
                 if (data.success) {
-                    if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
                         const externalUserId = data.data.user.role + data.data.user.id // You will supply the external user id to the OneSignal SDK
 
                         // Setting External User Id with Callback Available in SDK Version 2.11.2+
@@ -211,7 +211,6 @@ export default  {
                                 console.log('Not successful');
                             }
                         });
-                    }
 
                     if(data.data.user.role == "rider") {
                         this.router.push('/rider-dashboard')
@@ -298,6 +297,11 @@ export default  {
 
         async openRegistrationModal() {
             const modal = await modalController.create({component: RegistrationModal});
+            modal.present();
+        },
+
+        async forgotPasswordModal() {
+            const modal = await modalController.create({component: ForgotPasswordModal});
             modal.present();
         }
     },
