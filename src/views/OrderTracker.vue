@@ -78,6 +78,49 @@
                 </div>
            </ion-card>
 
+            <ion-card>
+                <div v-if="order.status === 'delivered' && !order.star_rating">
+                    <p class="title">How was service?</p>
+                    <ion-item>
+                        <ion-label position="stacked" style="margin-bottom: 20px;">Comment</ion-label>
+                        <Field as="ion-input" name="customer_feedback" type="text" v-model="serviceFeedback" />
+                        <ErrorMessage as="ion-text" name="customer_feedback" color="danger" />
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label position="stacked" style="margin-bottom: 20px;">Rate</ion-label>
+
+                        <star-rating
+                            :increment="0.5"
+                            :star-size="25"
+                            :rating="serviceRate"
+                            @update:rating="changeRating"
+                        />
+                    </ion-item>
+
+                    <ion-button expand="full" type="button" style="color: white" @click="saveReview">Save Review</ion-button>
+                </div>
+                <div v-else>
+                    <p class="title">Thanks for feedback.</p>
+
+                    <ion-item>
+                        <ion-label position="stacked" style="margin-bottom: 20px;">Comment</ion-label>
+                        <Field as="ion-input" name="customer_feedback" type="text" v-model="serviceFeedback" disabled />
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label position="stacked" style="margin-bottom: 20px;">Rate</ion-label>
+
+                        <star-rating
+                            :increment="0.5"
+                            :star-size="25"
+                            :rating="serviceRate"
+                            read-only
+                        />
+                    </ion-item>
+                </div>
+            </ion-card>
+
            <ion-card>
                 <div class="title-icon">
                     <ion-icon :icon="receiptOutline" class="map"></ion-icon>
@@ -178,17 +221,27 @@
             </ion-toolbar>
         </ion-footer>
     </ion-page>
+
+    <!-- <ion-loading
+        :is-open="isOpenLoadingRef"
+        message="Please wait..."
+        :duration="1000"
+        @didDismiss="setOpenLoading(false)"
+    >
+    </ion-loading> -->
 </template>
 
 <script>
-import { IonPage, IonContent, IonCard, IonGrid, IonButton } from '@ionic/vue';
+import { IonPage, IonContent, IonCard, IonGrid, IonButton, toastController } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, ellipseOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import GMap from '@/components/MapTracker.vue';
 import axios from "axios";
 import { Storage } from '@ionic/storage';
+import { Field, ErrorMessage } from "vee-validate";
+import StarRating from 'vue-star-rating'
 
 export default defineComponent({
     name: 'OrderDetails',
@@ -203,11 +256,18 @@ export default defineComponent({
             customer: {},
             shipping: {},
             coordslat: 14.090128,
-            coordslng: 121.173882
+            coordslng: 121.173882,
+
+            serviceFeedback: "",
+            serviceRate: 1
         }
     },
 
-    components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton, GMap },
+    components: {
+        IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton, GMap,
+        StarRating,
+        Field, ErrorMessage,
+    },
 
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
@@ -215,10 +275,15 @@ export default defineComponent({
 
         const storage = new Storage();
         storage.create();
-        
+
+        const isOpenLoadingRef = ref(false);
+        const setOpenLoading = (state) => isOpenLoadingRef.value = state;
+
         return {
             env, router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline,
-            storage, ellipseOutline
+            storage, ellipseOutline,
+
+            isOpenLoadingRef, setOpenLoading
         };
     },
 
@@ -234,7 +299,6 @@ export default defineComponent({
 
         async getDetails() {
             const d = await this.storage.get('authUser');
-            console.log("fdasfdas");
 
             axios({
                 method: "GET",
@@ -248,6 +312,8 @@ export default defineComponent({
 
                 if (data.success) {
                     this.order = data.data;
+                    this.serviceFeedback = this.order.customer_feedback;
+                    this.serviceRate = this.order.star_rating || this.serviceRate;
 
                     if (this.order.cart.customer !== null) {
                         this.customer = this.order.cart.customer;
@@ -279,11 +345,59 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
-            
-                    
-                        this.coordslat = 21;
-                        this.coordslng = 22;
-        }
+
+            // this.coordslat = 21;
+            // this.coordslng = 22;
+        },
+
+        async saveReview() {
+            this.setOpenLoading(true);
+
+            console.log(this.serviceFeedback);
+            console.log(this.serviceRate);
+
+            const authUser = await this.storage.get('authUser');
+
+            axios({
+                method: "PUT",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${this.$route.params.id}/rate-rider-service`,
+                headers: {
+                    Authorization: `Bearer ${authUser.token}`
+                },
+                data: {
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    customer_feedback: this.serviceFeedback,
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    star_rating: this.serviceRate
+                }
+            }).then(res => {
+                this.setOpenLoading(false);
+                const data = res.data;
+
+                if (data.success) {
+                    // eslint-disable-next-line @typescript-eslint/camelcase
+                    this.order.star_rating = this.serviceRate;
+                    this.openToast("Thanks for feedback.");
+                } else {
+                    this.openToast(data.message);
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                this.setOpenLoading(false);
+                console.log(err);
+            });
+        },
+
+        changeRating(newRate) {
+            this.serviceRate = newRate;
+        },
+
+        async openToast(message, durationSeconds=2) {
+            const duration = durationSeconds * 1000;
+            const toast = await toastController.create({message, duration});
+
+            return toast.present();
+        },
     }
 })
 </script>

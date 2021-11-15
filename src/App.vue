@@ -39,7 +39,7 @@ export default defineComponent({
     components: {
         IonApp,
         IonRouterOutlet,
-        GMap
+        GMap,
     },
 
     props: {
@@ -68,7 +68,7 @@ export default defineComponent({
         const toastMessage = "";
 
         const router = useRouter();
-        
+
         return {
             storage,
 
@@ -237,7 +237,9 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.OneSignalInit();
+        if (process.env.VUE_ENABLE_ONE_SIGNAL) {
+            this.OneSignalInit();
+        }
 
         this.initEcho();
     }

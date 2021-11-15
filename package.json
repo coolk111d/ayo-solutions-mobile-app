@@ -37,6 +37,7 @@
     "vue": "^3.2.1",
     "vue-infinite-loading": "^2.4.5",
     "vue-router": "^4.0.0-0",
+    "vue-star-rating": "^2.1.0",
     "vue-youtube": "^1.4.0",
     "vue-youtube-embed": "^2.2.2",
     "yup": "^0.32.9"
