@@ -26,7 +26,7 @@
                     <ion-item class="form-group">
                         <ion-label position="stacked">Password</ion-label>
                         <div class="input">
-                            <Field as="ion-input" type="password" name="password" ref="inputpass"/>
+                            <Field as="ion-input" type="password" name="password" />
                             <ErrorMessage as="ion-text" name="password" color="danger" />
                         </div>
                     </ion-item>
@@ -36,7 +36,7 @@
                 </Form>
 
                 <div class="login-meta-data text-center">
-                    <a class="stretched-link" href="/">Forgot Password?</a>
+                    <a class="stretched-link" @click="forgotPasswordModal">Forgot Password?</a>
                     <p>Didn't have an account? <a class="stretched-link" href="javascript:void(0)" @click="openRegistrationModal">Register Now</a></p>
                 </div>
             </div>
@@ -82,7 +82,8 @@ import {
 } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { modalController } from '@ionic/vue';
-import RegistrationModal from '@/components/RegistrationModal.vue'
+import RegistrationModal from '@/components/RegistrationModal.vue';
+import ForgotPasswordModal from '@/components/ForgotPassword.vue'
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 
@@ -125,8 +126,7 @@ export default  {
             email: `${process.env.VUE_APP_LOGIN_EMAIL}`,
             password: `${process.env.VUE_APP_LOGIN_PASSWORD}`,
         };
-        const inputpass = ref();
-        console.log(inputpass);
+
         const isOpenLoadingRef = ref(false);
         const setOpenLoading = (state) => isOpenLoadingRef.value = state;
 
@@ -152,7 +152,7 @@ export default  {
 
             // isOpenAlertRef, setOpenAlert, alertTitle, alertMessage
             isOpenToastRef, setOpenToast, toastMessage,
-            inputpass,
+
             storage
         };
     },
@@ -194,23 +194,23 @@ export default  {
 
                 this.setOpenLoading(false);
                 if (data.success) {
-                        // const externalUserId = data.data.user.role + data.data.user.id // You will supply the external user id to the OneSignal SDK
+                        const externalUserId = data.data.user.role + data.data.user.id // You will supply the external user id to the OneSignal SDK
 
-                        // // Setting External User Id with Callback Available in SDK Version 2.11.2+
-                        // OneSignal.setExternalUserId(externalUserId, (results) => {
-                        //     // The results will contain push and email success statuses
-                        //     console.log('Results of setting external user id');
-                        //     console.log(results);
+                        // Setting External User Id with Callback Available in SDK Version 2.11.2+
+                        OneSignal.setExternalUserId(externalUserId, (results) => {
+                            // The results will contain push and email success statuses
+                            console.log('Results of setting external user id');
+                            console.log(results);
 
-                        //     // Push can be expected in almost every situation with a success status, but
-                        //     // as a pre-caution its good to verify it exists
-                        //     if (results.push && results.push.success) {
-                        //         console.log('Results of setting external user id push status:');
-                        //         console.log(results.push.success);
-                        //     } else {
-                        //         console.log('Not successful');
-                        //     }
-                        // });
+                            // Push can be expected in almost every situation with a success status, but
+                            // as a pre-caution its good to verify it exists
+                            if (results.push && results.push.success) {
+                                console.log('Results of setting external user id push status:');
+                                console.log(results.push.success);
+                            } else {
+                                console.log('Not successful');
+                            }
+                        });
 
                     if(data.data.user.role == "rider") {
                         this.router.push('/rider-dashboard')
@@ -297,6 +297,11 @@ export default  {
 
         async openRegistrationModal() {
             const modal = await modalController.create({component: RegistrationModal});
+            modal.present();
+        },
+
+        async forgotPasswordModal() {
+            const modal = await modalController.create({component: ForgotPasswordModal});
             modal.present();
         }
     },
