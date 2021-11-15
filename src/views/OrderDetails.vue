@@ -1,6 +1,6 @@
 <template>
     <ion-page>
-        <CustomHeader reset="/checkout"/>
+        <CustomHeader reset="/food"/>
         <ion-content :fullscreen="true" v-if="order">
            <div class="head-container">   
                 <h4>Thank you for ordering!</h4>

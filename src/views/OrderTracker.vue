@@ -78,8 +78,8 @@
                 </div>
            </ion-card>
 
-            <ion-card>
-                <div v-if="order.status === 'delivered' && !order.star_rating">
+            <ion-card v-if="order.status === 'delivered'">
+                <div v-if="!order.star_rating">
                     <p class="title">How was service?</p>
                     <ion-item>
                         <ion-label position="stacked" style="margin-bottom: 20px;">Comment</ion-label>

@@ -38,7 +38,9 @@
     <ion-footer>
         <ion-toolbar>
         <ion-button color="success" @click="dismissModal()" style="width: 100%; color: #fff;">Add More Items</ion-button>
-                <ion-button color="primary" @click="checkout()" style="width: 100%; color: #fff;">Go to Cart</ion-button>
+
+        <!-- nag ko-cause ng stopper -->
+        <!-- <ion-button color="primary" @click="checkout()" style="width: 100%; color: #fff;">Go to Cart</ion-button> -->
         </ion-toolbar>
     </ion-footer>
             <!--<div style="margin: -5px auto 10px; text-align:center">
