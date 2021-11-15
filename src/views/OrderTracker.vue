@@ -322,6 +322,14 @@ export default defineComponent({
                     this.shipping = this.order.shipping_address;
                     this.items = this.order.cart.items;
 
+                    if (this.shipping.latitude) {
+                        this.coordslat = this.shipping.latitude;
+                    }
+
+                    if (this.shipping.longitude) {
+                        this.coordslng = this.shipping.longitude;
+                    }
+
                     axios({
                         method: "GET",
                         url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.order.assigned_rider}`,
@@ -345,9 +353,6 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
-
-            // this.coordslat = 21;
-            // this.coordslng = 22;
         },
 
         async saveReview() {
