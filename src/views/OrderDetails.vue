@@ -1,7 +1,7 @@
 <template>
     <ion-page>
-        <CustomHeader reset="/checkout"/>
-        <ion-content :fullscreen="true">
+        <CustomHeader reset="/food"/>
+        <ion-content :fullscreen="true" v-if="order">
            <div class="head-container">   
                 <h4>Thank you for ordering!</h4>
                 <h5>Order #{{order.tracking_number}}</h5>
@@ -19,7 +19,7 @@
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">{{riderDetails.name}}</p>
+                            <p style="font-size: 15px;">{{riderUser.name}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -27,7 +27,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + riderDetails.mobile_number" color="warning">Call Rider {{riderDetails.mobile_number}}</ion-button>
+                            <ion-button target="_blank" rel="noopener noreferrer" :href="'tel:' + rider.mobile_number" color="warning">Call Rider {{rider.mobile_number}}</ion-button>
                         </ion-col>
                     </ion-row>
                     
@@ -36,13 +36,13 @@
                     <ion-icon :icon="bicycleOutline" style="font-size: 24px; color: #000; margin-bottom: 15px;"></ion-icon>
                     </ion-row>
                     <ion-row>
-                            <p style="font-size: 12px;">Make and Model: {{riderDetails.make_and_model}}</p>
-                            <p style="font-size: 12px;">Plate Number: {{riderDetails.plate_number}}</p>
+                            <p style="font-size: 12px;">Make and Model: {{rider.make_and_model}}</p>
+                            <p style="font-size: 12px;">Plate Number: {{rider.plate_number}}</p>
                             </ion-row>
                     <ion-row>
                             <p style="font-size: 12px;">Company ID:</p>
                         <ion-col size="12"> 
-                            <img :src=" env + '/storage/' + riderDetails.company_id " style="margin-top: 0px">
+                            <img :src=" env + '/storage/' + rider.company_id " style="margin-top: 0px">
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -60,7 +60,7 @@
                             <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">{{shippingAddress.name}}</p>
+                            <p style="font-size: 15px;">{{shipping.name}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -68,7 +68,7 @@
                             <ion-icon :icon="call" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">{{shippingAddress.mobile_number}}</p>
+                            <p style="font-size: 15px;">{{shipping.mobile_number}}</p>
                         </ion-col>
                     </ion-row>
                     <ion-row>
@@ -76,7 +76,7 @@
                             <ion-icon :icon="navigate" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                         </ion-col>
                         <ion-col size="9"> 
-                            <p style="font-size: 15px;">{{shippingAddress.address}}</p>
+                            <p style="font-size: 15px;">{{shipping.address}}</p>
                         </ion-col>
                     </ion-row>
                     </ion-grid>
@@ -127,10 +127,9 @@
                     </div>
                 </div>
            </ion-card>
-            
-          
+
         </ion-content>
-        
+
         <ion-footer>
             <ion-toolbar>
                 <ion-button @click="() => router.push(`/order-tracker/${order.id}`)">TRACK MY ORDER</ion-button>
@@ -139,56 +138,110 @@
     </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { IonPage, IonContent, IonCard, IonGrid, IonButton  } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { defineComponent } from 'vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import axios from "axios";
+import { Storage } from '@ionic/storage';
+
 export default defineComponent({
     name: 'OrderDetails',
     components: { IonContent, IonPage, IonCard, CustomHeader, IonGrid, IonButton },
     data() {
             return {
-                order: [],
+                order: {},
                 items: [],
-                shippingAddress: {},
-                riderDetails: [],
+
+                rider: {},
+                riderUser: {},
+                shipping: {},
             }
         },
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
         const router = useRouter();
-        return { router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, env}
+
+        const storage = new Storage();
+        storage.create();
+
+        return {
+            router, arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, env,
+            storage
+        }
     },
     methods: {
         async getOrders() {
+            // axios({
+            //     method: "GET",
+            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.$route.params.id}`,
+            // }).then(res => {
+            //     const data = res.data;
+
+            //     this.order = data.order;
+            //     this.items = data.items;
+            //     this.shipping = data.order.shipping_address;
+            // }).catch(err => {
+            //     console.log(err);
+            // });
+
+            const d = await this.storage.get('authUser');
+
             axios({
                 method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/order-details/${this.$route.params.id}`,
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${this.$route.params.id}`,
+                headers: {
+                    Authorization: `Bearer ${d.token}`
+                }
             }).then(res => {
                 const data = res.data;
 
-                this.order = data.order;
-                this.items = data.items;
-                this.shippingAddress = data.order.shipping_address;
+                if (data.success) {
+                    this.order = data.data;
+
+                    // if (this.order.cart.customer !== null) {
+                    //     this.customer = this.order.cart.customer;
+                    // }
+
+                    this.shipping = this.order.shipping_address;
+                    this.items = this.order.cart.items;
+
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.order.assigned_rider}`,
+                    }).then(res => {
+                        const riderResponseData = res.data;
+
+                        if (riderResponseData.success) {
+                            this.rider = riderResponseData.data;
+                            this.riderUser = this.rider.user;
+                        } else {
+                            console.log(riderResponseData.message);
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                } else {
+                    console.log(data.message);
+                }
             }).catch(err => {
                 console.log(err);
             });
 
-            axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
-            }).then(res => {
-                console.log(res.data);
-                this.riderDetails = res.data[0];
-            }).catch(err => {
-                console.log(err);
-            });
+            // axios({
+            //     method: "GET",
+            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.$route.params.id}`,
+            // }).then(res => {
+            //     console.log(res.data);
+            //     this.rider = res.data[0];
+            // }).catch(err => {
+            //     console.log(err);
+            // });
         },
     },
-    beforeMount() {
+    mounted() {
         this.getOrders();
     },
 })

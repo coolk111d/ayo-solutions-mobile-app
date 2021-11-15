@@ -39,7 +39,7 @@ export default defineComponent({
     components: {
         IonApp,
         IonRouterOutlet,
-        GMap
+        GMap,
     },
 
     props: {
@@ -68,7 +68,7 @@ export default defineComponent({
         const toastMessage = "";
 
         const router = useRouter();
-        
+
         return {
             storage,
 

@@ -2,9 +2,12 @@
 
         <ion-content :fullscreen="true">
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
+
+            <!-- :center="{lat: order.shipping_address.latitude, lng: order.shipping_address.longitude}" -->
            <g-map
                 mapType="roadmap"
-                :center="{lat: order.shipping_address.latitude, lng: order.shipping_address.longitude}"
+                :lat="coordslat"
+                :lng="coordslng"
                 :zoom="14"
                 :disableUI="true"
              style="height: 200px;"></g-map>
@@ -150,7 +153,7 @@
         </ion-content>
 </template>
 
-<script lang="ts">
+<script>
 import { IonContent, IonCard, IonGrid, modalController, IonButton } from '@ionic/vue';
 import { arrowBackOutline, receiptOutline, person, call, personOutline, navigate, bicycleOutline, checkmarkCircleOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
@@ -170,6 +173,9 @@ export default defineComponent({
             order : {},
             shipping: {},
             rider: {},
+
+            coordslat: 14.090128,
+            coordslng: 121.173882,
         }
     },
     components: { IonContent, IonCard, IonGrid , GMap, IonButton },
@@ -200,32 +206,48 @@ export default defineComponent({
                 }
             }).then(res => {
                 const data = res.data;
+                console.log(data);
+
                 if (data.success) {
                     this.order = data.data;
-                    console.log(this.order);
+                    this.serviceFeedback = this.order.customer_feedback;
+                    this.serviceRate = this.order.star_rating || this.serviceRate;
+
+                    if (this.order.cart.customer !== null) {
+                        this.customer = this.order.cart.customer;
+                    }
+
+                    this.shipping = this.order.shipping_address;
+                    this.items = this.order.cart.items;
+
+                    if (this.shipping.latitude) {
+                        this.coordslat = this.shipping.latitude;
+                    }
+
+                    if (this.shipping.longitude) {
+                        this.coordslng = this.shipping.longitude;
+                    }
+
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${this.order.assigned_rider}`,
+                    }).then(res => {
+                        const riderResponseData = res.data;
+
+                        if (riderResponseData.success) {
+                            this.rider = riderResponseData.data;
+                            this.riderUser = this.rider.user;
+                        } else {
+                            console.log(riderResponseData.message);
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                    });
+
+                    console.log(this.shipping);
                 } else {
                     console.log(data.message);
                 }
-            }).catch(err => {
-                console.log(err);
-            });
-
-            axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/rider-details/${props.riderId}`,
-            }).then(res => {
-                const data = res.data;
-
-                if (data.success) {
-                    this.rider = data.data;
-                    // this.rider = res.data.user;
-
-                    // console.log(this.rider);
-                    // console.log(res.data.user);
-                } else {
-                    console.log(data.message);
-                }
-                console.log(this.rider);
             }).catch(err => {
                 console.log(err);
             });
