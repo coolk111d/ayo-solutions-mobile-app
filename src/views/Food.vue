@@ -31,7 +31,7 @@
                             <ion-select-option value="bay">Bay</ion-select-option>
                             <ion-select-option value="santa cruz, laguna">Santa Cruz (Capital)</ion-select-option>
                             <ion-select-option value="pila, laguna">Pila</ion-select-option>
-                            <ion-select-option value="san pablo, laguna">City Of San Pablo</ion-select-option>
+                            <ion-select-option value="san pablo">San Pablo City</ion-select-option>
                             <ion-select-option value="alaminos, laguna">Alaminos</ion-select-option>
 
                             <ion-select-option disabled>Zamboanga Del Sur</ion-select-option>
