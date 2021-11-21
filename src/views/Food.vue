@@ -38,6 +38,9 @@
                             <ion-select-option value="pagadian">City Of Pagadian (Capital)</ion-select-option>
                             <ion-select-option value="CITY OF ZAMBOANGA">City Of Zamboanga</ion-select-option>
 
+                            <ion-select-option disabled>Zamboanga Del Norte</ion-select-option>
+                            <ion-select-option value="Salug">Salug</ion-select-option>
+
                             <ion-select-option disabled>Negros Oriental</ion-select-option>
                             <ion-select-option value="dumaguete">City Of Dumaguete (Capital)</ion-select-option>
                             <ion-select-option value="sibulan">Sibulan</ion-select-option>
