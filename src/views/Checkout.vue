@@ -107,15 +107,15 @@
                         <ion-icon :icon="personOutline" class="map"></ion-icon>
                         <p class="title">Proof of Identity</p>
                     </div>
-                    <ion-item>
-                        <!-- <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
+                   <!--  <ion-item>
+                        <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
                         <ion-input name="government_id" type="file" accept="image/*" > </ion-input>
-                        <ErrorMessage as="ion-text" name="government_id" color="danger" /> -->
+                        <ErrorMessage as="ion-text" name="government_id" color="danger" />
 
                         <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
                         <Field as="ion-input" name="gov_id" type="file" accept="image/*" />
                         <ErrorMessage as="ion-text" name="gov_id" color="danger" />
-                    </ion-item>
+                    </ion-item> -->
                     <ion-item>
                         <!-- <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
                         <ion-input name="selfie" type="file" accept="image/*" > </ion-input>
@@ -265,7 +265,7 @@ export default defineComponent({
 
         const schema = object({
             // eslint-disable-next-line @typescript-eslint/camelcase
-            gov_id: mixed().required().label("Government ID"),
+            // gov_id: mixed().required().label("Government ID"),
             selfie: mixed().required().label("Selfie Picture"),
             // eslint-disable-next-line @typescript-eslint/camelcase
             special_instruction: string().required().min(3).max(50).label("Special Instruction"),
@@ -384,8 +384,8 @@ export default defineComponent({
 
                 this.storage.get("authUser").then(authUser => {
                     const formData = new FormData();
-                    formData.append('gov_id', new Blob([input.gov_id[0]]));
-                    delete input.gov_id;
+                    // formData.append('gov_id', new Blob([input.gov_id[0]]));
+                    // delete input.gov_id;
 
                     formData.append('selfie', new Blob([input.selfie[0]]));
                     delete input.selfie;

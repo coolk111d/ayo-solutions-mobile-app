@@ -8,10 +8,7 @@
                     <ion-title size="large">Home</ion-title>
                 </ion-toolbar>
             </ion-header>
-            <div class="video-div">
-            <iframe width="100%" height="170" src="https://www.youtube.com/embed/videoseries?list=PLX6R8Kyg0rnyUOXZ8DJBfmOtPQWRQgtgh" frameborder="0" allowfullscreen></iframe>
-            </div>
-            
+            <AdsSlider/>
           
             <!-- <a @click="sendNotif">Send Notif</a>-->
            <ServicesSlider slide1="Food" slide2="Express" slide3="Same Day" slide4="Handyman" slide5="Store" />
@@ -35,11 +32,12 @@ import RegistrationModal from '@/components/RegistrationModal.vue'
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonCard, IonButton } from '@ionic/vue';
 import ServicesSlider from '@/components/ServicesSlider.vue';
 import CategorySlider from '@/components/CategorySlider.vue';
+import AdsSlider from '@/components/AdsSlider.vue';
 import Header from '@/components/Header.vue';
 import axios from "axios";
 export default  {
     name: 'Home',
-    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Header, ServicesSlider, CategorySlider, IonCard, IonButton},
+    components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, Header, ServicesSlider, CategorySlider,AdsSlider, IonCard, IonButton},
     methods: {
       async openModal() {
           const modal = await modalController.create({component: RegistrationModal});

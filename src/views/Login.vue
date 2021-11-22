@@ -26,7 +26,10 @@
                     <ion-item class="form-group">
                         <ion-label position="stacked">Password</ion-label>
                         <div class="input">
-                            <Field as="ion-input" type="password" name="password" />
+                            <Field as="ion-input" type="password" name="password" ref="passwordRef"/>
+                            
+                            <ion-icon :icon="eyeOffOutline" style="position:absolute; top: 55px; right: 20px; font-size: 18px;" ref="eyeCloseRef" v-on:click="hidePassword"/>
+                            <ion-icon :icon="eyeOutline" style="position:absolute; top: 35px; right: 20px; font-size: 18px;" ref="eyeRef"  v-on:click="showPassword"/>
                             <ErrorMessage as="ion-text" name="password" color="danger" />
                         </div>
                     </ion-item>
@@ -85,8 +88,8 @@ import { modalController } from '@ionic/vue';
 import RegistrationModal from '@/components/RegistrationModal.vue';
 import ForgotPasswordModal from '@/components/ForgotPassword.vue'
 import { useRouter } from 'vue-router';
-import { ref } from 'vue';
-
+import { ref, onMounted } from 'vue';
+import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { object, string } from "yup";
 import { Storage } from '@ionic/storage';
@@ -126,6 +129,25 @@ export default  {
             email: `${process.env.VUE_APP_LOGIN_EMAIL}`,
             password: `${process.env.VUE_APP_LOGIN_PASSWORD}`,
         };
+        const passwordRef = ref(null);
+        const eyeRef = ref(null);
+        const eyeCloseRef = ref(null);
+        let barePassword = false;
+        onMounted(() => { 
+            // passwordRef.value.$.attrs.type = 'text';
+            console.log(passwordRef.value.$.attrs.type);
+        });
+
+        const showPassword = () => {
+            passwordRef.value.$.attrs.type = 'text';
+            barePassword = true; 
+            console.log(barePassword);
+        };
+
+        const hidePassword = () => {
+            passwordRef.value.$.attrs.type = 'password';
+            barePassword = false;
+        };
 
         const isOpenLoadingRef = ref(false);
         const setOpenLoading = (state) => isOpenLoadingRef.value = state;
@@ -145,7 +167,7 @@ export default  {
         return {
             router, arrowBackOutline,
             schema,
-
+            passwordRef, eyeRef, eyeCloseRef,
             formValues,
 
             isOpenLoadingRef, setOpenLoading,
@@ -153,7 +175,12 @@ export default  {
             // isOpenAlertRef, setOpenAlert, alertTitle, alertMessage
             isOpenToastRef, setOpenToast, toastMessage,
 
-            storage
+            storage,
+            
+            eyeOutline, eyeOffOutline,
+
+            showPassword, hidePassword,
+            barePassword
         };
     },
 

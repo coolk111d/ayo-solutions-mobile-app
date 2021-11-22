@@ -31,12 +31,15 @@
                             <ion-select-option value="bay">Bay</ion-select-option>
                             <ion-select-option value="santa cruz, laguna">Santa Cruz (Capital)</ion-select-option>
                             <ion-select-option value="pila, laguna">Pila</ion-select-option>
-                            <ion-select-option value="san pablo, laguna">City Of San Pablo</ion-select-option>
+                            <ion-select-option value="san pablo">San Pablo City</ion-select-option>
                             <ion-select-option value="alaminos, laguna">Alaminos</ion-select-option>
 
                             <ion-select-option disabled>Zamboanga Del Sur</ion-select-option>
                             <ion-select-option value="pagadian">City Of Pagadian (Capital)</ion-select-option>
                             <ion-select-option value="CITY OF ZAMBOANGA">City Of Zamboanga</ion-select-option>
+
+                            <ion-select-option disabled>Zamboanga Del Norte</ion-select-option>
+                            <ion-select-option value="Salug">Salug</ion-select-option>
 
                             <ion-select-option disabled>Negros Oriental</ion-select-option>
                             <ion-select-option value="dumaguete">City Of Dumaguete (Capital)</ion-select-option>
