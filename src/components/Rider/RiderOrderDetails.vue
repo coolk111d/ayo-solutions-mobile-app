@@ -1,5 +1,5 @@
 <template>
-        <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" v-if="order">
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
 
             <!-- :center="{lat: order.shipping_address.latitude, lng: order.shipping_address.longitude}" -->
@@ -35,7 +35,7 @@
                 <div class="title-icon">
                     <p style="text-align:center; font-size: 18px">Customer's Details</p> 
                 </div>
-                <div class="summary-details">
+                <div class="summary-details" v-if="order.status !== 'delivered'">
                     <ion-grid>
                         <ion-row>
                             <ion-col size="3">
@@ -74,6 +74,9 @@
                             </ion-col>
                         </ion-row>
                     </ion-grid>
+                </div>
+                <div class="summary-details" v-else>
+                    <p>Not Available</p>
                 </div>
            </ion-card>
            <ion-card>
@@ -158,6 +161,7 @@ export default defineComponent({
         dismissModal() {
             modalController.dismiss();
         },
+
         async getDetail(props) {
             const d = await this.storage.get('authUser');
 
@@ -168,8 +172,8 @@ export default defineComponent({
                     Authorization: `Bearer ${d.token}`
                 }
             }).then(res => {
-
                 const data = res.data;
+                console.log(data);
 
                 if (data.success) {
                     this.order = data.data

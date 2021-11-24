@@ -237,7 +237,9 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.OneSignalInit();
+        if (process.env.VUE_ENABLE_ONE_SIGNAL) {
+            this.OneSignalInit();
+        }
 
         this.initEcho();
     }
