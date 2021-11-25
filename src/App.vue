@@ -237,7 +237,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.OneSignalInit();
+        // this.OneSignalInit();
 
         this.initEcho();
     }
