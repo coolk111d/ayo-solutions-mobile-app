@@ -3,15 +3,16 @@
                 <swiper
     :modules="modules"
     :slides-per-view="1"
-    navigation
+    :navigation="navigation"
     :autoplay="{delay:20000}"
     :disableOnInteraction="true"
     :pauseOnMouseEnter="true"
     :loop="true"
-    :pagination='true'
+    :pagination='pagination'
     @swiper="onSwiper"
     @slideChange="onSlideChange"
     class="mySwiper"
+    ref="slider"
   >
     <swiper-slide v-for="ad of ads" :key="ad.id">
                     <a style="text-decoration:none;">
@@ -20,6 +21,9 @@
                     </div>
                     </a>
     </swiper-slide>
+    
+  <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
   </swiper>
   
 </div>
@@ -49,7 +53,16 @@ export default defineComponent({
   data(){
     return{
       ads: [],
-     
+      pagination: {
+        "clickable": true,
+        "renderBullet": function (index, className) {
+                return '<span class="' + className + '" style="background-color: #feb041 !important;"></span>';
+              }
+      },
+      navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+      },
     }
   },
   created() {
@@ -58,7 +71,6 @@ export default defineComponent({
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/ads/` 
             }).then(res => {
                 this.ads = res.data;
-                console.log(res.data);
             }).catch(err => {
                 console.log(err);
             });
@@ -67,6 +79,7 @@ export default defineComponent({
   setup() {
     const env = process.env.VUE_APP_ROOT_API;
     const slides = ref();
+    const slider = ref();
    const onSwiper = (swiper: any) => {
         slides.value = swiper;
       };
@@ -74,7 +87,9 @@ export default defineComponent({
         console.log('slide change');
       };
     const router = useRouter();
-    return { router, onSwiper, onSlideChange, env, modules: [ Autoplay, Pagination, Navigation] }
+    
+    console.log(slides.value);
+    return { router, onSwiper, slider, onSlideChange, env, modules: [ Autoplay, Pagination, Navigation] }
 },
   methods: {
     gotoCategory(id) {
@@ -109,5 +124,15 @@ ion-slide:first-child {
   width: 100vw;
   height: 190px;
   
+}
+.swiper-button-prev,  .swiper-button-next {
+  color: #feb041 !important;
+  background-image: none;
+  width: 12px !important;
+  top: 40%;
+}
+.swiper-button-prev:after, .swiper-button-next:after {
+  font-size: 32px;
+  font-weight: 800;
 }
 </style>
