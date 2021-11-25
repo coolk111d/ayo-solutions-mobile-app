@@ -9,23 +9,26 @@ import { ref, onMounted } from 'vue';
 export default {
     name: "GMap",
     props: {
-        lat: Number,
-        lng: Number,
+        coordslat: Number,
+        coordslng: Number,
         zoom: Number,
         mapType: String,
         disableUI: Boolean,
         mapDidLoad: Function,
         merchantlatlng: {lat: Number, lng: Number }
     },
-    setup(props, context) {
-        console.log(props.lat + ', ' + props.lng);
+    setup(props) {
+
+        
         const map = ref(null);
         const mapDivRef = ref(null);
         const currentMarkers = [];
-        const coords = ref(null);
         const dist = ref(null);
         const input = ref(null);
+        const coordslat1 = ref(null);
+        const coordslng1 = ref(null);
         onMounted(() => {
+            
             const key = process.env.VUE_APP_GOOGLEMAPS_KEY;
 
             const mapId = document.getElementById("google-map-script-id");
@@ -47,16 +50,19 @@ export default {
                 marker.setMap(null);
             });
         }
-
         window.initMap = () => {
+            console.log(coordslat1.value, coordslng1.value);
+            const myLatlng = new window.google.maps.LatLng(coordslat1.value, coordslng1.value);
+
+
             map.value = new window.google.maps.Map(mapDivRef.value, {
                 mapTypeId: props.mapType,
                 zoom: props.zoom,
                 disableDefaultUI: props.disableUI,
-                center: {lat: props.lat, lng: props.lng}
+                center: myLatlng
             });
-
             
+
             props.mapDidLoad && props.mapDidLoad(map, window.google.maps);
 
             const image = {
@@ -73,26 +79,38 @@ export default {
             anchor: new window.google.maps.Point(15, 50) // anchor
             };
             const newMarker = new window.google.maps.Marker({
-                    position: {lat: props.lat, lng: props.lng},
+                    position: myLatlng,
                     map: map.value,
                     icon: image
                 });
-            const newMarker1 = new window.google.maps.Marker({
-                    position: props.merchantlatlng,
-                    map: map.value,
-                    icon: image1
-                });
+            // const newMarker1 = new window.google.maps.Marker({
+            //         position: props.merchantlatlng,
+            //         map: map.value,
+            //         icon: image1
+            //     });
             map.value.setZoom(11);
             
             
 
-           
-
         };
         return {
-            mapDivRef
+            mapDivRef, coordslat1, coordslng1
         };
-    }
+    },
+    watch: {
+        coordslat: {
+        immediate: true,
+        handler (newVal, oldVal) {
+            this.coordslat1 = newVal;
+        }
+        },
+         coordslng: {
+        immediate: true,
+        handler (newVal, oldVal) {
+            this.coordslng1 = newVal;
+        }
+        },
+    },
 
 }
 </script>

@@ -1,12 +1,11 @@
 <template>
     <ion-page>
         <CustomHeader :reset="'/order-details/' + id"/>
-
         <ion-content :fullscreen="true">
             <g-map
                 mapType="roadmap"
-                :lat="coordslat"
-                :lng="coordslng"
+                :coordslat="this.coordslat"
+                :coordslng="this.coordslng"
                 :zoom="12"
                 :disableUI="true"
                 style="height: 200px;">
@@ -255,9 +254,8 @@ export default defineComponent({
             riderUser: {},
             customer: {},
             shipping: {},
-            coordslat: 14.090128,
-            coordslng: 121.173882,
-
+            coordslat: null,
+            coordslng: null,
             serviceFeedback: "",
             serviceRate: 1
         }
@@ -307,8 +305,7 @@ export default defineComponent({
                     Authorization: `Bearer ${d.token}`
                 }
             }).then(res => {
-                const data = res.data;
-                console.log(data);
+                const data = res.data;  
 
                 if (data.success) {
                     this.order = data.data;
@@ -322,13 +319,9 @@ export default defineComponent({
                     this.shipping = this.order.shipping_address;
                     this.items = this.order.cart.items;
 
-                    if (this.shipping.latitude) {
-                        this.coordslat = this.shipping.latitude;
-                    }
+                    this.coordslat = this.shipping.latitude;
 
-                    if (this.shipping.longitude) {
-                        this.coordslng = this.shipping.longitude;
-                    }
+                    this.coordslng = this.shipping.longitude;
 
                     axios({
                         method: "GET",
@@ -346,7 +339,6 @@ export default defineComponent({
                         console.log(err);
                     });
 
-                    console.log(this.shipping);
                 } else {
                     console.log(data.message);
                 }
