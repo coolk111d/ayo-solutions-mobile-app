@@ -250,7 +250,8 @@ export default  {
             })
             return modal.present();
         },
-         async details() {
+
+        async details() {
             const modal = await modalController
             .create({
             component: RiderOrderDetails,
