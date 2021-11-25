@@ -24,7 +24,7 @@
                             <ion-select-option disabled>Cavite</ion-select-option>
                             <ion-select-option value="Silang">Silang</ion-select-option>
                             <ion-select-option value="dasmarinas, cavite">City Of Dasmariñas</ion-select-option>
-                            <ion-select-option value="gen mariano alvarez, cavite">Gen. Mariano Alvarez</ion-select-option>
+                            <ion-select-option value="general trias">General Trias</ion-select-option>
 
                             <ion-select-option disabled>Laguna</ion-select-option>
                             <ion-select-option value="victoria, laguna">Victoria</ion-select-option>
