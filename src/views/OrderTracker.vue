@@ -35,7 +35,7 @@
                 </ion-grid>
            </ion-card>
 
-           <ion-card v-if="rider">
+           <ion-card v-if="rider && order.status != 'delivered'">
                 <div class="title-icon">
                     <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p>
                 </div>
@@ -151,7 +151,6 @@
                             <p style="font-size: 15px;">{{shipping.address}}</p>
                         </ion-col>
                     </ion-row>
-
                     <ion-row v-if="customer">
                             <p style="font-size: 12px;">Customer's ID:</p>
                         <ion-col size="12">

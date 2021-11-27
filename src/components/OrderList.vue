@@ -21,7 +21,7 @@
                             </div>
                             <p class="sale-price">Delivery Time: <span class="price">{{order.delivery_date}}</span></p>       
                             <p class="sale-price">Total Price: <span class="price">&#8369;{{order.total_price_with_tax}}</span></p> 
-                            <div v-if="order.status != 'delivered'">      
+                            <div>      
                             <ion-button size="small" @click="orderDetails(order.id)">Order Details</ion-button>
                             </div>
                     </ion-col>

@@ -36,8 +36,12 @@
                     <ion-icon :icon="mapOutline" class="map"></ion-icon>
                     <p class="title">Shipping Address</p>
                     <ion-icon :icon="pencilOutline" color="warning" class="edit"  @click="onChangeShipping"></ion-icon>
+                    
                 </div>
-
+                <div v-show="!shipping.google_address">
+                    <p class="address" @click="onChangeShipping">Add New Address</p>
+                    <hr style="margin-bottom: 30px;">
+                </div>
                 <div v-show="shipping.google_address">
                     <p class="address" @click="onChangeShipping">{{ shipping.google_address }}</p>
                     <hr style="margin-bottom: 30px;">
@@ -107,15 +111,15 @@
                         <ion-icon :icon="personOutline" class="map"></ion-icon>
                         <p class="title">Proof of Identity</p>
                     </div>
-                   <!--  <ion-item>
-                        <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
+                   <ion-item v-if="customer.gov_id ==  'https://ayo-bucket.s3.ap-southeast-1.amazonaws.com/img/item-placeholder.png'">
+                        <!--<ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
                         <ion-input name="government_id" type="file" accept="image/*" > </ion-input>
-                        <ErrorMessage as="ion-text" name="government_id" color="danger" />
+                        <ErrorMessage as="ion-text" name="government_id" color="danger" />-->
 
                         <ion-label position="stacked" style="margin-bottom: 20px;">Government ID</ion-label>
                         <Field as="ion-input" name="gov_id" type="file" accept="image/*" />
                         <ErrorMessage as="ion-text" name="gov_id" color="danger" />
-                    </ion-item> -->
+                    </ion-item>
                     <ion-item>
                         <!-- <ion-label position="stacked" style="margin-bottom: 20px;">Selfie</ion-label>
                         <ion-input name="selfie" type="file" accept="image/*" > </ion-input>
@@ -254,13 +258,14 @@ export default defineComponent({
             cart: {},
             items: [],
             toastMessage: "",
+            customer: {},
         }
     },
 
     setup() {
         const storage = new Storage();
         storage.create();
-
+        
         const router = useRouter();
 
         const schema = object({
@@ -291,12 +296,29 @@ export default defineComponent({
             formValues,
 
             isOpenLoadingRef, setOpenLoading,
-            isOpenToastRef, setOpenToast
+            isOpenToastRef, setOpenToast,
         }
     },
-
     mounted() {
         this.storage.get("authUser").then(user => {
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/customers/details`,
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    console.log(data.data.customer);
+                    this.customer = data.data.customer
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err.response.data.message);
+            });
             axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/customers/billing-shipping`,
@@ -307,8 +329,12 @@ export default defineComponent({
                 const data = res.data;
 
                 if (data.success) {
+                    if(data.data.billing != null) {
                     this.billing = data.data.billing;
+                    }
+                    if(data.data.shipping != null) {
                     this.shipping = data.data.shipping;
+                    }
 
                     console.log(this.billing);
                     console.log(this.shipping);
@@ -384,8 +410,12 @@ export default defineComponent({
 
                 this.storage.get("authUser").then(authUser => {
                     const formData = new FormData();
-                    // formData.append('gov_id', new Blob([input.gov_id[0]]));
-                    // delete input.gov_id;
+                    if (input.gov_id) {
+                    formData.append('gov_id', new Blob([input.gov_id[0]]));
+                    delete input.gov_id;
+                    } else {
+                        console.log('no');
+                    }
 
                     formData.append('selfie', new Blob([input.selfie[0]]));
                     delete input.selfie;

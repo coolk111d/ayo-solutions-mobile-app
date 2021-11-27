@@ -64,7 +64,7 @@
                         <ion-row>
                                 <p style="font-size: 12px;">Customer's ID:</p>
                             <ion-col size="12">
-                                <img :src="env + '/storage/' + order.gov_id" style="margin-top: -10px">
+                                <img :src="order.cart.customer.gov_id" style="margin-top: -10px">
                             </ion-col>
                         </ion-row>
                         <ion-row>
@@ -177,7 +177,7 @@ export default defineComponent({
 
                 if (data.success) {
                     this.order = data.data
-
+                    console.log(this.order)
                     this.shipping = this.order.shipping_address;
 
                     if (this.shipping.latitude) {
