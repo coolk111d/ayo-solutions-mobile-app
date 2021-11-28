@@ -1,29 +1,32 @@
 <template>
-            <ion-searchbar placeholder="What are you craving?" color="transparent" @ionChange="searchMerchant($event.target.value)"></ion-searchbar>
-            <ion-grid>
-                <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
-                    <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
-                    <ion-col size="4">
-                            <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
-                    </ion-col>
-                    <ion-col size="8">
-                         <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.name}}</a>
-                            <!-- Product Price -->
-                            <p class="sale-price" style="margin-bottom:0px" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.address}} </p>
-                            <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
-                            <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${merchant.id}`)">Visit Store</ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
-            
-            <div style="margin: -5px auto 10px; text-align:center">
-            <ion-button v-if="!loc" @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
-            </div>
+    <ion-searchbar placeholder="What are you craving?" color="transparent" @ionChange="searchMerchant($event.target.value)"></ion-searchbar>
+    <ion-grid>
+        <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
+            <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
+            <ion-col size="4">
+                <!-- Product Thumbnail -->
+                <a class="product-thumbnail">
+                    <img v-bind:src="merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else>
+                </a>
+            </ion-col>
+            <ion-col size="8">
+                 <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.user.name}}</a>
+                <!-- Product Price -->
+                <p class="sale-price" style="margin-bottom:0px" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.address}} </p>
+                <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
+                <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${merchant.id}`)">Visit Store</ion-button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+    <div style="margin: -5px auto 10px; text-align:center" v-if="loadMoreButton">
+        <ion-button v-if="!loc" @click="nextLoad()" fill="outline" size="small">Load More</ion-button>
+    </div>
 </template>
 
-<script lang="ts">
+<script>
 import { useRouter } from 'vue-router';
-import {  IonButton, IonSearchbar, IonCol, IonGrid, IonRow,} from '@ionic/vue';
+import { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, toastController } from '@ionic/vue';
 import { defineComponent} from "vue";
 import axios from "axios";
 
@@ -35,63 +38,89 @@ export default defineComponent({
       page: 1,
       arr: [],
       loc: false,
-      merchantsisNull: false
+      merchantsisNull: false,
+
+      loadMoreButton: false
     }
   },
   methods: {
       initialLoad: function() {
-      axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?page=` + this.page,
-            }).then(res => {
-                console.log(res.data.data);
-                this.merchants = res.data.data;
-            }).catch(err => {
-                console.log(err);
-            });
+        axios({
+            method: "GET",
+            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?page=` + this.page,
+        }).then(res => {
+            const data = res.data.data;
+            const paginateData = data.data;
+            this.merchants = paginateData;
+
+            this.loadMoreButton = paginateData.length > 0;
+        }).catch(err => {
+            console.log(err);
+        });
       },
 
       nextLoad: function() {
-            this.page++;
+           this.page++;
            axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?page=` + this.page,
             }).then(res => {
-                        this.arr = res.data.data.slice(0, res.data.data.length);
-                        this.arr.forEach(element => this.merchants.push(element));
+                const data = res.data.data;
+                const paginateData = data.data;
+
+                if (paginateData.length > 0) {
+                    this.arr = paginateData.slice(0, paginateData.length);
+                    this.arr.forEach(element => this.merchants.push(element));
+                } else {
+                    this.loadMoreButton = false;
+                    this.openToast("No more available merchants");
+                }
             }).catch(err => {
                 console.log(err);
             });
       },
 
-      changeLoad: function(loc) {
-           this.loc = true;
-           axios({
+      changeLoad: function(branch) {
+            this.page = 1;
+
+            axios({
                 method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants/${loc}`,
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?branch=${branch}`,
             }).then(res => {
-                        console.log(res.data);
-                        this.merchants = res.data;
+                const data = res.data.data;
+                const paginateData = data.data;
+
+                this.merchants = paginateData;
+
+                this.loadMoreButton = paginateData.length > 0;
+                console.log(paginateData.length > 0);
             }).catch(err => {
                 console.log(err);
             });
       },
 
       searchMerchant: function(loc) {
-                const query = loc;
+            const query = loc;
             if(query != "") {
               axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantsbySearch/${query}`,
             }).then(res => {
-                        console.log(res.data.length);
-                            this.merchants = res.data;
+                    console.log(res.data.length);
+                    this.merchants = res.data;
             }).catch(err => {
                 console.log(err);
             });
             } else {
                 this.initialLoad();
             }
+      },
+
+      async openToast(message, durationSeconds=2) {
+          const duration = durationSeconds * 1000;
+          const toast = await toastController.create({message, duration});
+
+          return toast.present();
       },
 
   },

@@ -27,9 +27,9 @@
                         <ion-label position="stacked">Password</ion-label>
                         <div class="input">
                             <Field as="ion-input" type="password" name="password" ref="passwordRef"/>
-                            
-                            <ion-icon :icon="eyeOffOutline" style="position:absolute; top: 55px; right: 20px; font-size: 18px;" ref="eyeCloseRef" v-on:click="hidePassword"/>
-                            <ion-icon :icon="eyeOutline" style="position:absolute; top: 35px; right: 20px; font-size: 18px;" ref="eyeRef"  v-on:click="showPassword"/>
+
+                            <ion-icon :icon="eyeOffOutline" style="position:absolute; top: 55px; right: 20px; font-size: 18px;" ref="eyeCloseRef" @click="hidePassword"/>
+                            <ion-icon :icon="eyeOutline" style="position:absolute; top: 35px; right: 20px; font-size: 18px;" ref="eyeRef"  @click="showPassword"/>
                             <ErrorMessage as="ion-text" name="password" color="danger" />
                         </div>
                     </ion-item>

@@ -50,12 +50,12 @@ export default defineComponent({
 
         ROLE_MERCHANT: {
             type: String,
-            default: "customer"
+            default: "merchant"
         },
 
         ROLE_RIDER: {
             type: String,
-            default: "customer"
+            default: "rider"
         },
     },
 

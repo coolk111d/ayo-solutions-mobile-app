@@ -1,7 +1,7 @@
 <template>
     <ion-page>
         <Header/>
-        
+
         <ion-content :fullscreen="true">
                 <ion-header collapse="condense">
                 <ion-toolbar>
@@ -9,13 +9,13 @@
                 </ion-toolbar>
             </ion-header>
             <div class="container">
-                
                 <ion-card class="food-card-head">
                     <div class="card-body pt-4">
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
                         <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectChange($event)">
                             <ion-select-option>----- Select -----</ion-select-option>
-                            <ion-select-option class="disabled">Batangas</ion-select-option>
+                            <ion-select-option v-for="branch in branches" :key="branch.id" :value="branch.id" v-text="branch.user.name"></ion-select-option>
+                            <!-- <ion-select-option class="disabled">Batangas</ion-select-option>
                             <ion-select-option value="Tanauan, Batangas" selected="">City Of Tanauan</ion-select-option>
                             <ion-select-option value="Santo Tomas, Batangas">City Of Sto. Tomas</ion-select-option>
                             <ion-select-option value="Malvar, Batangas">Malvar</ion-select-option>
@@ -53,7 +53,7 @@
                             <ion-select-option value="altavas">Altavas</ion-select-option>
 
                             <ion-select-option disabled>Quezon</ion-select-option>
-                            <ion-select-option value="Lucban">Lucban</ion-select-option>
+                            <ion-select-option value="Lucban">Lucban</ion-select-option> -->
                         </ion-select>
                     </div>
                 </ion-card>
@@ -85,9 +85,7 @@
 
 <script lang="ts">
 import { modalController } from '@ionic/vue';
-import { IonPage, IonHeader, IonToolbar, IonContent, IonCard,IonSelect, IonSelectOption, IonButton, IonSearchbar,
-        IonCol, IonGrid, IonRow
-} from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonContent, IonCard,IonSelect, IonSelectOption, IonButton } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import CategorySlider from '@/components/CategorySlider.vue';
@@ -95,36 +93,59 @@ import HotPicks from '@/components/HotPicks.vue';
 import PreRegistrationModal from '@/components/PreRegistrationModal.vue';
 import MerchantGrid from '@/components/MerchantGrid.vue';
 import Header from '@/components/Header.vue';
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent } from "vue";
 import { Geolocation } from '@capacitor/geolocation';
+import { Storage } from "@ionic/storage";
+import axios from "axios";
+
 export default defineComponent({
     name: 'AYO Food',
-    components: {IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, 
-    Header, HotPicks, MerchantGrid},
+
+    components: {
+        IonHeader, IonToolbar, IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider,
+        Header, HotPicks, MerchantGrid
+    },
+
+    data() {
+        return {
+            branches: []
+        };
+    },
+
     setup() {
         let geocoderService: any = null;
         const options: any = {
-        cssClass: 'my-custom-interface'
+            cssClass: 'my-custom-interface'
         };
         const router = useRouter();
-        
+
         const findLocation = async() => {
             const currentposition = await Geolocation.getCurrentPosition();
             const latlng = { lat: currentposition.coords.latitude, lng: currentposition.coords.longitude }; 
             geocoderService
-                .geocode({ location: latlng })
-                .then((response: any) => {
-                   console.log(response.results[0]);
-                })
-                .catch((e) => {
-                alert("Geocode was not successful for the following reason: " + e);
-                });
+            .geocode({ location: latlng })
+            .then((response: any) => {
+               console.log(response.results[0]);
+            })
+            .catch((e) => {
+            alert("Geocode was not successful for the following reason: " + e);
+            });
         };
+
         const handleMapDidLoad = (map: any, GServices: any) => {
             geocoderService = new GServices.Geocoder();
         }
+
+        const storage = new Storage();
+        storage.create();
+
         return { router, options, arrowBackOutline, handleMapDidLoad, findLocation }
   },
+
+  mounted() {
+    this.populateBranches();
+  },
+
   methods: {
       async openModal() {
           const modal = await modalController.create({component: PreRegistrationModal});
@@ -134,6 +155,24 @@ export default defineComponent({
           const child: any = this.$refs.merchantGrid;
           child.changeLoad(e.target.value);
       },
+
+      async populateBranches() {
+        // let authUser = await this.storage.get("authUser");
+        axios({
+            method: "GET",
+            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/branches`
+        }).then(res => {
+            const data = res.data;
+
+            if (data.success) {
+                this.branches = data.data;
+            } else {
+                console.log(data.message);
+            }
+        }).catch(err => {
+            console.log(err.response.data.message);
+        });
+      }
   },
 })
 </script>
