@@ -1,5 +1,4 @@
 <template>
-
         <ion-content :fullscreen="true">
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
 
@@ -193,7 +192,8 @@ export default defineComponent({
     },
     methods : {
         dismissModal() {
-            modalController.dismiss();
+            // modalController.dismiss();
+            location.reload();
         },
         async getDetail(props) {
             const d = await this.storage.get('authUser');

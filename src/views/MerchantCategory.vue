@@ -11,51 +11,16 @@
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
                         <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectChange($event)">
                             <ion-select-option>----- Select -----</ion-select-option>
-                            <ion-select-option class="disabled">Batangas</ion-select-option>
-                            <ion-select-option value="Tanauan, Batangas" selected="">City Of Tanauan</ion-select-option>
-                            <ion-select-option value="Santo Tomas, Batangas">City Of Sto. Tomas</ion-select-option>
-                            <ion-select-option value="Malvar, Batangas">Malvar</ion-select-option>
-                            <ion-select-option value="Lipa, Batangas">City Of Lipa</ion-select-option>
-
-                            <ion-select-option disabled>Cavite</ion-select-option>
-                            <ion-select-option value="Silang">Silang</ion-select-option>
-                            <ion-select-option value="dasmarinas, cavite">City Of Dasmariñas</ion-select-option>
-                            <ion-select-option value="gen mariano alvarez, cavite">Gen. Mariano Alvarez</ion-select-option>
-
-                            <ion-select-option disabled>Laguna</ion-select-option>
-                            <ion-select-option value="victoria, laguna">Victoria</ion-select-option>
-                            <ion-select-option value="bay">Bay</ion-select-option>
-                            <ion-select-option value="santa cruz, laguna">Santa Cruz (Capital)</ion-select-option>
-                            <ion-select-option value="pila, laguna">Pila</ion-select-option>
-                            <ion-select-option value="san pablo, laguna">City Of San Pablo</ion-select-option>
-                            <ion-select-option value="alaminos, laguna">Alaminos</ion-select-option>
-
-                            <ion-select-option disabled>Zamboanga Del Sur</ion-select-option>
-                            <ion-select-option value="pagadian">City Of Pagadian (Capital)</ion-select-option>
-                            <ion-select-option value="CITY OF ZAMBOANGA">City Of Zamboanga</ion-select-option>
-
-                            <ion-select-option disabled>Negros Oriental</ion-select-option>
-                            <ion-select-option value="dumaguete">City Of Dumaguete (Capital)</ion-select-option>
-                            <ion-select-option value="sibulan">Sibulan</ion-select-option>
-
-                            <ion-select-option diabled>Leyte</ion-select-option>
-                            <ion-select-option value="tacloban">City Of Tacloban (Capital)</ion-select-option>
-
-                            <ion-select-option disabled>Aklan</ion-select-option>
-                            <ion-select-option value="kalibo">Kalibo (Capital)</ion-select-option>
-                            <ion-select-option value="altavas">Altavas</ion-select-option>
-
-                            <ion-select-option disabled>Quezon</ion-select-option>
-                            <ion-select-option value="Lucban">Lucban</ion-select-option>
+                            <ion-select-option v-for="branch in branches" :key="branch.id" :value="branch.id" v-text="branch.user.name"></ion-select-option>
                         </ion-select>
                     </div>
                 </ion-card>
             </div>
-            
+
             <CategorySlider  />
-            
+
             <h5 class="title">All Restaurants in City of Tanauan</h5>
-            
+
             <ion-grid>
             <ion-searchbar placeholder="What are you craving?" color="transparent" @ionChange="searchMerchant($event.target.value)"></ion-searchbar>
                 <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
@@ -72,7 +37,6 @@
                     </ion-col>
                 </ion-row>
             </ion-grid>
-            
 
             <ion-card class="footer">
             <div class="footer-div">
@@ -109,6 +73,7 @@ export default defineComponent({
   },
   data(){
     return{
+      branches: [],
       merchants: [],
       arr: [],
       loc: false,
@@ -117,7 +82,7 @@ export default defineComponent({
   },
   methods: {
       initialLoad: function() {
-      axios({
+          axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantsbyCategory/${this.$route.params.id}`,
             }).then(res => {
@@ -126,7 +91,7 @@ export default defineComponent({
             }).catch(err => {
                 console.log(err);
             });
-      axios({
+          axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/getCategorybyID/${this.$route.params.id}`,
             }).then(res => {
@@ -136,7 +101,6 @@ export default defineComponent({
                 console.log(err);
             });
       },
-
 
       changeLoad: function(loc) {
            this.loc = true;
@@ -168,9 +132,28 @@ export default defineComponent({
             }
       },
 
+      async populateBranches() {
+        // let authUser = await this.storage.get("authUser");
+        axios({
+            method: "GET",
+            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/branches`
+        }).then(res => {
+            const data = res.data;
+
+            if (data.success) {
+                this.branches = data.data;
+                console.log(data);
+            } else {
+                console.log(data.message);
+            }
+        }).catch(err => {
+            console.log(err.response.data.message);
+        });
+      }
   },
   beforeMount() {
       this.initialLoad();
+      this.populateBranches();
   },
 })
 </script>

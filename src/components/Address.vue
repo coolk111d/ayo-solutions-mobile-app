@@ -145,18 +145,18 @@ export default defineComponent({
         const setOpenToast = (state) => isOpenToastRef.value = state;
 
         const merch = storage.get("authUser").then(d => {
-                axios({
-                    method: 'GET',
-                     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantbycarttoken/${d.cart_token}`,
-                     headers: {
-                        Authorization: `Bearer ${d.token}`
-                    }
-                }).then(res => {
-                    console.log(res);
-                   merchantlatlng.value = {lat: res.data.latitude, lng: res.data.longitude};  
-                   console.log(merchantlatlng.value);
-                });
+            axios({
+                method: 'GET',
+                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantbycarttoken/${d.cart_token}`,
+                 headers: {
+                    Authorization: `Bearer ${d.token}`
+                }
+            }).then(res => {
+                console.log(res);
+               merchantlatlng.value = {lat: res.data.latitude, lng: res.data.longitude};
+               console.log(merchantlatlng.value);
             });
+        });
 
         return {
             closeCircleOutline, router, navigateCircleoutline,
@@ -192,6 +192,7 @@ export default defineComponent({
             this.destination = value[1].destinationAddresses[0];
             console.log(value[1].destinationAddresses[0]);
         },
+
         onAddressChanged(value) {
             console.log(value[0].toJSON().lat);
             this.initialValues.lat = value[0].toJSON().lat;
@@ -205,9 +206,11 @@ export default defineComponent({
             this.destination = value[1].destinationAddresses[0];
             console.log(value[1].destinationAddresses[0]);
         },
+
         async dismissModal() {
             modalController.dismiss();
         },
+
         onSubmit(input) {
             this.setOpenLoading(true);
 

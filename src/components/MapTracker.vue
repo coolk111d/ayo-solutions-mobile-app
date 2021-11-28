@@ -25,11 +25,13 @@ export default {
         const coords = ref(null);
         const dist = ref(null);
         const input = ref(null);
+
         onMounted(() => {
             const key = process.env.VUE_APP_GOOGLEMAPS_KEY;
 
-            const mapId = document.getElementById("google-map-script-id");
-            if (!mapId) {
+            // const mapId = document.getElementById("google-map-script-id");
+            const mapIsLoaded = props.mapDidLoad && props.mapDidLoad(map, window.google.maps);
+            if (!mapIsLoaded) {
                 const googleMapScript = document.createElement("SCRIPT");
                 googleMapScript.setAttribute(
                     "src",
@@ -41,7 +43,6 @@ export default {
             }
         });
 
-        
         const clearMarkers = () => {
             currentMarkers.forEach(marker => {
                 marker.setMap(null);
@@ -56,7 +57,6 @@ export default {
                 center: {lat: props.lat, lng: props.lng}
             });
 
-            
             props.mapDidLoad && props.mapDidLoad(map, window.google.maps);
 
             const image = {
@@ -83,10 +83,6 @@ export default {
                     icon: image1
                 });
             map.value.setZoom(11);
-            
-            
-
-           
 
         };
         return {
