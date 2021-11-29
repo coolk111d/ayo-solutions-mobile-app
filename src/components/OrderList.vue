@@ -13,10 +13,17 @@
                     <ion-col size="12" style="text-align:center;">
                          <!-- Product Title --><a class="product-title" href=""><span style="color:#feb041; font-size: 14px;">Order #{{order.tracking_number}}</span></a>
                             <!-- Product Price -->
-                            <p class="sale-price">Status: {{order.status}}</p>
+                            <div v-if="order.status != 'delivered'">   
+                            <p class="sale-price" style="color:white; text-transform: uppercase; background: rgba(0,0,0,0.5);  padding:1px 2px; width: 30%; margin: 5px auto;">{{order.status}}</p>
+                            </div>
+                            <div v-if="order.status == 'delivered'">   
+                            <p class="sale-price" style="color:white; text-transform: uppercase; background: rgba(0,255,0,0.5); padding: 1px 2px; width: 30%; margin: 5px auto;">{{order.status}}</p>
+                            </div>
                             <p class="sale-price">Delivery Time: <span class="price">{{order.delivery_date}}</span></p>       
-                            <p class="sale-price">Total Price: <span class="price">&#8369;{{order.total_price_with_tax}}</span></p>       
+                            <p class="sale-price">Total Price: <span class="price">&#8369;{{order.total_price_with_tax}}</span></p> 
+                            <div>      
                             <ion-button size="small" @click="orderDetails(order.id)">Order Details</ion-button>
+                            </div>
                     </ion-col>
             </ion-row>
 
@@ -76,39 +83,39 @@ export default defineComponent({
             this.router.push(`/order-details/${id}`);
         },
         async getOrders() {
-            const d = await this.storage.get('authUser');
+            // const d = await this.storage.get('authUser');
 
-            axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
-                headers: {
-                    Authorization: `Bearer ${d.token}`
-                }
-            }).then(res => {
-                const data = res.data;
+            // axios({
+            //     method: "GET",
+            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders`,
+            //     headers: {
+            //         Authorization: `Bearer ${d.token}`
+            //     }
+            // }).then(res => {
+            //     const data = res.data;
 
-                if (data.success) {
-                    console.log(data.data);
-                    this.orders = data.data
-                } else {
-                    console.log(data.message);
-                }
+            //     if (data.success) {
+            //         console.log(data.data);
+            //         this.orders = data.data
+            //     } else {
+            //         console.log(data.message);
+            //     }
 
-            }).catch(err => {
-                console.log(err);
-            });
-                    // const customer = await this.storage.get('authUser');
-                    // console.log(customer);
-                    // this.customerId = customer.id;
-                    // axios({
-                    //     method: "GET",
-                    //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/orders/${customer.id}`,
-                    // }).then(res => {
-                    //     console.log(res.data);
-                    //     this.orders = res.data;
-                    // }).catch(err => {
-                    //     console.log(err);
-                    // });
+            // }).catch(err => {
+            //     console.log(err);
+            // });
+                    const customer = await this.storage.get('authUser');
+                    console.log(customer);
+                    this.customerId = customer.user.id;
+                    axios({
+                        method: "GET",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/customer-orders/${customer.user.id}`,
+                    }).then(res => {
+                        console.log(res.data);
+                        this.orders = res.data;
+                    }).catch(err => {
+                        console.log(err);
+                    });
         },
          
     },

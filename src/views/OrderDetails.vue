@@ -8,7 +8,7 @@
                 <h6 v-if="order.received_time">Ordered: {{order.received_time}}</h6>
                 <h6 v-if="order.delivery_date">Estimated Delivery: {{order.delivery_date}}</h6>
            </div>
-           <ion-card v-if="order.assigned_rider != null">
+           <ion-card v-if="order.assigned_rider != null && order.status != 'delivered'">
                 <div class="title-icon">
                     <p class="title" style="text-align:left; margin-right: 120px;">Rider Details</p> 
                 </div>

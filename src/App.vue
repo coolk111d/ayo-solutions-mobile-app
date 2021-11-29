@@ -166,7 +166,6 @@ export default defineComponent({
                                         "channel_for_external_user_ids": "push",
                                         "template_id": "31880987-1115-4f63-92d2-52afb395c799",
                                         "headings": {"en": `Your order is now in progress! ${e.order.tracking_number}`},
-                                        "contents": {"en": "Please accept the order."},
                                         "buttons": [{"id": "id2", "text": "View", "icon": "ic_menu_share", "url": "/merchant-dashboard"}],
                                         "android_accent_color": "FEB041"
                                 }
@@ -237,9 +236,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        if (process.env.VUE_ENABLE_ONE_SIGNAL) {
-            this.OneSignalInit();
-        }
+        this.OneSignalInit();
 
         this.initEcho();
     }

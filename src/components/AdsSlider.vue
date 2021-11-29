@@ -1,19 +1,29 @@
 <template>
 <div class="container" >
                 <swiper
+    :modules="modules"
     :slides-per-view="1"
+    :navigation="navigation"
+    :autoplay="{delay:20000}"
+    :disableOnInteraction="true"
+    :pauseOnMouseEnter="true"
+    :loop="true"
+    :pagination='pagination'
     @swiper="onSwiper"
     @slideChange="onSlideChange"
-    :autoplay="5000"
-    :loop="true"
+    class="mySwiper"
+    ref="slider"
   >
     <swiper-slide v-for="ad of ads" :key="ad.id">
-                    <a v-bind:href="'/merchant-category/'+ ad.id" style="text-decoration:none;">
+                    <a style="text-decoration:none;">
                     <div class="video-div">
                     <iframe width="100%" height="170" v-bind:src="ad.url" frameborder="0" allowfullscreen></iframe>
                     </div>
                     </a>
     </swiper-slide>
+    
+  <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
   </swiper>
   
 </div>
@@ -21,15 +31,38 @@
 
 <script lang="ts">
 import { useRouter } from 'vue-router';
-import { defineComponent } from "vue";
+import { defineComponent, ref  } from "vue";
 import axios from "axios";
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/swiper-bundle.css';
+
+  // Import Swiper Vue.js components
+  import { Swiper, SwiperSlide } from 'swiper/vue';
+
+  // Import Swiper styles
+  import 'swiper/swiper-bundle.css';
+    import 'swiper/components/autoplay';
+  import 'swiper/components/pagination';
+  // import Swiper core and required modules
+import SwiperCore, {
+  Pagination, Autoplay, Navigation
+} from 'swiper';
+
+// install Swiper modules
+SwiperCore.use([Pagination, Autoplay, Navigation]);
 export default defineComponent({
   name: 'CategorySlider',
   data(){
     return{
       ads: [],
+      pagination: {
+        "clickable": true,
+        "renderBullet": function (index, className) {
+                return '<span class="' + className + '" style="background-color: #feb041 !important;"></span>';
+              }
+      },
+      navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+      },
     }
   },
   created() {
@@ -38,7 +71,6 @@ export default defineComponent({
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/ads/` 
             }).then(res => {
                 this.ads = res.data;
-                console.log(res.data);
             }).catch(err => {
                 console.log(err);
             });
@@ -46,14 +78,18 @@ export default defineComponent({
   components: { Swiper, SwiperSlide },
   setup() {
     const env = process.env.VUE_APP_ROOT_API;
-    const onSwiper = (swiper) => {
-      return;
+    const slides = ref();
+    const slider = ref();
+   const onSwiper = (swiper: any) => {
+        slides.value = swiper;
       };
       const onSlideChange = () => {
-        return;
+        console.log('slide change');
       };
     const router = useRouter();
-    return { router, onSwiper, onSlideChange, env }
+    
+    console.log(slides.value);
+    return { router, onSwiper, slider, onSlideChange, env, modules: [ Autoplay, Pagination, Navigation] }
 },
   methods: {
     gotoCategory(id) {
@@ -86,5 +122,17 @@ ion-slide:first-child {
 }
 .video-div {
   width: 100vw;
+  height: 190px;
+  
+}
+.swiper-button-prev,  .swiper-button-next {
+  color: #feb041 !important;
+  background-image: none;
+  width: 12px !important;
+  top: 40%;
+}
+.swiper-button-prev:after, .swiper-button-next:after {
+  font-size: 32px;
+  font-weight: 800;
 }
 </style>
