@@ -291,7 +291,8 @@ export default defineComponent({
         async checkout() {
             modalController.dismiss();
 
-            const authUser = this.storage.get("authUser");
+            const authUser = await this.storage.get("authUser");
+
             if (authUser.user !== undefined) {
                 this.router.push('/checkout');
             } else { // guest
