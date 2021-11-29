@@ -3,9 +3,10 @@
         <CustomHeader :reset="'/order-details/' + id"/>
         <ion-content :fullscreen="true">
             <g-map
+                v-if="coordslat && coordslng"
                 mapType="roadmap"
-                :coordslat="this.coordslat"
-                :coordslng="this.coordslng"
+                :coordslat="coordslat"
+                :coordslng="coordslng"
                 :zoom="12"
                 :disableUI="true"
                 style="height: 200px;">

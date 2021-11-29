@@ -1,5 +1,4 @@
 <template>
-    
     <div class="map" ref="mapDivRef">
     </div>
 </template>
@@ -23,14 +22,13 @@ export default {
         const map = ref(null);
         const mapDivRef = ref(null);
         const currentMarkers = [];
-        const dist = ref(null);
-        const input = ref(null);
+        // const dist = ref(null);
+        // const input = ref(null);
 
         const coordslat1 = ref(null);
         const coordslng1 = ref(null);
 
         onMounted(() => {
-
             const key = process.env.VUE_APP_GOOGLEMAPS_KEY;
 
             // const mapId = document.getElementById("google-map-script-id");
@@ -55,7 +53,6 @@ export default {
         window.initMap = () => {
             console.log(coordslat1.value, coordslng1.value);
             const myLatlng = new window.google.maps.LatLng(coordslat1.value, coordslng1.value);
-
 
             map.value = new window.google.maps.Map(mapDivRef.value, {
                 mapTypeId: props.mapType,

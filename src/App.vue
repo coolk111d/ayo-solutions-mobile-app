@@ -27,7 +27,7 @@ import {
     toastController, alertController
 } from '@ionic/vue';
 import { defineComponent, ref } from 'vue';
-import GMap from '@/components/GMapTracker.vue';
+// import GMap from '@/components/GMapTracker.vue';
 import OneSignal from 'onesignal-cordova-plugin';
 import axios from "axios";
 import { Storage } from '@ionic/storage';
@@ -39,7 +39,7 @@ export default defineComponent({
     components: {
         IonApp,
         IonRouterOutlet,
-        GMap,
+        // GMap,
     },
 
     props: {
@@ -101,112 +101,114 @@ export default defineComponent({
         async initEcho() {
             const storageAuthUser = await this.storage.get('authUser');
 
-            if (storageAuthUser.user !== undefined) {
+            if (storageAuthUser !== null) {
                 const user = storageAuthUser.user;
 
-                const simpleNotif = new Audio(`${process.env.VUE_APP_ROOT_API}/media/all-riders-are-engage.mp3`);
-                // const noisySound = new Audio(`${process.env.VUE_APP_ROOT_API}/media/rider-notif2.mp3`);
+                if (user !== undefined) {
+                    const simpleNotif = new Audio(`${process.env.VUE_APP_ROOT_API}/media/all-riders-are-engage.mp3`);
+                    // const noisySound = new Audio(`${process.env.VUE_APP_ROOT_API}/media/rider-notif2.mp3`);
 
-                const echo = new Echo({
-                    broadcaster: "pusher",
-                    key: process.env.VUE_APP_PUSHER_APP_KEY,
-                    cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
-                    encrypted: true,
-                    authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
-                    auth: {
-                        headers: {
-                            Authorization: `Bearer ${storageAuthUser.token}`
+                    const echo = new Echo({
+                        broadcaster: "pusher",
+                        key: process.env.VUE_APP_PUSHER_APP_KEY,
+                        cluster: process.env.VUE_APP_PUSHER_APP_CLUSTER,
+                        encrypted: true,
+                        authEndpoint: `${process.env.VUE_APP_ROOT_API}/broadcasting/auth`,
+                        auth: {
+                            headers: {
+                                Authorization: `Bearer ${storageAuthUser.token}`
+                            }
                         }
-                    }
-                });
+                    });
 
-                switch (user.role) {
-                    case this.ROLE_CUSTOMER:
-                        echo.private(`ping-customer.${user.customer.id}`)
-                        .listen(".all-riders-are-engage", () => {
+                    switch (user.role) {
+                        case this.ROLE_CUSTOMER:
+                            echo.private(`ping-customer.${user.customer.id}`)
+                            .listen(".all-riders-are-engage", () => {
 
-                             axios({
-                                method: "POST",
-                                url: `https://onesignal.com/api/v1/notifications`,
-                                headers: {
-                                    Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
-                                },
-                                data: {
-                                    "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
-                                        "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
-                                        "channel_for_external_user_ids": "push",
-                                        "template_id": "31880987-1115-4f63-92d2-52afb395c799",
-                                        "headings": {"en": `All riders are currently engaged.`},
-                                        "contents": {"en": "Please try again later."},
-                                        "android_accent_color": "FEB041"
-                                }
-                            }).then(res => {
-                                    console.log(res);
-                            }).catch(err => {
-                                console.log(err.response.data.message);
-                            });
-
-                            simpleNotif.currentTime = 0;
-                            simpleNotif.play();
-
-                            this.openAlert("All riders are currently engaged. Please try again later.");
-                        })
-                        .listen(".rider-accepted-order", (e) => {
-                            const order = e.order;
-
-                             axios({
-                                method: "POST",
-                                url: `https://onesignal.com/api/v1/notifications`,
-                                headers: {
-                                    Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
-                                },
-                                data: {
-                                    "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
-                                        "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
-                                        "channel_for_external_user_ids": "push",
-                                        "template_id": "31880987-1115-4f63-92d2-52afb395c799",
-                                        "headings": {"en": `Your order is now in progress! ${e.order.tracking_number}`},
-                                        "buttons": [{"id": "id2", "text": "View", "icon": "ic_menu_share", "url": "/merchant-dashboard"}],
-                                        "android_accent_color": "FEB041"
-                                }
-                            }).then(res => {
-                                    console.log(res);
-                            }).catch(err => {
-                                console.log(err.response.data.message);
-                            });
-
-                            simpleNotif.currentTime = 0;
-                            simpleNotif.play();
-
-                            this.openAlertOptions({
-                                header: order.tracking_number,
-                                message: "Your order is now in progress.",
-                                buttons: [
-                                    {
-                                        text: "Track Order",
-                                        role: "track-order",
-                                        handler: blah => {
-                                            this.router.push(`/order-tracker/${order.id}`);
-                                            console.log("blah", blah);
-                                        }
+                                 axios({
+                                    method: "POST",
+                                    url: `https://onesignal.com/api/v1/notifications`,
+                                    headers: {
+                                        Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
                                     },
-                                    {
-                                        text: "Close",
-                                        handler() {
-                                            console.log("close");
-                                        }
+                                    data: {
+                                        "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
+                                            "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
+                                            "channel_for_external_user_ids": "push",
+                                            "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                                            "headings": {"en": `All riders are currently engaged.`},
+                                            "contents": {"en": "Please try again later."},
+                                            "android_accent_color": "FEB041"
                                     }
-                                ]
+                                }).then(res => {
+                                        console.log(res);
+                                }).catch(err => {
+                                    console.log(err.response.data.message);
+                                });
+
+                                simpleNotif.currentTime = 0;
+                                simpleNotif.play();
+
+                                this.openAlert("All riders are currently engaged. Please try again later.");
+                            })
+                            .listen(".rider-accepted-order", (e) => {
+                                const order = e.order;
+
+                                 axios({
+                                    method: "POST",
+                                    url: `https://onesignal.com/api/v1/notifications`,
+                                    headers: {
+                                        Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
+                                    },
+                                    data: {
+                                        "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
+                                            "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
+                                            "channel_for_external_user_ids": "push",
+                                            "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                                            "headings": {"en": `Your order is now in progress! ${e.order.tracking_number}`},
+                                            "buttons": [{"id": "id2", "text": "View", "icon": "ic_menu_share", "url": "/merchant-dashboard"}],
+                                            "android_accent_color": "FEB041"
+                                    }
+                                }).then(res => {
+                                        console.log(res);
+                                }).catch(err => {
+                                    console.log(err.response.data.message);
+                                });
+
+                                simpleNotif.currentTime = 0;
+                                simpleNotif.play();
+
+                                this.openAlertOptions({
+                                    header: order.tracking_number,
+                                    message: "Your order is now in progress.",
+                                    buttons: [
+                                        {
+                                            text: "Track Order",
+                                            role: "track-order",
+                                            handler: blah => {
+                                                this.router.push(`/order-tracker/${order.id}`);
+                                                console.log("blah", blah);
+                                            }
+                                        },
+                                        {
+                                            text: "Close",
+                                            handler() {
+                                                console.log("close");
+                                            }
+                                        }
+                                    ]
+                                });
                             });
-                        });
 
-                        break;
+                            break;
 
-                    case this.ROLE_MERCHANT:
-                        break;
+                        case this.ROLE_MERCHANT:
+                            break;
 
-                    case this.ROLE_RIDER:
-                        break;
+                        case this.ROLE_RIDER:
+                            break;
+                    }
                 }
             }
         },
@@ -236,7 +238,7 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.OneSignalInit();
+        // this.OneSignalInit();
 
         this.initEcho();
     }

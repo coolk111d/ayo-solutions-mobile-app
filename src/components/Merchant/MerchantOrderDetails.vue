@@ -2,14 +2,16 @@
         <ion-content :fullscreen="true">
            <ion-icon :icon="arrowBackOutline" style="position:fixed; top:10px; left: 20px; z-index: 20; border-radius: 50%; padding: 5px; border:1px solid #feb041; background: #feb041; color: #fff" @click="dismissModal"/>
 
-            <!-- :center="{lat: order.shipping_address.latitude, lng: order.shipping_address.longitude}" -->
-           <g-map
-                mapType="roadmap"
-                :lat="coordslat"
-                :lng="coordslng"
-                :zoom="14"
-                :disableUI="true"
-             style="height: 200px;"></g-map>
+             <g-map
+                 v-if="coordslat && coordslng"
+                 mapType="roadmap"
+                 :coordslat="coordslat"
+                 :coordslng="coordslng"
+                 :zoom="12"
+                 :disableUI="true"
+                 style="height: 200px;">
+             </g-map>
+
            <ion-card class="status">
                 <h4>Customer's Order</h4>
                 <h5>Order #{{order.tracking_number}}</h5>
@@ -87,7 +89,7 @@
                                 <ion-icon :icon="person" class="map" style="font-size: 18px; margin-right: 10px; color: #000"></ion-icon>
                             </ion-col>
                             <ion-col size="9">
-                                <p style="font-size: 15px;">{{rider.user.name}}</p>
+                                <p style="font-size: 15px;">{{ rider.user.name }}</p>
                             </ion-col>
                         </ion-row>
                         <ion-row>

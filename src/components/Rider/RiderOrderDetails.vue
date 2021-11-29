@@ -4,14 +4,17 @@
 
             <!-- :center="{lat: order.shipping_address.latitude, lng: order.shipping_address.longitude}" -->
            <g-map
-                mapType="roadmap"
-                :lat="coordslat"
-                :lng="coordslng"
-                :zoom="14"
-                :disableUI="true"
-                style="height: 200px;"></g-map>
+               v-if="coordslat && coordslng"
+               mapType="roadmap"
+               :coordslat="coordslat"
+               :coordslng="coordslng"
+               :zoom="12"
+               :disableUI="true"
+               style="height: 200px;">
+           </g-map>
+
            <ion-card class="status">
-                <h4>Customer's Order</h4>
+                <h4>Customer's Order {{ coordslat }} {{ coordslng }}</h4>
                 <h5>Order #{{order.tracking_number}}</h5>
                 <h6>Estimated Delivery Time: {{order.delivery_date}}</h6>
                 <ion-grid>
@@ -187,6 +190,9 @@ export default defineComponent({
                     if (this.shipping.longitude) {
                         this.coordslng = this.shipping.longitude;
                     }
+
+                    console.log(this.coordslat);
+                    console.log(this.coordslng);
                 } else {
                     console.log(data.message);
                 }
