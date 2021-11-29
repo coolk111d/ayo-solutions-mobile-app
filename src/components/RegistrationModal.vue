@@ -110,6 +110,7 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import { object, string, boolean, mixed } from "yup";
 
 import axios from "axios";
+import { Storage } from '@ionic/storage';
 
 export default defineComponent({
     name: "RegistrationModal",
@@ -181,6 +182,9 @@ export default defineComponent({
         const alertTitle = "";
         const alertMessage = "";
 
+        const storage = new Storage();
+        storage.create();
+
         return {
             schema,
 
@@ -188,7 +192,9 @@ export default defineComponent({
 
             isOpenLoadingRef, setOpenLoading,
 
-            isOpenAlertRef, setOpenAlert, alertTitle, alertMessage, arrowBackOutline
+            isOpenAlertRef, setOpenAlert, alertTitle, alertMessage, arrowBackOutline,
+
+            storage
         };
     },
 
@@ -197,7 +203,9 @@ export default defineComponent({
             modalController.dismiss();
         },
 
-        onSubmit(inputs) {
+        async onSubmit(inputs) {
+            const authUser = await this.storage.get("authUser");
+
             this.setOpenLoading(true);
 
             const formData = new FormData();
@@ -207,6 +215,10 @@ export default defineComponent({
             for (const field in inputs) {
                 console.log(field, inputs[field]);
                 formData.append(field, inputs[field]);
+            }
+
+            if (authUser.user === undefined && authUser.cart_token) { // guest has cart
+                formData.append('cart_token', authUser.cart_token);
             }
 
             axios({
