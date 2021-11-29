@@ -199,7 +199,7 @@ export default  {
                 if (user !== undefined) {
                     const externalUserId = user.role + user.id // You will supply the external user id to the OneSignal SDK
 
-                    Setting External User Id with Callback Available in SDK Version 2.11.2+
+                    // Setting External User Id with Callback Available in SDK Version 2.11.2+
                     OneSignal.setExternalUserId(externalUserId, (results) => {
                         // The results will contain push and email success statuses
                         console.log('Results of setting external user id');
