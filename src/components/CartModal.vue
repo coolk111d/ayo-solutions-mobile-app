@@ -288,9 +288,15 @@ export default defineComponent({
             }, 800);
         },
 
-        checkout() {
+        async checkout() {
             modalController.dismiss();
-            this.router.push('/checkout');
+
+            const authUser = this.storage.get("authUser");
+            if (authUser.user !== undefined) {
+                this.router.push('/checkout');
+            } else { // guest
+                this.router.push("/login");
+            }
         }
     }
 })

@@ -8,7 +8,13 @@
             </ion-header>
 
             <div class="login-container" style="">
-                <a href="javascript:void(0)" style="display:none" class="guest-signin-link" @click="loginAsGuest"><ion-icon :icon="arrowBackOutline" /> Sign in as Guest</a>
+                <a href="javascript:void(0)" class="guest-signin-link" @click="loginAsGuest" v-if="!guest">
+                    <ion-icon :icon="arrowBackOutline" /> Sign in as Guest
+                </a>
+
+                <a href="javascript:void(0)" class="guest-signin-link" @click="router.push('/home')" v-else>
+                    <ion-icon :icon="arrowBackOutline" /> Continue Shopping
+                </a>
 
                 <img src="/assets/images/logo-trans.png" alt="" style="width: 30%; margin: 0 auto;">
 
@@ -39,7 +45,7 @@
                 </Form>
 
                 <div class="login-meta-data text-center">
-                    <a class="stretched-link" @click="forgotPasswordModal">Forgot Password?</a>
+                    <a class="stretched-link" @click="forgotPasswordModal" v-if="!guest">Forgot Password?</a>
                     <p>Didn't have an account? <a class="stretched-link" href="javascript:void(0)" @click="openRegistrationModal">Register Now</a></p>
                 </div>
             </div>
@@ -112,7 +118,8 @@ export default  {
 
     data() {
         return {
-            notAuth: true
+            notAuth: true,
+            guest: null
         }
     },
 
@@ -176,7 +183,7 @@ export default  {
             isOpenToastRef, setOpenToast, toastMessage,
 
             storage,
-            
+
             eyeOutline, eyeOffOutline,
 
             showPassword, hidePassword,
@@ -189,14 +196,21 @@ export default  {
             if (authUser !== null) {
                 const user = authUser.user;
 
-                this.toastMessage = "You are already login";
-                this.setOpenToast(true);
-                if(user.role == "rider") {
-                    this.router.push('/rider-dashboard')
-                } else if(user.role == "merchant") {
-                    this.router.push('/merchant-dashboard')
-                } else {
-                    this.router.push('/home')
+                if (user !== undefined) {
+                    if (user.role == "rider") {
+                        this.router.push('/rider-dashboard');
+                    } else if (user.role == "merchant") {
+                        this.router.push('/merchant-dashboard');
+                    } else {
+                        this.router.push('/home');
+                    }
+
+                    this.toastMessage = "You are already login";
+                    this.setOpenToast(true);
+                } else { // guest
+                    this.guest = {
+                        cartToken: authUser.cart_token
+                    };
                 }
             } else {
                 this.notAuth = true;
@@ -209,13 +223,20 @@ export default  {
             actions.setValues({email: "", password: ""});
             this.setOpenLoading(true);
 
+            const data = {
+                email: inputs.email,
+                password: inputs.password
+            };
+
+            if (this.guest !== null) {
+                // eslint-disable-next-line @typescript-eslint/camelcase
+                data.cart_token = this.guest.cartToken;
+            }
+
             axios({
                 method: "POST",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/login`,
-                data: {
-                    email: inputs.email,
-                    password: inputs.password
-                }
+                data: data
             }).then(res => {
                 const data = res.data;
 
@@ -241,23 +262,25 @@ export default  {
                         });
                     }
 
-                    if(data.data.user.role == "rider") {
-                        this.router.push('/rider-dashboard')
-                    } else if(data.data.user.role == "merchant") {
-                        this.router.push('/merchant-dashboard')
-                    } else {
-                        this.router.push('/home')
-                    }
-                    this.toastMessage = `Successfully Login! Welcome ${data.data.user.name}`;
-                    // eslint-disable-next-line no-undef
-                    this.storage.set('authUser', {
-                            user: data.data.user,
+                    const authUser = {
+                        user: data.data.user,
+                        token: data.data.token
+                    };
 
-                            token: data.data.token,
-                            // eslint-disable-next-line @typescript-eslint/camelcase
-                            cart_token: data.data.cart_token,
-                        }
-                    );
+                    if (data.data.user.role == "rider") {
+                        this.router.push('/rider-dashboard');
+                    } else if (data.data.user.role == "merchant") {
+                        this.router.push('/merchant-dashboard');
+                    } else { // customer
+                        this.router.push('/home');
+                        // eslint-disable-next-line @typescript-eslint/camelcase
+                        authUser.cart_token = data.data.cart_token;
+                    }
+
+                    this.toastMessage = `Successfully Login! Welcome ${data.data.user.name}`;
+                    this.storage.set('authUser', authUser);
+
+                    setTimeout(() => location.reload(), 500);
                 } else {
                     this.toastMessage = "Invalid email and password."
                 }
@@ -273,55 +296,42 @@ export default  {
         },
 
         loginAsGuest() {
-            this.router.push('/home')
-            this.toastMessage = `Successfully Login as Guest!`;
+            this.setOpenLoading(true);
 
-            // eslint-disable-next-line no-undef
-            this.storage.set('authUser', {
-                    token: null,
-                    // eslint-disable-next-line @typescript-eslint/camelcase
-                    cart_token: "STuVkR4toQnnS994I7emmxjYw3ibca05daaHt4Mv1uXdXqkTw5fNvwY6XSS0gu",
-                    // cart_token: data.cart_token,
-                    name: null,
-                    email: null,
-                    role: "guest"
+            axios({
+                method: "POST",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/carts`
+            }).then(res => {
+                const data = res.data;
+
+                this.setOpenLoading(false);
+                if (data.success) {
+                    this.router.push('/home');
+                    this.toastMessage = `Successfully Login as Guest!`;
+
+                    // eslint-disable-next-line no-undef
+                    this.storage.set('authUser', {
+                            token: null,
+                            // eslint-disable-next-line @typescript-eslint/camelcase
+                            cart_token: data.cart_token,
+                            // name: null,
+                            // email: null,
+                            // role: "guest"
+                        }
+                    );
+
+                    setTimeout(() => location.reload(), 500);
+                } else {
+                    this.toastMessage = "Cannot sign in as guest. Please try again later.";
                 }
-            );
 
-            // this.setOpenLoading(true);
+                this.setOpenToast(true);
+            }).catch(err => {
+                this.setOpenLoading(false);
 
-            // axios({
-            //     method: "POST",
-            //     url: `${process.env.VUE_APP_ROOT_API}/mobile-api/cart/take`
-            // }).then(res => {
-            //     const data = res.data;
-
-            //     this.setOpenLoading(false);
-            //     if (data.success) {
-            //         this.router.push('/home')
-            //         this.toastMessage = `Successfully Login as Guest!`;
-
-            //         // eslint-disable-next-line no-undef
-            //         this.storage.set('authUser', {
-            //                 token: null,
-            //                 // eslint-disable-next-line @typescript-eslint/camelcase
-            //                 cart_token: data.cart_token,
-            //                 name: null,
-            //                 email: null,
-            //                 role: "guest"
-            //             }
-            //         );
-            //     } else {
-            //         this.toastMessage = "Invalid email and password."
-            //     }
-
-            //     this.setOpenToast(true);
-            // }).catch(err => {
-            //     this.setOpenLoading(false);
-
-            //     this.toastMessage = err.response.data.message;
-            //     this.setOpenToast(true);
-            // });
+                this.toastMessage = err.response.data.message;
+                this.setOpenToast(true);
+            });
         },
 
         async openRegistrationModal() {

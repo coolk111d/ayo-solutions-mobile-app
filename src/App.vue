@@ -101,7 +101,7 @@ export default defineComponent({
         async initEcho() {
             const storageAuthUser = await this.storage.get('authUser');
 
-            if (storageAuthUser !== null) {
+            if (storageAuthUser.user !== undefined) {
                 const user = storageAuthUser.user;
 
                 const simpleNotif = new Audio(`${process.env.VUE_APP_ROOT_API}/media/all-riders-are-engage.mp3`);

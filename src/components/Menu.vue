@@ -6,19 +6,29 @@
             </ion-toolbar>
         </ion-header>
         <ion-content>
-        
-            
             <div class="name">
                 <h3 style="margin: 0">{{name}}</h3><br>
                 <span style="color:#feb041; font-size: 14px; text-align:center;margin: -15px 0 0">{{role}}</span>
                 <p style="color:rgba(230,230,230,1); font-size: 12px; text-align:center;margin: 5px 0 20px">{{email}}</p>
             </div>
             <ion-list>
-                <ion-item lines="none" detail button @click="orders"><ion-icon :icon="bagOutline"/> <a>Orders</a></ion-item>
-                <ion-item lines="none" detail button @click="samedayorders"><ion-icon :icon="cubeOutline"/> <a>Same Day Transactions</a></ion-item>
-                <ion-item  lines="none" detail button  @click="address"> <ion-icon :icon="mapOutline"/> <a>Addresses</a></ion-item>
-                <ion-item  lines="none" detail button @click="password"><ion-icon :icon="keypadOutline"/><a> Change Password</a></ion-item>
-                <ion-item  lines="none" detail button @click="logOut"><ion-icon :icon="logOutOutline"/><a> Log Out</a></ion-item>
+                <div v-if="role !== 'guest'">
+                    <ion-item lines="none" detail button @click="orders">
+                        <ion-icon :icon="bagOutline"/> <a>Orders</a>
+                    </ion-item>
+                    <ion-item lines="none" detail button @click="samedayorders">
+                        <ion-icon :icon="cubeOutline"/> <a>Same Day Transactions</a>
+                    </ion-item>
+                    <ion-item  lines="none" detail button  @click="address">
+                        <ion-icon :icon="mapOutline"/> <a>Addresses</a>
+                    </ion-item>
+                    <ion-item  lines="none" detail button @click="password">
+                        <ion-icon :icon="keypadOutline"/><a> Change Password</a>
+                    </ion-item>
+                </div>
+                <ion-item  lines="none" detail button @click="logOut">
+                    <ion-icon :icon="logOutOutline"/><a> Log Out</a>
+                </ion-item>
             </ion-list>
         </ion-content>
     </ion-menu>
@@ -84,20 +94,21 @@
                  * if current logged in is guest, add confirmation before proceed it on logout
                  * because all items he add on cart will be lost.
                  */
+                if (this.role !== "guest") {
+                    const storageAuthUser = await this.storage.get('authUser');
 
-                const storageAuthUser = await this.storage.get('authUser');
-
-                axios({
-                    method: "POST",
-                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/logout`,
-                    headers: {
-                        Authorization: `Bearer ${storageAuthUser.token}`
-                    }
-                }).then(res => {
-                    const data = res.data;
-                }).catch(err => {
-                    console.log(err);
-                });
+                    axios({
+                        method: "POST",
+                        url: `${process.env.VUE_APP_ROOT_API}/mobile-api/logout`,
+                        headers: {
+                            Authorization: `Bearer ${storageAuthUser.token}`
+                        }
+                    }).then(res => {
+                        const data = res.data;
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }
 
                 this.storage.clear();
                 this.router.push("/login");
@@ -108,49 +119,54 @@
             },
 
             async getName() {
-                    const user = await this.storage.get('authUser');
-                    console.log(user);
-                    if(user == null) {
-                        this.name = "Guest" 
-                        this.email = "Not Available"
-                        this.role = "Customer"
-                    } else {
-                    this.name = user.user.name;
-                    this.email = user.user.email;
-                    this.role = user.user.role;
-                    }
+                const authUser = await this.storage.get('authUser');
+                console.log(authUser);
+
+                if(authUser.user !== undefined) {
+                    this.name = authUser.user.name;
+                    this.email = authUser.user.email;
+                    this.role = authUser.user.role;
+                } else {
+                    this.name = "Customer"
+                    this.email = "Not Available"
+                    this.role = "guest"
+                }
             },
+
             async orders() {
                 const modal = await modalController
                 .create({
                 component: OrderList,
                 cssClass: 'my-custom-class',
                 })
-            return modal.present();
+                return modal.present();
             },
+
             async samedayorders() {
                 const modal = await modalController
                 .create({
                 component: SameDayOrderList,
                 cssClass: 'my-custom-class',
                 })
-            return modal.present();
+                return modal.present();
             },
+
             async address() {
                 const modal = await modalController
                 .create({
                 component: AddressList,
                 cssClass: 'my-custom-class',
                 })
-            return modal.present();
+                return modal.present();
             },
+
             async password() {
                 const modal = await modalController
                 .create({
                 component: ChangePassword,
                 cssClass: 'my-custom-class',
                 })
-            return modal.present();
+                return modal.present();
             },
         },
         beforeMount() {
