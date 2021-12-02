@@ -48,7 +48,8 @@
 
                 <ion-item>
                     <ion-label position="floating">Password</ion-label>
-                    <Field as="ion-input" name="password" type="password" />
+                    <ion-icon :icon="eyeOutline" style="position:absolute; top: 40px; right: 20px; font-size: 18px; z-index: 100" ref="eyeRef"  @click="showPassword"/>
+                    <Field as="ion-input" name="password" type="password" ref="passwordRef" v-model="passwordValue" />
                     <ErrorMessage as="ion-text" name="password" color="danger" />
                 </ion-item>
 
@@ -104,8 +105,8 @@ import {
     modalController
 } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
-import { defineComponent, ref } from 'vue';
-
+import { defineComponent, ref, onMounted } from 'vue';
+import { eyeOutline, eyeOffOutline } from 'ionicons/icons';
 import { Form, Field, ErrorMessage } from "vee-validate";
 import { object, string, boolean, mixed } from "yup";
 
@@ -181,6 +182,23 @@ export default defineComponent({
         const setOpenAlert = (state) => isOpenAlertRef.value = state;
         const alertTitle = "";
         const alertMessage = "";
+        const passwordRef = ref(null);
+        const eyeRef = ref(null);
+        const passwordValue = ref(null);
+        let barePassword = false;
+
+         onMounted(() => { 
+            // passwordRef.value.$.attrs.type = 'text';
+            console.log(passwordRef.value.$.attrs.type);
+        });
+
+        const showPassword = () => {
+            const value1 = passwordValue.value;
+            passwordRef.value.$.attrs.type = 'text';
+            barePassword = true; 
+            passwordValue.value = value1;
+        };
+
 
         const storage = new Storage();
         storage.create();
@@ -194,7 +212,15 @@ export default defineComponent({
 
             isOpenAlertRef, setOpenAlert, alertTitle, alertMessage, arrowBackOutline,
 
-            storage
+            storage,
+
+              passwordRef, eyeRef,
+
+               eyeOutline, eyeOffOutline,
+
+            showPassword,
+            barePassword,
+            passwordValue
         };
     },
 

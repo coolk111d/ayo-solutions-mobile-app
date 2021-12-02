@@ -34,7 +34,7 @@
                         <div class="input">
                             <Field as="ion-input" type="password" name="password" ref="passwordRef"/>
 
-                            <ion-icon :icon="eyeOffOutline" style="position:absolute; top: 55px; right: 20px; font-size: 18px;" ref="eyeCloseRef" @click="hidePassword"/>
+                            
                             <ion-icon :icon="eyeOutline" style="position:absolute; top: 35px; right: 20px; font-size: 18px;" ref="eyeRef"  @click="showPassword"/>
                             <ErrorMessage as="ion-text" name="password" color="danger" />
                         </div>
@@ -151,10 +151,6 @@ export default  {
             console.log(barePassword);
         };
 
-        const hidePassword = () => {
-            passwordRef.value.$.attrs.type = 'password';
-            barePassword = false;
-        };
 
         const isOpenLoadingRef = ref(false);
         const setOpenLoading = (state) => isOpenLoadingRef.value = state;
@@ -186,7 +182,7 @@ export default  {
 
             eyeOutline, eyeOffOutline,
 
-            showPassword, hidePassword,
+            showPassword,
             barePassword
         };
     },
