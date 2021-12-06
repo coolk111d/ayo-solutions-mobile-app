@@ -3,8 +3,8 @@
         <CustomHeader link="/food"/>
         <ion-content :fullscreen="true">
             <div class="container">
-                <div class="header-container" v-bind:style="{ backgroundImage: 'url('+ env + '/storage/' + category.image +')' }">
-                <h3>{{category.name}}</h3>
+                <div class="header-container" v-bind:style="{ backgroundImage: 'url('+ env + '/storage/' + category.image +')' }" v-if="category">
+                    <h3>{{category.name}}</h3>
                 </div>
                 <ion-card class="food-card-head">
                     <div class="card-body pt-4">
@@ -21,25 +21,7 @@
 
             <!-- <h5 class="title">All Restaurants in City of Tanauan</h5> -->
 
-            <ion-grid>
-                <ion-searchbar placeholder="What are you craving?" color="transparent" @ionChange="searchMerchant($event.target.value)"></ion-searchbar>
-                <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
-                    <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
-                    <ion-col size="4">
-                        <!-- Product Thumbnail -->
-                        <a class="product-thumbnail">
-                            <img v-bind:src="merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else>
-                        </a>
-                    </ion-col>
-                    <ion-col size="8">
-                         <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.user.name}}</a>
-                        <!-- Product Price -->
-                        <p class="sale-price" style="margin-bottom:0px" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.address}} </p>
-                        <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
-                        <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${merchant.id}`)">Visit Store</ion-button>
-                    </ion-col>
-                </ion-row>
-            </ion-grid>
+            <MerchantGrid ref="merchantGrid"/>
 
             <ion-card class="footer">
             <div class="footer-div">
@@ -53,21 +35,21 @@
 </template>
 
 <script>
-import { IonPage, IonContent, IonCard,IonSelect, IonSelectOption, IonButton, IonSearchbar } from '@ionic/vue';
+import { IonPage, IonContent, IonCard,IonSelect, IonSelectOption, IonButton } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import CategorySlider from '@/components/CategorySlider.vue';
 import CustomHeader from '@/components/CustomHeader.vue';
+import MerchantGrid from '@/components/MerchantGrid.vue';
 import axios from "axios";
 import { defineComponent } from "vue";
-import queryString from "query-string";
 
 export default defineComponent({
     name: 'Merchant Category',
 
     components: {
-        IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, IonSearchbar,
-        CustomHeader
+        IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider,
+        CustomHeader, MerchantGrid
     },
 
     setup() {
@@ -81,14 +63,9 @@ export default defineComponent({
     data() {
         return {
               branches: [],
-              merchants: [],
-              arr: [],
-              loc: false,
-              category: [],
+              category: null,
 
-              page: 1,
               branch: null,
-              categoryId: null,
               loadMoreButton: false
         }
   },
@@ -96,11 +73,10 @@ export default defineComponent({
     methods: {
         initialLoad: function() {
             this.populateBranches();
-            this.populateMerchants(this.branch, null, this.categoryId);
 
             axios({
                 method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/getCategorybyID/${this.categoryId}`,
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/getCategorybyID/${this.$route.params.id}`,
             }).then(res => {
                 console.log(res.data)
                 this.category = res.data;
@@ -110,60 +86,13 @@ export default defineComponent({
         },
 
         onSelectBranch(e) {
-              this.branch = e.target.value;
+            const child = this.$refs.merchantGrid;
+            const branch = e.target.value;
 
-              console.log(this.branch);
-
-              const qs = {
-                  branch: this.branch,
-                  location: null,
-                  category: this.categoryId,
-              }
-
-              axios({
-                  method: "GET",
-                  url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
-              }).then(res => {
-                  const data = res.data.data;
-                  const paginateData = data.data;
-
-                  console.log("bat ganon?");
-
-                  // this.merchants = paginateData;
-
-                  this.loadMoreButton = paginateData.length > 0;
-              }).catch(err => {
-                  console.log(err);
-              });
-              // this.populateMerchants(this.branch, null, this.categoryId);
-        },
-
-        searchMerchant: function(location) {
-            // this.populateMerchants(this.branch, location, this.categoryId);
-
-            const qs = {
-                branch: this.branch,
-                location: location,
-                category: this.categoryId,
-            }
-
-            axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
-            }).then(res => {
-                const data = res.data.data;
-                const paginateData = data.data;
-
-                this.merchants = paginateData;
-
-                this.loadMoreButton = paginateData.length > 0;
-            }).catch(err => {
-                console.log(err);
-            });
+            child.onChangeBranch(branch);
         },
 
         populateBranches() {
-            // let authUser = await this.storage.get("authUser");
             axios({
                 method: "GET",
                 url: `${process.env.VUE_APP_ROOT_API}/mobile-api/branches`
@@ -179,35 +108,10 @@ export default defineComponent({
                 console.log(err.response.data.message);
             });
         },
-
-        populateMerchants(branch=null, location=null, category=null) {
-            this.page = 1;
-
-            const qs = {
-                branch: branch,
-                location: location,
-                category: category,
-            }
-
-            axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
-            }).then(res => {
-                const data = res.data.data;
-                const paginateData = data.data;
-
-                this.merchants = paginateData;
-
-                this.loadMoreButton = paginateData.length > 0;
-            }).catch(err => {
-                console.log(err);
-            });
-        }
     },
 
     mounted() {
         this.initialLoad();
-        this.categoryId = this.$route.params.id;
     },
 })
 </script>
