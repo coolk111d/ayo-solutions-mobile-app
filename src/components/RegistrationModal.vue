@@ -48,8 +48,18 @@
 
                 <ion-item>
                     <ion-label position="floating">Password</ion-label>
-                    <Field as="ion-input" name="password" type="password" />
-                    <ErrorMessage as="ion-text" name="password" color="danger" />
+                    <!-- <Field as="ion-input" name="password" type="password" />
+                    <ErrorMessage as="ion-text" name="password" color="danger" /> -->
+
+                    <div class="input">
+                        <ion-input type="text" v-if="showPass" :value="password" @ionInput="password = $event.target.value"></ion-input>
+                        <ion-input type="password" v-else :value="password" @ionInput="password = $event.target.value"></ion-input>
+                    </div>
+
+                    <ion-toggle
+                        :checked="showPass"
+                        @ionChange="showPassword($event.target.value)">
+                    </ion-toggle>
                 </ion-item>
 
                 <br>
@@ -96,7 +106,7 @@ ion-card-title {
 import {
     IonHeader, IonContent, IonToolbar, IonTitle,
     IonButtons, IonButton, IonCardHeader, IonCardTitle, IonCardContent,
-    IonLabel, IonItem, IonText,
+    IonLabel, IonItem, IonText, IonToggle,
 
     IonLoading,
     IonAlert,
@@ -126,12 +136,19 @@ export default defineComponent({
     components: {
         IonHeader, IonContent, IonToolbar, IonTitle,
         IonButtons, IonButton, IonCardHeader, IonCardTitle, IonCardContent,
-        IonLabel, IonItem, IonText,
+        IonLabel, IonItem, IonText, IonToggle,
 
         IonLoading,
         IonAlert,
 
         Form, Field, ErrorMessage
+    },
+
+    data() {
+        return {
+            showPass: false,
+            password: ""
+        };
     },
 
     setup() {
@@ -144,7 +161,7 @@ export default defineComponent({
             mobile_number: string().required().matches(/^(09|\+639)\d{9}$/, "Mobile Number is invalid.").label("Mobile Number"),
             email: string().required().email().label("Email"),
 
-            password: string().required().min(8).max(20).label("Password"),
+            // password: string().required().min(8).max(20).label("Password"),
             // eslint-disable-next-line @typescript-eslint/camelcase
             government_id: mixed().required()
             // .test("fileSize", "The file is too large.", value => {
@@ -217,9 +234,13 @@ export default defineComponent({
                 formData.append(field, inputs[field]);
             }
 
-            if (authUser.user === undefined && authUser.cart_token) { // guest has cart
-                formData.append('cart_token', authUser.cart_token);
+            if (authUser !== null) {
+                if (authUser.user === undefined && authUser.cart_token) { // guest has cart
+                    formData.append('cart_token', authUser.cart_token);
+                }
             }
+
+            formData.append('password', this.password);
 
             axios({
                 method: "POST",
@@ -244,7 +265,23 @@ export default defineComponent({
                 this.alertMessage = err.response.data.message;
                 this.setOpenAlert(true);
             });
+        },
+
+        showPassword() {
+            this.showPass = !this.showPass;
         }
     }
 })
 </script>
+
+<style>
+    ion-toggle {
+      position: absolute;
+
+      top: 10px;
+      right: 10px;
+
+      content: "ON";
+      z-index: 1;
+    }
+</style>
