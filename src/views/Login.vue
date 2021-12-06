@@ -32,12 +32,14 @@
                     <ion-item class="form-group">
                         <ion-label position="stacked">Password</ion-label>
                         <div class="input">
-                            <Field as="ion-input" type="password" name="password" ref="passwordRef"/>
-
-                            <ion-icon :icon="eyeOffOutline" style="position:absolute; top: 55px; right: 20px; font-size: 18px;" ref="eyeCloseRef" @click="hidePassword"/>
-                            <ion-icon :icon="eyeOutline" style="position:absolute; top: 35px; right: 20px; font-size: 18px;" ref="eyeRef"  @click="showPassword"/>
-                            <ErrorMessage as="ion-text" name="password" color="danger" />
+                            <ion-input type="text" v-if="showPass" :value="password" @ionInput="password = $event.target.value"></ion-input>
+                            <ion-input type="password" v-else :value="password" @ionInput="password = $event.target.value"></ion-input>
                         </div>
+
+                        <ion-toggle
+                            :checked="showPass"
+                            @ionChange="showPassword($event.target.value)">
+                        </ion-toggle>
                     </ion-item>
 
                     <!-- <ion-button @click="() => router.push('/home')" class="signin-button">Sign in</ion-button> -->
@@ -85,7 +87,7 @@
 
 <script>
 import {
-    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonLabel, IonItem, IonIcon,
+    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonLabel, IonItem, IonIcon, IonToggle,
 
     IonLoading, IonToast
 } from '@ionic/vue';
@@ -109,7 +111,7 @@ export default  {
     },
 
     components: {
-        IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButton, IonItem, IonLabel, IonIcon,
+        IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButton, IonItem, IonLabel, IonIcon, IonToggle,
 
         IonLoading, IonToast,
 
@@ -119,7 +121,10 @@ export default  {
     data() {
         return {
             notAuth: true,
-            guest: null
+            guest: null,
+
+            showPass: false,
+            password: ""
         }
     },
 
@@ -128,41 +133,17 @@ export default  {
 
         const schema = object({
             email: string().required().email().label("Email"),
-            password: string().required().label("Password")
+            // password: string().required().label("Password")
         });
 
         // Initial values
         const formValues = {
-            email: `${process.env.VUE_APP_LOGIN_EMAIL}`,
-            password: `${process.env.VUE_APP_LOGIN_PASSWORD}`,
-        };
-        const passwordRef = ref(null);
-        const eyeRef = ref(null);
-        const eyeCloseRef = ref(null);
-        let barePassword = false;
-        onMounted(() => { 
-            // passwordRef.value.$.attrs.type = 'text';
-            console.log(passwordRef.value.$.attrs.type);
-        });
-
-        const showPassword = () => {
-            passwordRef.value.$.attrs.type = 'text';
-            barePassword = true; 
-            console.log(barePassword);
-        };
-
-        const hidePassword = () => {
-            passwordRef.value.$.attrs.type = 'password';
-            barePassword = false;
+            email: process.env.VUE_APP_LOGIN_EMAIL,
+            // password: `${process.env.VUE_APP_LOGIN_PASSWORD}`,
         };
 
         const isOpenLoadingRef = ref(false);
         const setOpenLoading = (state) => isOpenLoadingRef.value = state;
-
-        // const isOpenAlertRef = ref(false);
-        // const setOpenAlert = (state) => isOpenAlertRef.value = state;
-        // const alertTitle = "";
-        // const alertMessage = "";
 
         const isOpenToastRef = ref(false);
         const setOpenToast = (state) => isOpenToastRef.value = state;
@@ -174,7 +155,6 @@ export default  {
         return {
             router, arrowBackOutline,
             schema,
-            passwordRef, eyeRef, eyeCloseRef,
             formValues,
 
             isOpenLoadingRef, setOpenLoading,
@@ -185,9 +165,6 @@ export default  {
             storage,
 
             eyeOutline, eyeOffOutline,
-
-            showPassword, hidePassword,
-            barePassword
         };
     },
 
@@ -238,15 +215,21 @@ export default  {
         });
     },
 
+    mounted() {
+        this.password = process.env.VUE_APP_LOGIN_PASSWORD;
+    },
+
     methods: {
         onSubmit(inputs, actions) {
-            actions.setValues({email: "", password: ""});
             this.setOpenLoading(true);
 
             const data = {
                 email: inputs.email,
-                password: inputs.password
+                password: this.password
             };
+
+            actions.setValues({email: ""});
+            this.password = "";
 
             if (this.guest !== null) {
                 // eslint-disable-next-line @typescript-eslint/camelcase
@@ -362,6 +345,10 @@ export default  {
         async forgotPasswordModal() {
             const modal = await modalController.create({component: ForgotPasswordModal});
             modal.present();
+        },
+
+        showPassword() {
+            this.showPass = !this.showPass;
         }
     },
 }
@@ -402,5 +389,15 @@ export default  {
         font-size: 12px;
         color: #1f0757;
         font-weight: 600;
+    }
+
+    ion-toggle {
+      position: absolute;
+
+      top: 10px;
+      right: 10px;
+
+      content: "ON";
+      z-index: 1;
     }
 </style>
