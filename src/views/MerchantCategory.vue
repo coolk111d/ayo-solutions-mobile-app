@@ -19,21 +19,24 @@
 
             <CategorySlider  />
 
-            <h5 class="title">All Restaurants in City of Tanauan</h5>
+            <!-- <h5 class="title">All Restaurants in City of Tanauan</h5> -->
 
             <ion-grid>
-            <ion-searchbar placeholder="What are you craving?" color="transparent" @ionChange="searchMerchant($event.target.value)"></ion-searchbar>
+                <ion-searchbar placeholder="What are you craving?" color="transparent" @ionChange="searchMerchant($event.target.value)"></ion-searchbar>
                 <ion-row class="ion-align-items-center" v-for="merchant of merchants" :key="merchant.id" @click="() => router.push(`/merchant/${merchant.id}`)">
                     <!--@click="() => router.push(`/merchant/${merchant.id}`)"-->
                     <ion-col size="4">
-                            <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
+                        <!-- Product Thumbnail -->
+                        <a class="product-thumbnail">
+                            <img v-bind:src="merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else>
+                        </a>
                     </ion-col>
                     <ion-col size="8">
                          <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.user.name}}</a>
-                            <!-- Product Price -->
-                            <p class="sale-price" style="margin-bottom:0px" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.address}} </p>
-                            <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
-                            <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${merchant.id}`)">Visit Store</ion-button>
+                        <!-- Product Price -->
+                        <p class="sale-price" style="margin-bottom:0px" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.address}} </p>
+                        <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
+                        <ion-button color="warning" expand="full" shape="round" size="small" @click="() => router.push(`/merchant/${merchant.id}`)">Visit Store</ion-button>
                     </ion-col>
                 </ion-row>
             </ion-grid>
@@ -49,7 +52,7 @@
     </ion-page>
 </template>
 
-<script lang="ts">
+<script>
 import { IonPage, IonContent, IonCard,IonSelect, IonSelectOption, IonButton, IonSearchbar } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
@@ -61,108 +64,151 @@ import queryString from "query-string";
 
 export default defineComponent({
     name: 'Merchant Category',
-    components: { IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, IonSearchbar,
-    CustomHeader},
+
+    components: {
+        IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, IonSearchbar,
+        CustomHeader
+    },
+
     setup() {
         const env = process.env.VUE_APP_ROOT_API;
-        const options: any = {
-        cssClass: 'my-custom-interface'
+        const options = {
+            cssClass: 'my-custom-interface'
         };
         const router = useRouter();
         return { router, options, arrowBackOutline, env }
+    },
+    data() {
+        return {
+              branches: [],
+              merchants: [],
+              arr: [],
+              loc: false,
+              category: [],
+
+              page: 1,
+              branch: null,
+              categoryId: null,
+              loadMoreButton: false
+        }
   },
-  data(){
-    return{
-      branches: [],
-      merchants: [],
-      arr: [],
-      loc: false,
-      category: [],
 
-      page: 1,
-      branch: null,
-      loadMoreButton: false
-    }
-  },
-  methods: {
-      initialLoad: function() {
-        this.populateBranches();
-        this.populateMerchants(this.branch, null, this.category);
+    methods: {
+        initialLoad: function() {
+            this.populateBranches();
+            this.populateMerchants(this.branch, null, this.categoryId);
 
-        axios({
-            method: "GET",
-            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/getCategorybyID/${this.$route.params.id}`,
-        }).then(res => {
-            console.log(res.data)
-            this.category = res.data;
-        }).catch(err => {
-            console.log(err);
-        });
-      },
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/getCategorybyID/${this.categoryId}`,
+            }).then(res => {
+                console.log(res.data)
+                this.category = res.data;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
 
-      async onSelectBranch(e: Event & { target: HTMLInputElement }) {
-          const branch = e.target.value;
+        onSelectBranch(e) {
+              this.branch = e.target.value;
 
-          this.onChangeBranch(branch);
-      },
+              console.log(this.branch);
 
-      onChangeBranch: function(branch) {
-        this.branch = branch;
+              const qs = {
+                  branch: this.branch,
+                  location: null,
+                  category: this.categoryId,
+              }
 
-        this.populateMerchants(this.branch, null, this.category);
-      },
+              axios({
+                  method: "GET",
+                  url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
+              }).then(res => {
+                  const data = res.data.data;
+                  const paginateData = data.data;
 
-      searchMerchant: function(location) {
-        this.populateMerchants(this.branch, location, this.category);
-      },
+                  console.log("bat ganon?");
 
-    async populateBranches() {
-        // let authUser = await this.storage.get("authUser");
-        axios({
-            method: "GET",
-            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/branches`
-        }).then(res => {
-            const data = res.data;
+                  // this.merchants = paginateData;
 
-            if (data.success) {
-                this.branches = data.data;
-                console.log(data);
-            } else {
-                console.log(data.message);
+                  this.loadMoreButton = paginateData.length > 0;
+              }).catch(err => {
+                  console.log(err);
+              });
+              // this.populateMerchants(this.branch, null, this.categoryId);
+        },
+
+        searchMerchant: function(location) {
+            // this.populateMerchants(this.branch, location, this.categoryId);
+
+            const qs = {
+                branch: this.branch,
+                location: location,
+                category: this.categoryId,
             }
-        }).catch(err => {
-            console.log(err.response.data.message);
-        });
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
+            }).then(res => {
+                const data = res.data.data;
+                const paginateData = data.data;
+
+                this.merchants = paginateData;
+
+                this.loadMoreButton = paginateData.length > 0;
+            }).catch(err => {
+                console.log(err);
+            });
+        },
+
+        populateBranches() {
+            // let authUser = await this.storage.get("authUser");
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/branches`
+            }).then(res => {
+                const data = res.data;
+
+                if (data.success) {
+                    this.branches = data.data;
+                } else {
+                    console.log(data.message);
+                }
+            }).catch(err => {
+                console.log(err.response.data.message);
+            });
+        },
+
+        populateMerchants(branch=null, location=null, category=null) {
+            this.page = 1;
+
+            const qs = {
+                branch: branch,
+                location: location,
+                category: category,
+            }
+
+            axios({
+                method: "GET",
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
+            }).then(res => {
+                const data = res.data.data;
+                const paginateData = data.data;
+
+                this.merchants = paginateData;
+
+                this.loadMoreButton = paginateData.length > 0;
+            }).catch(err => {
+                console.log(err);
+            });
+        }
     },
 
-    async populateMerchants(branch=null, location=null, category=null) {
-        this.page = 1;
-
-        const qs = {
-            branch: branch,
-            location: location,
-            category: category,
-        }
-
-        axios({
-            method: "GET",
-            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
-        }).then(res => {
-            const data = res.data.data;
-            const paginateData = data.data;
-
-            this.merchants = paginateData;
-
-            this.loadMoreButton = paginateData.length > 0;
-            console.log(paginateData.length > 0);
-        }).catch(err => {
-            console.log(err);
-        });
-    }
-  },
-  beforeMount() {
-      this.initialLoad();
-  },
+    mounted() {
+        this.initialLoad();
+        this.categoryId = this.$route.params.id;
+    },
 })
 </script>
 
