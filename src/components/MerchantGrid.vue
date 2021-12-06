@@ -109,7 +109,7 @@ export default defineComponent({
 
                 const qs = {
                     branch: this.branch,
-                    locatio: location
+                    location: location
                 }
 
                 axios({

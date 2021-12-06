@@ -9,7 +9,7 @@
                 <ion-card class="food-card-head">
                     <div class="card-body pt-4">
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
-                        <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectChange($event)">
+                        <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectBranch($event)">
                             <ion-select-option>----- Select -----</ion-select-option>
                             <ion-select-option v-for="branch in branches" :key="branch.id" :value="branch.id" v-text="branch.user.name"></ion-select-option>
                         </ion-select>
@@ -29,7 +29,7 @@
                             <!-- Product Thumbnail --><a class="product-thumbnail"><img v-bind:src="merchant.image" alt="" v-if="merchant.image != null"><img src="assets/images/ayo-placeholder.png" alt="" v-else></a>
                     </ion-col>
                     <ion-col size="8">
-                         <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.name}}</a>
+                         <!-- Product Title --><a class="product-title" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.user.name}}</a>
                             <!-- Product Price -->
                             <p class="sale-price" style="margin-bottom:0px" @click="() => router.push(`/merchant/${merchant.id}`)">{{merchant.address}} </p>
                             <span class="store-hours open" v-if="merchant.opening_time != null">Open ({{merchant.opening_time}} - {{merchant.closing_time}})</span>
@@ -50,15 +50,15 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonContent, IonCard,IonSelect, IonSelectOption, IonButton, IonSearchbar,
-        IonCol, IonGrid, IonRow
-} from '@ionic/vue';
+import { IonPage, IonContent, IonCard,IonSelect, IonSelectOption, IonButton, IonSearchbar } from '@ionic/vue';
 import { arrowBackOutline } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import CategorySlider from '@/components/CategorySlider.vue';
 import CustomHeader from '@/components/CustomHeader.vue';
 import axios from "axios";
 import { defineComponent } from "vue";
+import queryString from "query-string";
+
 export default defineComponent({
     name: 'Merchant Category',
     components: { IonContent, IonPage, IonCard, IonSelect, IonSelectOption, IonButton, CategorySlider, IonSearchbar,
@@ -77,62 +77,46 @@ export default defineComponent({
       merchants: [],
       arr: [],
       loc: false,
-      category: []
+      category: [],
+
+      page: 1,
+      branch: null,
+      loadMoreButton: false
     }
   },
   methods: {
       initialLoad: function() {
-          axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantsbyCategory/${this.$route.params.id}`,
-            }).then(res => {
-                console.log(res.data)
-                this.merchants = res.data;
-            }).catch(err => {
-                console.log(err);
-            });
-          axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/getCategorybyID/${this.$route.params.id}`,
-            }).then(res => {
-                console.log(res.data)
-                this.category = res.data;
-            }).catch(err => {
-                console.log(err);
-            });
+        this.populateBranches();
+        this.populateMerchants(this.branch, null, this.category);
+
+        axios({
+            method: "GET",
+            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/getCategorybyID/${this.$route.params.id}`,
+        }).then(res => {
+            console.log(res.data)
+            this.category = res.data;
+        }).catch(err => {
+            console.log(err);
+        });
       },
 
-      changeLoad: function(loc) {
-           this.loc = true;
-           axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants/${loc}`,
-            }).then(res => {
-                        console.log(res.data);
-                        this.merchants = res.data;
-            }).catch(err => {
-                console.log(err);
-            });
+      async onSelectBranch(e: Event & { target: HTMLInputElement }) {
+          const branch = e.target.value;
+
+          this.onChangeBranch(branch);
       },
 
-      searchMerchant: function(loc) {
-                const query = loc;
-            if(query != "") {
-              axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantsbySearch/${query}`,
-            }).then(res => {
-                        console.log(res.data.length);
-                            this.merchants = res.data;
-            }).catch(err => {
-                console.log(err);
-            });
-            } else {
-                this.initialLoad();
-            }
+      onChangeBranch: function(branch) {
+        this.branch = branch;
+
+        this.populateMerchants(this.branch, null, this.category);
       },
 
-      async populateBranches() {
+      searchMerchant: function(location) {
+        this.populateMerchants(this.branch, location, this.category);
+      },
+
+    async populateBranches() {
         // let authUser = await this.storage.get("authUser");
         axios({
             method: "GET",
@@ -149,11 +133,35 @@ export default defineComponent({
         }).catch(err => {
             console.log(err.response.data.message);
         });
-      }
+    },
+
+    async populateMerchants(branch=null, location=null, category=null) {
+        this.page = 1;
+
+        const qs = {
+            branch: branch,
+            location: location,
+            category: category,
+        }
+
+        axios({
+            method: "GET",
+            url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
+        }).then(res => {
+            const data = res.data.data;
+            const paginateData = data.data;
+
+            this.merchants = paginateData;
+
+            this.loadMoreButton = paginateData.length > 0;
+            console.log(paginateData.length > 0);
+        }).catch(err => {
+            console.log(err);
+        });
+    }
   },
   beforeMount() {
       this.initialLoad();
-      this.populateBranches();
   },
 })
 </script>
