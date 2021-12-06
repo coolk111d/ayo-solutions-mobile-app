@@ -174,6 +174,7 @@ export default  {
             echo.private(channel)
             .listen(".queue", (e) => {
 
+                if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
                     axios({
                         method: "POST",
                         url: `https://onesignal.com/api/v1/notifications`,
@@ -195,6 +196,7 @@ export default  {
                     }).catch(err => {
                         console.log(err.response.data.message);
                     });
+                }
 
                 this.audio.currentTime = 0;
                 this.audio.play();

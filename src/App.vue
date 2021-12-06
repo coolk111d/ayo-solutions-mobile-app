@@ -125,27 +125,28 @@ export default defineComponent({
                         case this.ROLE_CUSTOMER:
                             echo.private(`ping-customer.${user.customer.id}`)
                             .listen(".all-riders-are-engage", () => {
-
-                                 axios({
-                                    method: "POST",
-                                    url: `https://onesignal.com/api/v1/notifications`,
-                                    headers: {
-                                        Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
-                                    },
-                                    data: {
-                                        "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
-                                            "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
-                                            "channel_for_external_user_ids": "push",
-                                            "template_id": "31880987-1115-4f63-92d2-52afb395c799",
-                                            "headings": {"en": `All riders are currently engaged.`},
-                                            "contents": {"en": "Please try again later."},
-                                            "android_accent_color": "FEB041"
-                                    }
-                                }).then(res => {
-                                        console.log(res);
-                                }).catch(err => {
-                                    console.log(err.response.data.message);
-                                });
+                                if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
+                                    axios({
+                                        method: "POST",
+                                        url: `https://onesignal.com/api/v1/notifications`,
+                                        headers: {
+                                            Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
+                                        },
+                                        data: {
+                                            "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
+                                                "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
+                                                "channel_for_external_user_ids": "push",
+                                                "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                                                "headings": {"en": `All riders are currently engaged.`},
+                                                "contents": {"en": "Please try again later."},
+                                                "android_accent_color": "FEB041"
+                                        }
+                                    }).then(res => {
+                                            console.log(res);
+                                    }).catch(err => {
+                                        console.log(err.response.data.message);
+                                    });
+                                }
 
                                 simpleNotif.currentTime = 0;
                                 simpleNotif.play();
@@ -155,26 +156,28 @@ export default defineComponent({
                             .listen(".rider-accepted-order", (e) => {
                                 const order = e.order;
 
-                                 axios({
-                                    method: "POST",
-                                    url: `https://onesignal.com/api/v1/notifications`,
-                                    headers: {
-                                        Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
-                                    },
-                                    data: {
-                                        "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
-                                            "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
-                                            "channel_for_external_user_ids": "push",
-                                            "template_id": "31880987-1115-4f63-92d2-52afb395c799",
-                                            "headings": {"en": `Your order is now in progress! ${e.order.tracking_number}`},
-                                            "buttons": [{"id": "id2", "text": "View", "icon": "ic_menu_share", "url": "/merchant-dashboard"}],
-                                            "android_accent_color": "FEB041"
-                                    }
-                                }).then(res => {
-                                        console.log(res);
-                                }).catch(err => {
-                                    console.log(err.response.data.message);
-                                });
+                                if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
+                                    axios({
+                                        method: "POST",
+                                        url: `https://onesignal.com/api/v1/notifications`,
+                                        headers: {
+                                            Authorization: `Basic ${process.env.VUE_APP_ONE_SIGNAL_AUTH}`
+                                        },
+                                        data: {
+                                            "app_id": process.env.VUE_APP_ONE_SIGNAL_ID,
+                                                "include_external_user_ids": [`customer${storageAuthUser.user.id}`],
+                                                "channel_for_external_user_ids": "push",
+                                                "template_id": "31880987-1115-4f63-92d2-52afb395c799",
+                                                "headings": {"en": `Your order is now in progress! ${e.order.tracking_number}`},
+                                                "buttons": [{"id": "id2", "text": "View", "icon": "ic_menu_share", "url": "/merchant-dashboard"}],
+                                                "android_accent_color": "FEB041"
+                                        }
+                                    }).then(res => {
+                                            console.log(res);
+                                    }).catch(err => {
+                                        console.log(err.response.data.message);
+                                    });
+                                }
 
                                 simpleNotif.currentTime = 0;
                                 simpleNotif.play();
@@ -238,7 +241,9 @@ export default defineComponent({
         }
     },
     mounted() {
-        this.OneSignalInit();
+        if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
+            this.OneSignalInit();
+        }
 
         this.initEcho();
     }

@@ -30,6 +30,8 @@ import { IonButton, IonSearchbar, IonCol, IonGrid, IonRow, toastController } fro
 import { defineComponent} from "vue";
 import axios from "axios";
 
+import queryString from "query-string";
+
 export default defineComponent({
   name: 'MerchantGrid',
   data(){
@@ -40,6 +42,7 @@ export default defineComponent({
       loc: false,
       merchantsisNull: false,
 
+      branch: null,
       loadMoreButton: false
     }
   },
@@ -80,12 +83,13 @@ export default defineComponent({
             });
       },
 
-      changeLoad: function(branch) {
+      onChangeBranch: function(branch) {
+            this.branch = branch;
             this.page = 1;
 
             axios({
                 method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?branch=${branch}`,
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?branch=${this.branch}`,
             }).then(res => {
                 const data = res.data.data;
                 const paginateData = data.data;
@@ -99,18 +103,29 @@ export default defineComponent({
             });
       },
 
-      searchMerchant: function(loc) {
-            const query = loc;
-            if(query != "") {
-              axios({
-                method: "GET",
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchantsbySearch/${query}`,
-            }).then(res => {
-                    console.log(res.data.length);
-                    this.merchants = res.data;
-            }).catch(err => {
-                console.log(err);
-            });
+      searchMerchant: function(location) {
+            if (location != "") {
+                this.page = 1;
+
+                const qs = {
+                    branch: this.branch,
+                    locatio: location
+                }
+
+                axios({
+                    method: "GET",
+                    url: `${process.env.VUE_APP_ROOT_API}/mobile-api/merchants?${queryString.stringify(qs)}`,
+                }).then(res => {
+                    const data = res.data.data;
+                    const paginateData = data.data;
+
+                    this.merchants = paginateData;
+
+                    this.loadMoreButton = paginateData.length > 0;
+                    console.log(paginateData.length > 0);
+                }).catch(err => {
+                    console.log(err);
+                });
             } else {
                 this.initialLoad();
             }

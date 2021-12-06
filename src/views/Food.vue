@@ -12,7 +12,7 @@
                 <ion-card class="food-card-head">
                     <div class="card-body pt-4">
                         <label class="form-label ayo-text-orange fs-6 mb-3" for="defaultSelect">Choose the AYO Branch near you:</label>
-                        <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectChange($event)">
+                        <ion-select class="form-select" interface="action-sheet" :interface-options="options" @ionChange="onSelectBranch($event)">
                             <ion-select-option>----- Select -----</ion-select-option>
                             <ion-select-option v-for="branch in branches" :key="branch.id" :value="branch.id" v-text="branch.user.name"></ion-select-option>
                             <!-- <ion-select-option class="disabled">Batangas</ion-select-option>
@@ -151,9 +151,12 @@ export default defineComponent({
           const modal = await modalController.create({component: PreRegistrationModal});
           modal.present();
       },
-      async onSelectChange(e: Event & { target: HTMLInputElement }) {
+
+      async onSelectBranch(e: Event & { target: HTMLInputElement }) {
           const child: any = this.$refs.merchantGrid;
-          child.changeLoad(e.target.value);
+          const branch = e.target.value;
+
+          child.onChangeBranch(branch);
       },
 
       async populateBranches() {
