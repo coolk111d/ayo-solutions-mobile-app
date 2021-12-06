@@ -16,8 +16,6 @@
         <ion-card-content>
             <!-- <form @submit.prevent="onSubmit"> -->
             <Form @submit="onSubmit" :validation-schema="schema" :initial-values="formValues">
-                
-
                 <ion-item>
                     <ion-label position="floating">Email Address</ion-label>
                     <Field as="ion-input" name="email" />
@@ -26,7 +24,6 @@
 
                 <br>
 
-               
                 <ion-button class="button" expand="full" type="submit">Reset Password</ion-button>
             <!-- </form> -->
             </Form>
@@ -101,42 +98,12 @@ export default defineComponent({
 
     setup() {
         const schema = object({
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            first_name: string().required().min(3).max(50).label("First Name"),
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            last_name: string().required().min(3).max(50).label("Last Name"),
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            mobile_number: string().required().matches(/^(09|\+639)\d{9}$/, "Mobile Number is invalid.").label("Mobile Number"),
             email: string().required().email().label("Email"),
-
-            password: string().required().min(8).max(20).label("Password"),
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            government_id: mixed().required()
-            // .test("fileSize", "The file is too large.", value => {
-            //     if (!value.length) return false; // attachment is optional
-            //     return value[0].size <= 2048;
-            // })
-            .label("Government ID")
-            ,
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            terms_and_condition: boolean().required("Please accept our terms and conditions."),
         });
 
         // Initial values
         const formValues = {
-            // name: "Rodrigo",
-            // address: "Kanluran laang",
-            // // eslint-disable-next-line @typescript-eslint/camelcase
-            // mobile_number: "09052990579",
-            // email: "rodrigogalura3rd@gmail.com"
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            first_name: "",
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            last_name: "",
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            mobile_number: "",
             email: "",
-            password: ""
         };
 
         const isOpenLoadingRef = ref(false);
@@ -166,31 +133,22 @@ export default defineComponent({
         onSubmit(inputs) {
             this.setOpenLoading(true);
 
-            const formData = new FormData();
-            formData.append('government_id', new Blob([inputs.government_id[0]]));
-            delete inputs.government_id;
-
-            for (const field in inputs) {
-                console.log(field, inputs[field]);
-                formData.append(field, inputs[field]);
-            }
-
             axios({
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/registration`,
-                data: formData
+                url: `${process.env.VUE_APP_ROOT_API}/mobile-api/password/email`,
+                data: {email: inputs.email}
             }).then(res => {
                 console.log(res);
                 this.setOpenLoading(false);
 
-                this.alertTitle = "Success";
-                this.alertMessage = "";
+                this.alertTitle = "";
+                this.alertMessage = "We have e-mailed your password reset link!";
                 this.setOpenAlert(true);
 
-                setTimeout(modalController.dismiss, 1500);
+                setTimeout(modalController.dismiss, 2500);
             }).catch(err => {
                 this.setOpenLoading(false);
 
