@@ -244,20 +244,16 @@ export default defineComponent({
             const CURRENT_VERSION = process.env.VUE_APP_VERSION;
             const versionResponse = await axios.get(`${process.env.VUE_APP_ROOT_API}/mobile-api/version`);
 
-            console.log(CURRENT_VERSION);
-            console.log(versionResponse.data);
-
             const latestVersion = versionResponse.data;
 
             if (latestVersion.success) {
                 if (CURRENT_VERSION !== latestVersion.data.version) {
-                    console.log(latestVersion.data.version);
                     this.openAlertOptions({
-                        header: "A New Update is Available",
+                        header: "New app version available!",
                         message: "",
                         buttons: [
                             {
-                                text: "Update",
+                                text: "Update now",
                                 handler() {
                                     window.open(`https://play.google.com/store/apps/details?id=${process.env.VUE_APP_ID}`, "_system");
                                 }
