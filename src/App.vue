@@ -238,9 +238,26 @@ export default defineComponent({
 
             const { role } = await alert.onDidDismiss();
             return new Promise(resolve => resolve(role));
+        },
+
+        async updateAppService() {
+            this.openAlertOptions({
+                header: "A New Update is Available",
+                message: "",
+                buttons: [
+                    {
+                        text: "Update",
+                        handler() {
+                            window.open("https://play.google.com/store/apps/details?id=com.ayosolution.inc", "_system");
+                        }
+                    }
+                ]
+            });
         }
     },
     mounted() {
+        this.updateAppService();
+
         if (process.env.VUE_APP_ENABLE_ONE_SIGNAL) {
             this.OneSignalInit();
         }
